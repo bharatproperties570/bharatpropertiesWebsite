@@ -1,0 +1,6 @@
+<placeholder_video_download_logic>
+I will use a placeholder URL for now in the Hero component, direct MP4 link if possible.
+Video URL: https://media.istockphoto.com/id/1455772765/video/luxury-modern-home-exterior-at-sunset-with-large-windows-and-swimming-pool.mp4?s=mp4-640x640-is&k=20&c=XpT7XjB5jR7h2jK_yJ4zJ1xX1xX1xX1xX1xX1xX1xX1=
+Actually, best to use a reliable public one.
+https://assets.mixkit.co/videos/preview/mixkit-modern-luxury-home-interior-fly-through-23423-large.mp4
+</placeholder_video_download_logic>

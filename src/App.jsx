@@ -316,40 +316,19 @@ function App() {
 
         {/* VIEW 3: SEARCH RESULTS */}
         {currentView === 'RESULTS' && (
-          <>
-            <div style={{ padding: '2rem 0', textAlign: 'center', display: 'flex', flexDirection: 'column', alignItems: 'center', gap: '1rem' }}>
-              <button
-                onClick={() => setShowMapView(true)}
-                style={{
-                  display: 'flex',
-                  alignItems: 'center',
-                  gap: '0.5rem',
-                  backgroundColor: 'white',
-                  color: 'var(--color-primary)',
-                  border: '1px solid var(--color-primary)',
-                  padding: '0.75rem 1.5rem',
-                  borderRadius: 'var(--radius-full)',
-                  fontWeight: 600,
-                  cursor: 'pointer'
-                }}
-              >
-                <MapPin size={20} /> Show Search Results on Map
-              </button>
-            </div>
-            <SearchResults
-              properties={PROPERTY_DATA.filter(p =>
-                p.title.toLowerCase().includes(currentSearchTerm.toLowerCase()) ||
-                p.location.toLowerCase().includes(currentSearchTerm.toLowerCase())
-              ).map(p => ({
-                ...p,
-                onCompare: handleAddToPropertyComparison,
-                onWishlist: handleToggleWishlist,
-                isWishlisted: wishlist.some(w => w.id === p.id)
-              }))}
-              searchTerm={currentSearchTerm}
-              onPropertySelect={handleSelectProperty}
-            />
-          </>
+          <SearchResults
+            properties={PROPERTY_DATA.filter(p =>
+              p.title.toLowerCase().includes(currentSearchTerm.toLowerCase()) ||
+              p.location.toLowerCase().includes(currentSearchTerm.toLowerCase())
+            ).map(p => ({
+              ...p,
+              onCompare: handleAddToPropertyComparison,
+              onWishlist: handleToggleWishlist,
+              isWishlisted: wishlist.some(w => w.id === p.id)
+            }))}
+            searchTerm={currentSearchTerm}
+            onPropertySelect={handleSelectProperty}
+          />
         )}
 
         {/* VIEW 4: PROJECT DETAIL */}
@@ -392,7 +371,7 @@ function App() {
             onTalkToExpert={() => setShowExpertModal(true)}
           />
         )}
-      </main>
+      </main >
       <Footer
         onPrivacyClick={handlePrivacyPolicy}
         onTermsClick={handleTerms}
@@ -401,93 +380,109 @@ function App() {
       />
 
       {/* Floating Property Comparison Toggle */}
-      {comparisonProperties.length > 0 && !showPropertyComparison && (
-        <button
-          onClick={() => setShowPropertyComparison(true)}
-          style={{
-            position: 'fixed',
-            bottom: '160px',
-            right: '2rem',
-            zIndex: 1500,
-            padding: '1rem 2rem',
-            backgroundColor: 'var(--color-primary)',
-            color: 'white',
-            border: 'none',
-            borderRadius: '50px',
-            fontWeight: 800,
-            cursor: 'pointer',
-            boxShadow: '0 10px 25px -5px rgba(0,0,0,0.3)',
-            display: 'flex',
-            alignItems: 'center',
-            gap: '10px'
-          }}
-        >
-          🔍 Properties ({comparisonProperties.length})
-        </button>
-      )}
+      {
+        comparisonProperties.length > 0 && !showPropertyComparison && (
+          <button
+            onClick={() => setShowPropertyComparison(true)}
+            style={{
+              position: 'fixed',
+              bottom: '160px',
+              right: '2rem',
+              zIndex: 1500,
+              padding: '1rem 2rem',
+              backgroundColor: 'var(--color-primary)',
+              color: 'white',
+              border: 'none',
+              borderRadius: '50px',
+              fontWeight: 800,
+              cursor: 'pointer',
+              boxShadow: '0 10px 25px -5px rgba(0,0,0,0.3)',
+              display: 'flex',
+              alignItems: 'center',
+              gap: '10px'
+            }}
+          >
+            🔍 Properties ({comparisonProperties.length})
+          </button>
+        )
+      }
 
-      {showComparison && (
-        <ProjectComparison
-          projects={comparisonProjects}
-          onClose={() => setShowComparison(false)}
-          onRemoveProject={handleRemoveFromComparison}
-          onAddProject={handleAddToComparison}
-        />
-      )}
+      {
+        showComparison && (
+          <ProjectComparison
+            projects={comparisonProjects}
+            onClose={() => setShowComparison(false)}
+            onRemoveProject={handleRemoveFromComparison}
+            onAddProject={handleAddToComparison}
+          />
+        )
+      }
 
-      {showPropertyComparison && (
-        <PropertyComparison
-          properties={comparisonProperties}
-          onClose={() => setShowPropertyComparison(false)}
-          onRemoveProperty={handleRemoveFromPropertyComparison}
-          onAddProperty={handleAddToPropertyComparison}
-        />
-      )}
+      {
+        showPropertyComparison && (
+          <PropertyComparison
+            properties={comparisonProperties}
+            onClose={() => setShowPropertyComparison(false)}
+            onRemoveProperty={handleRemoveFromPropertyComparison}
+            onAddProperty={handleAddToPropertyComparison}
+          />
+        )
+      }
 
       {/* Floating Project Comparison Toggle */}
-      {comparisonProjects.length > 0 && !showComparison && (
-        <button
-          onClick={() => setShowComparison(true)}
-          style={{
-            position: 'fixed',
-            bottom: '90px',
-            right: '2rem',
-            padding: '1rem 2rem',
-            backgroundColor: 'var(--color-accent)',
-            color: 'white',
-            border: 'none',
-            borderRadius: '50px',
-            fontWeight: 800,
-            cursor: 'pointer',
-            boxShadow: '0 10px 25px -5px rgba(0,0,0,0.3)',
-            zIndex: 1500,
-            display: 'flex',
-            alignItems: 'center',
-            gap: '10px',
-            transition: 'transform 0.2s'
-          }}
-          onMouseEnter={(e) => e.target.style.transform = 'translateY(-4px)'}
-          onMouseLeave={(e) => e.target.style.transform = 'translateY(0)'}
-        >
-          🏙️ Projects ({comparisonProjects.length})
-        </button>
-      )}
+      {
+        comparisonProjects.length > 0 && !showComparison && (
+          <button
+            onClick={() => setShowComparison(true)}
+            style={{
+              position: 'fixed',
+              bottom: '90px',
+              right: '2rem',
+              padding: '1rem 2rem',
+              backgroundColor: 'var(--color-accent)',
+              color: 'white',
+              border: 'none',
+              borderRadius: '50px',
+              fontWeight: 800,
+              cursor: 'pointer',
+              boxShadow: '0 10px 25px -5px rgba(0,0,0,0.3)',
+              zIndex: 1500,
+              display: 'flex',
+              alignItems: 'center',
+              gap: '10px',
+              transition: 'transform 0.2s'
+            }}
+            onMouseEnter={(e) => e.target.style.transform = 'translateY(-4px)'}
+            onMouseLeave={(e) => e.target.style.transform = 'translateY(0)'}
+          >
+            🏙️ Projects ({comparisonProjects.length})
+          </button>
+        )
+      }
 
-      {showPostProperty && (
-        <PostPropertyForm onClose={() => setShowPostProperty(false)} />
-      )}
+      {
+        showPostProperty && (
+          <PostPropertyForm onClose={() => setShowPostProperty(false)} />
+        )
+      }
 
-      {showFeedbackModal && (
-        <FeedbackForm onClose={() => setShowFeedbackModal(false)} />
-      )}
+      {
+        showFeedbackModal && (
+          <FeedbackForm onClose={() => setShowFeedbackModal(false)} />
+        )
+      }
 
-      {showConsultationModal && (
-        <ConsultationForm onClose={() => setShowConsultationModal(false)} />
-      )}
+      {
+        showConsultationModal && (
+          <ConsultationForm onClose={() => setShowConsultationModal(false)} />
+        )
+      }
 
-      {showExpertModal && (
-        <TalkToExpertForm onClose={() => setShowExpertModal(false)} />
-      )}
+      {
+        showExpertModal && (
+          <TalkToExpertForm onClose={() => setShowExpertModal(false)} />
+        )
+      }
 
       {/* Floating Wishlist Toggle */}
       <button
@@ -548,17 +543,19 @@ function App() {
         onClose={() => setShowContactPopup(false)}
       />
 
-      {showMapView && (
-        <PropertyMapView
-          properties={
-            currentView === 'CITY'
-              ? PROPERTY_DATA.filter(p => p.location === selectedCity)
-              : PROPERTY_DATA
-          }
-          onPropertySelect={(id) => { setShowMapView(false); handleSelectProperty(id); }}
-          onClose={() => setShowMapView(false)}
-        />
-      )}
+      {
+        showMapView && (
+          <PropertyMapView
+            properties={
+              currentView === 'CITY'
+                ? PROPERTY_DATA.filter(p => p.location === selectedCity)
+                : PROPERTY_DATA
+            }
+            onPropertySelect={(id) => { setShowMapView(false); handleSelectProperty(id); }}
+            onClose={() => setShowMapView(false)}
+          />
+        )
+      }
 
       {/* Floating Contact Trigger */}
       <button

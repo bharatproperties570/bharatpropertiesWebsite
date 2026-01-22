@@ -1,5 +1,6 @@
 import React, { useState } from 'react';
 import PropertyListItem from './PropertyListItem';
+import PropertyMapView from './PropertyMapView';
 import { Filter, Map, List, Maximize2, Minimize2 } from 'lucide-react';
 
 // Reusable Filter Component
@@ -156,22 +157,13 @@ const SearchResults = ({ properties, searchTerm, onPropertySelect }) => {
                     </button>
                 </div>
 
-                {/* Full Screen Map Placeholder */}
-                <div style={{
-                    width: '100%',
-                    height: '100%',
-                    backgroundColor: '#e2e8f0',
-                    position: 'relative',
-                    display: 'flex',
-                    alignItems: 'center',
-                    justifyContent: 'center'
-                }}>
-                    <img
-                        src="https://images.unsplash.com/photo-1524661135-423995f22d0b?ixlib=rb-4.0.3&auto=format&fit=crop&w=1600&q=80"
-                        alt="Map View"
-                        style={{ width: '100%', height: '100%', objectFit: 'cover' }}
-                    />
-                </div>
+                {/* Full Screen Map */}
+                <PropertyMapView
+                    properties={properties}
+                    onPropertySelect={onPropertySelect}
+                    onClose={() => { setViewMode('list'); setIsFullScreen(false); }}
+                    embedded={false}
+                />
             </div>
         );
     }
@@ -270,9 +262,6 @@ const SearchResults = ({ properties, searchTerm, onPropertySelect }) => {
                             borderRadius: 'var(--radius-lg)',
                             overflow: 'hidden',
                             position: 'relative',
-                            display: 'flex',
-                            alignItems: 'center',
-                            justifyContent: 'center',
                             border: '1px solid #cbd5e1'
                         }}>
                             <button
@@ -281,7 +270,7 @@ const SearchResults = ({ properties, searchTerm, onPropertySelect }) => {
                                     position: 'absolute',
                                     top: '1rem',
                                     right: '1rem',
-                                    zIndex: 10,
+                                    zIndex: 1000,
                                     backgroundColor: 'white',
                                     border: 'none',
                                     borderRadius: '8px',
@@ -300,26 +289,12 @@ const SearchResults = ({ properties, searchTerm, onPropertySelect }) => {
                                 Expand Map
                             </button>
 
-                            <img
-                                src="https://images.unsplash.com/photo-1524661135-423995f22d0b?ixlib=rb-4.0.3&auto=format&fit=crop&w=1600&q=80" // Map Placeholder
-                                alt="Map View"
-                                style={{ width: '100%', height: '100%', objectFit: 'cover', opacity: 0.8 }}
+                            <PropertyMapView
+                                properties={properties}
+                                onPropertySelect={onPropertySelect}
+                                onClose={() => setViewMode('list')}
+                                embedded={true}
                             />
-                            <div style={{
-                                position: 'absolute',
-                                backgroundColor: 'white',
-                                padding: '1.5rem',
-                                borderRadius: 'var(--radius-lg)',
-                                boxShadow: 'var(--shadow-lg)',
-                                textAlign: 'center',
-                                maxWidth: '300px'
-                            }}>
-                                <Map size={48} color="var(--color-primary)" style={{ marginBottom: '1rem' }} />
-                                <h3 style={{ fontSize: '1.25rem', marginBottom: '0.5rem', color: 'var(--color-primary)' }}>Map View Enabled</h3>
-                                <p style={{ color: 'var(--color-text-muted)', fontSize: '0.9rem' }}>
-                                    Interactive Google Maps integration requires an API key.
-                                </p>
-                            </div>
                         </div>
                     )}
                 </div>

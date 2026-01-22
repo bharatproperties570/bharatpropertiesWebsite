@@ -17,35 +17,24 @@ const OfficeInfo = () => {
                             position: 'relative',
                             boxShadow: 'var(--shadow-lg)'
                         }}>
-                            {/* Video: Location Map Route -> Exterior -> Interior with People working */}
-                            <video
-                                autoPlay
-                                loop
-                                muted
-                                playsInline
-                                style={{ width: '100%', height: '100%', objectFit: 'cover' }}
-                            >
-                                <source src="https://assets.mixkit.co/videos/preview/mixkit-busy-office-with-people-working-at-desks-4351-large.mp4" type="video/mp4" />
-                                Your browser does not support the video tag.
-                            </video>
-
-                            {/* Overlay Text */}
+                            {/* Gradient Background (External videos blocked in production) */}
                             <div style={{
-                                position: 'absolute',
-                                bottom: 0,
-                                left: 0,
                                 width: '100%',
-                                background: 'linear-gradient(to top, rgba(0,0,0,0.8), transparent)',
-                                padding: '1.5rem',
-                                color: 'white'
+                                height: '100%',
+                                background: 'linear-gradient(135deg, #667eea 0%, #764ba2 100%)',
+                                display: 'flex',
+                                alignItems: 'center',
+                                justifyContent: 'center'
                             }}>
-                                <div style={{ display: 'flex', alignItems: 'center', gap: '0.5rem', marginBottom: '0.25rem' }}>
-                                    <MapPin size={18} color="var(--color-gold)" />
-                                    <span style={{ fontWeight: 600, fontSize: '1rem' }}>Our Headquarters Location</span>
+                                <div style={{
+                                    textAlign: 'center',
+                                    color: 'white',
+                                    padding: '2rem'
+                                }}>
+                                    <MapPin size={64} style={{ margin: '0 auto 1rem', opacity: 0.9 }} />
+                                    <h3 style={{ fontSize: '1.5rem', fontWeight: 700, marginBottom: '0.5rem' }}>Visit Our Office</h3>
+                                    <p style={{ opacity: 0.9 }}>Sector 82, JLPL Industrial Area, Mohali</p>
                                 </div>
-                                <p style={{ fontSize: '0.85rem', opacity: 0.9 }}>
-                                    Watch: Route map & interior tour of our busy workspace.
-                                </p>
                             </div>
                         </div>
                     </div>
@@ -94,7 +83,7 @@ const OfficeInfo = () => {
 
                 </div>
             </div>
-        </section>
+        </section >
     );
 };
 

@@ -33,7 +33,7 @@ const OfficeInfo = () => {
                                 }}>
                                     <MapPin size={64} style={{ margin: '0 auto 1rem', opacity: 0.9 }} />
                                     <h3 style={{ fontSize: '1.5rem', fontWeight: 700, marginBottom: '0.5rem' }}>Visit Our Office</h3>
-                                    <p style={{ opacity: 0.9 }}>Sector 82, JLPL Industrial Area, Mohali</p>
+                                    <p style={{ opacity: 0.9 }}>Shop No 166, Sector 3, Huda Market, Kurukshetra</p>
                                 </div>
                             </div>
                         </div>
@@ -55,7 +55,7 @@ const OfficeInfo = () => {
                                 </div>
                                 <div>
                                     <h4 style={{ fontSize: '1.1rem', fontWeight: 700, marginBottom: '0.25rem' }}>Address</h4>
-                                    <p style={{ color: 'var(--color-text-muted)' }}>Sector 82, JLPL Industrial Area,<br />Mohali, Punjab 140308</p>
+                                    <p style={{ color: 'var(--color-text-muted)' }}>Shop No 166, Sector 3, Huda Market,<br />Kurukshetra, Haryana 136118</p>
                                 </div>
                             </div>
 
@@ -65,7 +65,7 @@ const OfficeInfo = () => {
                                 </div>
                                 <div>
                                     <h4 style={{ fontSize: '1.1rem', fontWeight: 700, marginBottom: '0.25rem' }}>Phone</h4>
-                                    <p style={{ color: 'var(--color-text-muted)' }}>+91 98765 43210</p>
+                                    <p style={{ color: 'var(--color-text-muted)' }}>+91 9991000570, +91 9991333570</p>
                                 </div>
                             </div>
 

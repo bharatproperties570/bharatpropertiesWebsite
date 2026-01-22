@@ -52,15 +52,15 @@ const Footer = ({ onPrivacyClick, onTermsClick, onCalculatorClick, onAboutClick 
                     <div style={{ display: 'flex', flexDirection: 'column', gap: '1rem', opacity: 0.8 }}>
                         <div style={{ display: 'flex', gap: '0.8rem', alignItems: 'center' }}>
                             <MapPin size={18} />
-                            <span>123 Luxury Lane, Beverly Hills, CA</span>
+                            <span>Shop No 166, Sector 3, Huda Market, Kurukshetra, Haryana 136118</span>
                         </div>
                         <div style={{ display: 'flex', gap: '0.8rem', alignItems: 'center' }}>
                             <Phone size={18} />
-                            <span>+1 (555) 123-4567</span>
+                            <span>+91 9991000570, +91 9991333570</span>
                         </div>
                         <div style={{ display: 'flex', gap: '0.8rem', alignItems: 'center' }}>
                             <Mail size={18} />
-                            <span>concierge@luxeestate.com</span>
+                            <span>info@bharatproperties.co</span>
                         </div>
                     </div>
                 </div>

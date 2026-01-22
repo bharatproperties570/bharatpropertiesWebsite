@@ -147,7 +147,7 @@ const TalkToExpertForm = ({ onClose }) => {
                                         <input
                                             type="tel"
                                             required
-                                            placeholder="98765 43210"
+                                            placeholder="9991000570"
                                             style={{ ...inputStyle, paddingLeft: '3.5rem' }}
                                             value={formData.phone}
                                             onChange={(e) => setFormData({ ...formData, phone: e.target.value })}

@@ -3,7 +3,8 @@ import Header from './components/Header'
 import Footer from './components/Footer'
 import Hero from './components/Hero'
 import BrandHero from './components/BrandHero'
-import CityGrid, { CITIES } from './components/CityGrid'
+import CityGrid from './components/CityGrid'
+import { CITY_DATA } from './data/cityData'
 import OfficeInfo from './components/OfficeInfo'
 import SearchBarOverlay from './components/SearchBarOverlay'
 import FeaturedProperties from './components/FeaturedProperties'
@@ -273,7 +274,7 @@ function App() {
             <Hero
               onSearch={handleSearch}
               city={selectedCity}
-              video={CITIES.find(c => c.name === selectedCity)?.video}
+              video={CITY_DATA.find(c => c.name === selectedCity)?.video}
             />
             {(() => {
               const cityProperties = PROPERTY_DATA.filter(p => p.location === selectedCity);

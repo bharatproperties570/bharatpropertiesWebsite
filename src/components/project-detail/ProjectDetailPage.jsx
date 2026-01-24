@@ -8,6 +8,7 @@ import SiteVisitForm from './SiteVisitForm';
 import ImageGallery from './ImageGallery';
 import ProjectLocation from './ProjectLocation';
 import NewsSection from '../NewsSection';
+import SEO from '../SEO';
 import { getProjectById } from '../../data/sampleProjects';
 
 const ProjectDetailPage = ({ projectId, onBookConsultation, onAddToCompare }) => {
@@ -59,6 +60,11 @@ const ProjectDetailPage = ({ projectId, onBookConsultation, onAddToCompare }) =>
 
     return (
         <div style={{ backgroundColor: '#fff', minHeight: '100vh', scrollBehavior: 'smooth' }}>
+            <SEO
+                title={`${project.name} | ${project.address?.city} | Bharat Properties`}
+                description={project.description || `Discover ${project.name}, a premium real estate project in ${project.address?.city}. Exclusive details, pricing, and amenities.`}
+                keywords={`${project.name}, ${project.address?.city} Real Estate, ${project.type || 'Project'} in ${project.address?.city}`}
+            />
             {/* Project Header (Sticky) */}
             <ProjectHeader
                 project={project}

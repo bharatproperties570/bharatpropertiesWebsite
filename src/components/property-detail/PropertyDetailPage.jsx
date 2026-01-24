@@ -5,6 +5,7 @@ import PropertyBuiltup from './PropertyBuiltup';
 import PropertyLocation from './PropertyLocation';
 import PropertyMedia from './PropertyMedia';
 import NewsSection from '../NewsSection';
+import SEO from '../SEO';
 import { getPropertyById } from '../../data/individualProperties';
 
 const PropertyDetailPage = ({ propertyId, onAddToCompare, onBookConsultation }) => {
@@ -46,6 +47,11 @@ const PropertyDetailPage = ({ propertyId, onAddToCompare, onBookConsultation }) 
 
     return (
         <div style={{ backgroundColor: '#fff', minHeight: '100vh', paddingTop: '20px' }}>
+            <SEO
+                title={`${property.title} | ${property.location?.city} | Bharat Properties`}
+                description={property.description || `View details for ${property.title} in ${property.location?.city}. Luxury residential property at ${property.price}.`}
+                keywords={`${property.title}, Luxury Property ${property.location?.city}, ${property.type} for sale`}
+            />
             <PropertyHeader
                 property={property}
                 onAddToCompare={onAddToCompare}

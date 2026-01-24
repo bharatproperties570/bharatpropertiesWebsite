@@ -30,6 +30,7 @@ import ContactPopup from './components/ContactPopup'
 import PropertyMapView from './components/PropertyMapView'
 import { Heart, MessageCircle, MapPin } from 'lucide-react'
 import { ContactSection } from './components/Sections'
+import SEO from './components/SEO'
 
 import { PROPERTY_DATA } from './data/propertyData'
 import { INDIVIDUAL_PROPERTIES } from './data/individualProperties'
@@ -209,6 +210,7 @@ function App() {
 
   return (
     <>
+      <SEO view={currentView} city={selectedCity} />
       <Header
         onLogoClick={handleLogoClick}
         selectedCity={selectedCity}

@@ -1,4 +1,5 @@
 import { CITY_DATA } from '../data/cityData';
+import { ArrowRight } from 'lucide-react';
 
 const CityGrid = ({ onSelectCity }) => {
     return (
@@ -90,5 +91,5 @@ const CityGrid = ({ onSelectCity }) => {
     );
 };
 
-export { CITIES };
+
 export default CityGrid;

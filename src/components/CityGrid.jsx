@@ -7,7 +7,7 @@ const CITIES = [
     { name: 'Mohali', image: 'https://images.unsplash.com/photo-1582268611958-ebfd161ef9cf?ixlib=rb-4.0.3&auto=format&fit=crop&w=800&q=80', description: 'IT Hub of Punjab' },
     { name: 'Panchkula', image: 'https://images.unsplash.com/photo-1626544827763-d516dce335e2?ixlib=rb-4.0.3&auto=format&fit=crop&w=800&q=80', description: 'Scenic Peace' },
     { name: 'Zirakpur', image: 'https://images.unsplash.com/photo-1560518883-ce09059eeffa?ixlib=rb-4.0.3&auto=format&fit=crop&w=800&q=80', description: 'Gateway to Chandigarh' },
-    { name: 'Kharar', image: 'https://images.unsplash.com/photo-1516156008625-3a9d60da923c?ixlib=rb-4.0.3&auto=format&fit=crop&w=800&q=80', description: 'Emerging Market' },
+    { name: 'Kharar', image: '/images/cities/kharar.png', description: 'Emerging Market' },
     { name: 'New Chandigarh', image: 'https://images.unsplash.com/photo-1512917774080-9991f1c4c750?ixlib=rb-4.0.3&auto=format&fit=crop&w=800&q=80', description: 'Smart City' },
 ];
 

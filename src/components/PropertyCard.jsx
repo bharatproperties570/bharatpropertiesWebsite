@@ -29,7 +29,7 @@ const PropertyCard = ({ property, onClick }) => {
             <div style={{ position: 'relative', height: '260px', overflow: 'hidden', aspectRatio: '16/9' }}>
                 <img
                     src={property.image}
-                    alt={property.title}
+                    alt={`${property.title} in ${property.location} - Bharat Properties`}
                     loading="lazy"
                     style={{ width: '100%', height: '100%', objectFit: 'cover', transition: 'transform 0.6s cubic-bezier(0.4, 0, 0.2, 1)' }}
                     onMouseEnter={(e) => e.target.style.transform = 'scale(1.1)'}

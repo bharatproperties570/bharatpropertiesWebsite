@@ -14,7 +14,14 @@ const SEO = ({ view, city, title, description, keywords, type = 'website' }) => 
     const finalTitle = title || seo.title;
     const finalDescription = description || seo.description;
     const finalKeywords = keywords || seo.keywords;
-    const siteUrl = 'https://bharatproperties.co/';
+    const siteUrl = 'https://bharatproperties.co';
+
+    // Professional dynamic canonical URL
+    let canonicalUrl = siteUrl;
+    if (view === 'CITY' && city) canonicalUrl = `${siteUrl}/${city.toLowerCase()}`;
+    else if (view === 'PROJECT' && title) canonicalUrl = `${siteUrl}/project/${title.replace(/\s+/g, '-').toLowerCase()}`;
+    else if (view === 'PROPERTY' && title) canonicalUrl = `${siteUrl}/property/${title.replace(/\s+/g, '-').toLowerCase()}`;
+    else if (view !== 'HOME') canonicalUrl = `${siteUrl}/${view.toLowerCase()}`;
 
     // Dynamic Structured Data
     const structuredData = {
@@ -48,16 +55,18 @@ const SEO = ({ view, city, title, description, keywords, type = 'website' }) => 
             <meta property="og:type" content={type} />
             <meta property="og:title" content={finalTitle} />
             <meta property="og:description" content={finalDescription} />
-            <meta property="og:url" content={siteUrl} />
+            <meta property="og:url" content={canonicalUrl} />
             <meta property="og:site_name" content="Bharat Properties" />
+            <meta property="og:image" content={`${siteUrl}/assets/logo.png`} />
 
             {/* Twitter */}
             <meta name="twitter:card" content="summary_large_image" />
             <meta name="twitter:title" content={finalTitle} />
             <meta name="twitter:description" content={finalDescription} />
+            <meta name="twitter:image" content={`${siteUrl}/assets/logo.png`} />
 
             {/* Canonical Link */}
-            <link rel="canonical" href={siteUrl} />
+            <link rel="canonical" href={canonicalUrl} />
 
             {/* Structured Data */}
             <script type="application/ld+json">

@@ -1,4 +1,10 @@
 User-agent: *
 Allow: /
+Disallow: /admin/
+Disallow: /config/
 
+# Host
+Host: https://bharatproperties.co
+
+# Sitemaps
 Sitemap: https://bharatproperties.co/sitemap.xml

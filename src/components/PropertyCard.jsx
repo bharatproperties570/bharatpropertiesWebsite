@@ -26,10 +26,11 @@ const PropertyCard = ({ property, onClick }) => {
                 e.currentTarget.style.boxShadow = 'var(--shadow-lg)';
             }}
         >
-            <div style={{ position: 'relative', height: '260px', overflow: 'hidden' }}>
+            <div style={{ position: 'relative', height: '260px', overflow: 'hidden', aspectRatio: '16/9' }}>
                 <img
                     src={property.image}
                     alt={property.title}
+                    loading="lazy"
                     style={{ width: '100%', height: '100%', objectFit: 'cover', transition: 'transform 0.6s cubic-bezier(0.4, 0, 0.2, 1)' }}
                     onMouseEnter={(e) => e.target.style.transform = 'scale(1.1)'}
                     onMouseLeave={(e) => e.target.style.transform = 'scale(1)'}

@@ -275,6 +275,15 @@ function App() {
               const cityProperties = PROPERTY_DATA.filter(p => p.location === selectedCity);
               return (
                 <>
+                  <FeaturedProperties
+                    properties={cityProperties.map(p => ({
+                      ...p,
+                      onCompare: handleAddToPropertyComparison,
+                      onWishlist: handleToggleWishlist,
+                      isWishlisted: wishlist.some(w => w.id === p.id)
+                    }))}
+                    onPropertySelect={handleSelectProperty}
+                  />
                   <div style={{ padding: '2rem 0', textAlign: 'center', display: 'flex', flexDirection: 'column', alignItems: 'center', gap: '1rem' }}>
                     <h3 style={{ fontSize: '1.5rem', color: 'var(--color-text-muted)' }}>
                       Showing Active Projects in <span style={{ color: 'var(--color-primary)', fontWeight: 700 }}>{selectedCity}</span>
@@ -298,15 +307,6 @@ function App() {
                       <MapPin size={20} /> View on Map
                     </button>
                   </div>
-                  <FeaturedProperties
-                    properties={cityProperties.map(p => ({
-                      ...p,
-                      onCompare: handleAddToPropertyComparison,
-                      onWishlist: handleToggleWishlist,
-                      isWishlisted: wishlist.some(w => w.id === p.id)
-                    }))}
-                    onPropertySelect={handleSelectProperty}
-                  />
                 </>
               );
             })()}

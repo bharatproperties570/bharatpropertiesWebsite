@@ -74,8 +74,10 @@ const Header = ({ onLogoClick, selectedCity, onSelectCity, onPostProperty, onBoo
                 {/* Logo */}
                 <div
                     onClick={onLogoClick}
+                    role="button"
+                    aria-label="Bharat Properties Home"
                     style={{ fontFamily: 'var(--font-heading)', fontSize: '1.5rem', fontWeight: 700, display: 'flex', alignItems: 'center', gap: '0.75rem', cursor: 'pointer' }}>
-                    <img src={logo} alt="Bharat Properties" style={{ height: '70px', width: 'auto' }} />
+                    <img src={logo} alt="" style={{ height: '70px', width: 'auto' }} aria-hidden="true" />
                     <span>Bharat Properties</span>
                 </div>
 
@@ -326,6 +328,8 @@ const Header = ({ onLogoClick, selectedCity, onSelectCity, onPostProperty, onBoo
                     onClick={() => setIsMobileMenuOpen(!isMobileMenuOpen)}
                     style={{ display: 'block', color: 'inherit', background: 'none' }}
                     className="mobile-toggle"
+                    aria-label={isMobileMenuOpen ? "Close Menu" : "Open Menu"}
+                    aria-expanded={isMobileMenuOpen}
                 >
                     {isMobileMenuOpen ? <X size={24} /> : <Menu size={24} />}
                 </button>

@@ -24,6 +24,7 @@ const Hero = ({ onSearch, city }) => {
                 loop
                 muted
                 playsInline
+                aria-hidden="true"
                 style={{
                     position: 'absolute',
                     top: '50%',
@@ -53,14 +54,29 @@ const Hero = ({ onSearch, city }) => {
 
             <div className="container" style={{ position: 'relative', zIndex: 2, textAlign: 'center', maxWidth: '850px' }}>
                 <h1 style={{
-                    fontSize: 'clamp(2rem, 4vw, 3.5rem)', // Smaller than BrandHero
-                    marginBottom: '2rem',
+                    fontSize: 'clamp(2.5rem, 5vw, 4rem)',
+                    marginBottom: '1rem',
                     fontFamily: 'var(--font-heading)',
-                    fontWeight: 700,
-                    textShadow: '0 2px 4px rgba(0,0,0,0.3)'
+                    fontWeight: 800,
+                    textShadow: '0 4px 15px rgba(0,0,0,0.4)',
+                    color: '#FFFFFF',
+                    lineHeight: 1.1
                 }}>
-                    Find Properties in {city || 'Your Dream Location'}
+                    Explore {city || 'Elite Properties'}
                 </h1>
+                <p style={{
+                    fontSize: 'clamp(1rem, 2vw, 1.25rem)',
+                    marginBottom: '3rem',
+                    color: 'var(--color-gold)',
+                    fontWeight: 500,
+                    maxWidth: '700px',
+                    margin: '0 auto 3rem',
+                    textShadow: '0 2px 8px rgba(0,0,0,0.3)',
+                    lineHeight: 1.5
+                }}>
+                    Discover the Finest Residential & Commercial Real Estate <br />
+                    Tailored for Your Lifestyle in {city || 'the Tricity'}.
+                </p>
 
                 {/* Search Bar Container */}
                 <div style={{
@@ -85,6 +101,7 @@ const Hero = ({ onSearch, city }) => {
                             <button
                                 key={type}
                                 onClick={() => setSearchType(type)}
+                                aria-current={searchType === type ? 'page' : undefined}
                                 style={{
                                     padding: '0.5rem 1.5rem',
                                     border: 'none',
@@ -135,7 +152,9 @@ const Hero = ({ onSearch, city }) => {
 
                         {/* Search Input Segment */}
                         <div style={{ flex: 1, minWidth: '200px' }}>
+                            <label htmlFor="hero-search" style={{ position: 'absolute', width: '1px', height: '1px', padding: 0, margin: '-1px', overflow: 'hidden', clip: 'rect(0, 0, 0, 0)', border: 0 }}>Search Properties</label>
                             <input
+                                id="hero-search"
                                 type="text"
                                 placeholder="Search for locality, landmark, project..."
                                 value={searchValue}

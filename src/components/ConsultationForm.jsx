@@ -22,8 +22,8 @@ const ConsultationForm = ({ onClose }) => {
     const [formData, setFormData] = useState({
         activityType: 'Meeting',
         reason: 'Requirement',
-        locationType: 'Office',
-        locationAddress: 'C-21, Second Floor, Sector 3, Kurukshetra',
+        locationType: 'Kurukshetra Office',
+        locationAddress: 'Shop No 166, Sector 3, Huda Market, Kurukshetra',
         projectName: '',
         block: '',
         unitNumber: '',
@@ -57,7 +57,21 @@ const ConsultationForm = ({ onClose }) => {
     };
 
     const handleChange = (e) => {
-        setFormData({ ...formData, [e.target.name]: e.target.value });
+        const { name, value } = e.target;
+        let newFormData = { ...formData, [name]: value };
+
+        // Auto-update address for offices
+        if (name === 'locationType') {
+            if (value === 'Kurukshetra Office') {
+                newFormData.locationAddress = 'Shop No 166, Sector 3, Huda Market, Kurukshetra';
+            } else if (value === 'Mohali Office') {
+                newFormData.locationAddress = 'Airport Road, Sector 82 Industrial Area, Mohali';
+            } else if (value === 'Virtual') {
+                newFormData.locationAddress = 'Meeting link will be shared via email/WhatsApp';
+            }
+        }
+
+        setFormData(newFormData);
     };
 
     const inputStyles = {
@@ -239,8 +253,8 @@ const ConsultationForm = ({ onClose }) => {
                                         onChange={handleChange}
                                         style={inputStyles}
                                     >
-                                        <option>Office</option>
-                                        <option>On-Site</option>
+                                        <option>Kurukshetra Office</option>
+                                        <option>Mohali Office</option>
                                         <option>Virtual</option>
                                     </select>
                                 </div>
@@ -264,7 +278,7 @@ const ConsultationForm = ({ onClose }) => {
                                         {formData.locationType === 'Virtual' ? <Video size={18} /> : <Map size={18} />}
                                         {formData.locationType === 'Virtual'
                                             ? (showMapPlaceholder ? 'Hide Meet Info' : 'Google Meet Option')
-                                            : (showMapPlaceholder ? 'Close Map' : 'Select on Google Maps')}
+                                            : (showMapPlaceholder ? 'Close Map' : 'Direction on Google Map')}
                                     </button>
                                 </div>
                             </div>

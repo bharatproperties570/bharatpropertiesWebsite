@@ -48,36 +48,45 @@ const OfficeInfo = () => {
                             We invite you to experience our premium hospitality. Visit our main office to discuss your real estate dreams with our expert consultants over a cup of coffee.
                         </p>
 
-                        <div style={{ display: 'flex', flexDirection: 'column', gap: '1.5rem' }}>
-                            <div style={{ display: 'flex', gap: '1rem' }}>
-                                <div style={{ backgroundColor: 'white', padding: '0.75rem', borderRadius: '50%', boxShadow: '0 2px 10px rgba(0,0,0,0.05)', height: 'fit-content' }}>
-                                    <MapPin color="var(--color-accent)" size={24} />
+                        <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(280px, 1fr))', gap: '2rem' }}>
+                            {/* Kurukshetra Office */}
+                            <div style={{ display: 'flex', flexDirection: 'column', gap: '1.25rem', backgroundColor: 'white', padding: '1.5rem', borderRadius: 'var(--radius-lg)', boxShadow: 'var(--shadow-sm)', border: '1px solid rgba(0,0,0,0.05)' }}>
+                                <div style={{ display: 'flex', alignItems: 'center', gap: '0.75rem', color: 'var(--color-primary)' }}>
+                                    <MapPin size={24} />
+                                    <h4 style={{ fontSize: '1.25rem', fontWeight: 800 }}>Kurukshetra Office</h4>
                                 </div>
-                                <div>
-                                    <h4 style={{ fontSize: '1.1rem', fontWeight: 700, marginBottom: '0.25rem' }}>Address</h4>
-                                    <p style={{ color: 'var(--color-text-muted)' }}>Shop No 166, Sector 3, Huda Market,<br />Kurukshetra, Haryana 136118</p>
+                                <div style={{ display: 'flex', gap: '1rem', alignItems: 'flex-start' }}>
+                                    <MapPin size={18} style={{ color: 'var(--color-accent)', marginTop: '0.2rem' }} />
+                                    <p style={{ color: 'var(--color-text-muted)', fontSize: '0.95rem' }}>Shop No 166, Sector 3, Huda Market,<br />Kurukshetra, Haryana 136118</p>
                                 </div>
-                            </div>
-
-                            <div style={{ display: 'flex', gap: '1rem' }}>
-                                <div style={{ backgroundColor: 'white', padding: '0.75rem', borderRadius: '50%', boxShadow: '0 2px 10px rgba(0,0,0,0.05)', height: 'fit-content' }}>
-                                    <Phone color="var(--color-accent)" size={24} />
-                                </div>
-                                <div>
-                                    <h4 style={{ fontSize: '1.1rem', fontWeight: 700, marginBottom: '0.25rem' }}>Phone</h4>
-                                    <p style={{ color: 'var(--color-text-muted)' }}>+91 9991000570, +91 9991333570</p>
+                                <div style={{ display: 'flex', gap: '1rem', alignItems: 'center' }}>
+                                    <Phone size={18} style={{ color: 'var(--color-accent)' }} />
+                                    <p style={{ color: 'var(--color-text-muted)', fontSize: '0.95rem' }}>+91 9991333570</p>
                                 </div>
                             </div>
 
-                            <div style={{ display: 'flex', gap: '1rem' }}>
-                                <div style={{ backgroundColor: 'white', padding: '0.75rem', borderRadius: '50%', boxShadow: '0 2px 10px rgba(0,0,0,0.05)', height: 'fit-content' }}>
-                                    <Clock color="var(--color-accent)" size={24} />
+                            {/* Mohali Office */}
+                            <div style={{ display: 'flex', flexDirection: 'column', gap: '1.25rem', backgroundColor: 'white', padding: '1.5rem', borderRadius: 'var(--radius-lg)', boxShadow: 'var(--shadow-sm)', border: '1px solid rgba(0,0,0,0.05)' }}>
+                                <div style={{ display: 'flex', alignItems: 'center', gap: '0.75rem', color: 'var(--color-primary)' }}>
+                                    <MapPin size={24} />
+                                    <h4 style={{ fontSize: '1.25rem', fontWeight: 800 }}>Mohali Office</h4>
                                 </div>
-                                <div>
-                                    <h4 style={{ fontSize: '1.1rem', fontWeight: 700, marginBottom: '0.25rem' }}>Hours</h4>
-                                    <p style={{ color: 'var(--color-text-muted)' }}>Mon - Sat: 10:00 AM - 7:00 PM<br />Sun: By Appointment</p>
+                                <div style={{ display: 'flex', gap: '1rem', alignItems: 'flex-start' }}>
+                                    <MapPin size={18} style={{ color: 'var(--color-accent)', marginTop: '0.2rem' }} />
+                                    <p style={{ color: 'var(--color-text-muted)', fontSize: '0.95rem' }}>Airport Road, Sector 82 Industrial Area,<br />Mohali, Punjab</p>
+                                </div>
+                                <div style={{ display: 'flex', gap: '1rem', alignItems: 'center' }}>
+                                    <Phone size={18} style={{ color: 'var(--color-accent)' }} />
+                                    <p style={{ color: 'var(--color-text-muted)', fontSize: '0.95rem' }}>9991000570, 9996000570</p>
                                 </div>
                             </div>
+                        </div>
+
+                        <div style={{ marginTop: '2rem', display: 'flex', gap: '1rem', alignItems: 'center', opacity: 0.8 }}>
+                            <Clock color="var(--color-accent)" size={20} />
+                            <p style={{ color: 'var(--color-text-muted)', fontSize: '0.95rem' }}>
+                                <strong>Hours:</strong> Mon - Sat: 10:00 AM - 7:00 PM | Sun: By Appointment
+                            </p>
                         </div>
                     </div>
 

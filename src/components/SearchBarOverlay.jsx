@@ -36,6 +36,7 @@ const SearchBarOverlay = ({ onSearch }) => {
                             <button
                                 key={type}
                                 onClick={() => setSearchType(type)}
+                                aria-current={searchType === type ? 'page' : undefined}
                                 style={{
                                     padding: '0.5rem 1.5rem',
                                     border: 'none',
@@ -82,7 +83,9 @@ const SearchBarOverlay = ({ onSearch }) => {
 
                         {/* Search Input */}
                         <div style={{ flex: 1, minWidth: '200px' }}>
+                            <label htmlFor="overlay-search" style={{ position: 'absolute', width: '1px', height: '1px', padding: 0, margin: '-1px', overflow: 'hidden', clip: 'rect(0, 0, 0, 0)', border: 0 }}>Search Properties</label>
                             <input
+                                id="overlay-search"
                                 type="text"
                                 placeholder="Search for locality, landmark, project..."
                                 value={searchValue}

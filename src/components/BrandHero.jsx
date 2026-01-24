@@ -33,6 +33,7 @@ const BrandHero = ({ onExplore }) => {
                 muted
                 onEnded={handleVideoEnd}
                 playsInline
+                aria-hidden="true"
                 style={{
                     position: 'absolute',
                     top: '50%',
@@ -68,23 +69,25 @@ const BrandHero = ({ onExplore }) => {
                     fontWeight: 800,
                     textShadow: '0 10px 30px rgba(0,0,0,0.5)',
                     letterSpacing: '-2px',
-                    lineHeight: 1
+                    lineHeight: 1,
+                    color: '#FFFFFF'
                 }}>
                     Bharat Properties
                 </h1>
                 <p style={{
                     fontSize: 'clamp(1.1rem, 2.5vw, 1.4rem)',
                     marginBottom: '4rem',
-                    opacity: 0.9,
-                    fontWeight: 400,
-                    maxWidth: '750px',
+                    color: 'var(--color-gold)',
+                    fontWeight: 500,
+                    maxWidth: '800px',
                     marginLeft: 'auto',
                     marginRight: 'auto',
                     lineHeight: 1.6,
-                    letterSpacing: '0.5px'
+                    letterSpacing: '0.5px',
+                    textShadow: '0 2px 10px rgba(0,0,0,0.3)'
                 }}>
-                    Redefining Luxury Real Estate in North India. <br />
-                    Exclusive Homes for the Discerning Lifestyle.
+                    The Premier Destination for Luxury Real Estate in North India. <br />
+                    Expertly Curated Collections in Chandigarh, Mohali & Panchkula.
                 </p>
 
                 <button

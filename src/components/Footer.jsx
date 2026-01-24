@@ -17,9 +17,9 @@ const Footer = ({ onPrivacyClick, onTermsClick, onCalculatorClick, onAboutClick 
                         Elevating your lifestyle with premium real estate solutions. We find homes that match your dreams.
                     </p>
                     <div style={{ display: 'flex', gap: '1rem' }}>
-                        <Instagram size={20} />
-                        <Facebook size={20} />
-                        <Twitter size={20} />
+                        <a href="https://instagram.com" aria-label="Visit our Instagram"><Instagram size={20} /></a>
+                        <a href="https://facebook.com" aria-label="Visit our Facebook"><Facebook size={20} /></a>
+                        <a href="https://twitter.com" aria-label="Visit our Twitter"><Twitter size={20} /></a>
                     </div>
                 </div>
 
@@ -50,17 +50,23 @@ const Footer = ({ onPrivacyClick, onTermsClick, onCalculatorClick, onAboutClick 
                 <div>
                     <h4 style={{ marginBottom: '1.5rem', color: 'white' }}>Contact Us</h4>
                     <div style={{ display: 'flex', flexDirection: 'column', gap: '1rem', opacity: 0.8 }}>
-                        <div style={{ display: 'flex', gap: '0.8rem', alignItems: 'center' }}>
-                            <MapPin size={18} />
-                            <span>Shop No 166, Sector 3, Huda Market, Kurukshetra, Haryana 136118</span>
+                        <div style={{ display: 'flex', gap: '0.8rem', alignItems: 'flex-start' }}>
+                            <MapPin size={18} style={{ marginTop: '0.2rem' }} />
+                            <div>
+                                <strong style={{ color: 'var(--color-gold)', display: 'block', marginBottom: '0.2rem' }}>Kurukshetra Office</strong>
+                                <span style={{ fontSize: '0.9rem' }}>Shop No 166, Sector 3, Huda Market, Kurukshetra<br />Phone: +91 9991333570</span>
+                            </div>
                         </div>
-                        <div style={{ display: 'flex', gap: '0.8rem', alignItems: 'center' }}>
-                            <Phone size={18} />
-                            <span>+91 9991000570, +91 9991333570</span>
+                        <div style={{ display: 'flex', gap: '0.8rem', alignItems: 'flex-start' }}>
+                            <MapPin size={18} style={{ marginTop: '0.2rem' }} />
+                            <div>
+                                <strong style={{ color: 'var(--color-gold)', display: 'block', marginBottom: '0.2rem' }}>Mohali Office</strong>
+                                <span style={{ fontSize: '0.9rem' }}>Airport Road, Sector 82 Industrial Area, Mohali<br />Phone: 9991000570, 9996000570</span>
+                            </div>
                         </div>
                         <div style={{ display: 'flex', gap: '0.8rem', alignItems: 'center' }}>
                             <Mail size={18} />
-                            <span>info@bharatproperties.co</span>
+                            <span>info&#64;bharatproperties.co</span>
                         </div>
                     </div>
                 </div>

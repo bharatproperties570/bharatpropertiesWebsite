@@ -122,7 +122,7 @@ const TermsConditions = () => {
                 <div style={styles.section}>
                     <h2 style={styles.subheading}>7. Contact</h2>
                     <p style={styles.text}>
-                        For legal inquiries or clarifications regarding these terms, please contact us at: legal@bharatproperties.com
+                        For legal inquiries or clarifications regarding these terms, please contact us at: legal&#64;bharatproperties.com
                     </p>
                 </div>
 

@@ -149,7 +149,7 @@ const PrivacyPolicy = () => {
                     <h2 style={styles.subheading}>6. Contact Us</h2>
                     <p style={styles.text}>If you have any questions about this Privacy Policy, please contact us:</p>
                     <ul style={styles.list}>
-                        <li style={styles.listItem}>By email: privacy@bharatproperties.com</li>
+                        <li style={styles.listItem}>By email: privacy&#64;bharatproperties.com</li>
                         <li style={styles.listItem}>By visiting this page on our website: <a href="#contact" style={{ color: 'var(--color-primary)' }}>Contact Page</a></li>
                     </ul>
                 </div>

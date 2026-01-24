@@ -2,9 +2,11 @@ import React from 'react';
 import { Search } from 'lucide-react';
 import PropertyTypeSelector from './PropertyTypeSelector';
 
-const Hero = ({ onSearch, city }) => {
+const Hero = ({ onSearch, city, video }) => {
     const [searchValue, setSearchValue] = React.useState('');
     const [searchType, setSearchType] = React.useState('Buy'); // Buy, Rent, Commercial
+
+    const defaultVideo = "https://cdn.pixabay.com/video/2025/03/04/262412_large.mp4";
 
     return (
         <div style={{
@@ -20,6 +22,7 @@ const Hero = ({ onSearch, city }) => {
         }}>
             {/* Video Background */}
             <video
+                key={video || defaultVideo} // Force reload on video change
                 autoPlay
                 loop
                 muted
@@ -38,7 +41,7 @@ const Hero = ({ onSearch, city }) => {
                     zIndex: 0
                 }}
             >
-                <source src="https://cdn.pixabay.com/video/2025/03/04/262412_large.mp4" type="video/mp4" />
+                <source src={video || defaultVideo} type="video/mp4" />
             </video>
 
             {/* Overlay */}

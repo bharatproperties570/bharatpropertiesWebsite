@@ -127,7 +127,7 @@ export const CITY_DATA = [
     },
     {
         name: 'Rohtak',
-        image: 'https://images.unsplash.com/photo-1497366216548-37526070297c?w=1600&q=80', // Modern Building
+        image: 'https://images.unsplash.com/photo-1541339907198-e08756ebafe3?w=1600&q=80', // Modern University Campus Vibe
         videos: [
             'https://cdn.pixabay.com/video/2024/08/01/223858_large.mp4', // Educational Hub Vibe
             'https://cdn.pixabay.com/video/2024/05/25/213558_large.mp4',
@@ -167,7 +167,7 @@ export const CITY_DATA = [
     },
     {
         name: 'New Chandigarh',
-        image: 'https://images.unsplash.com/photo-1502672260266-1c1ef2d93688?w=1600&q=80', // Eco-City
+        image: 'https://images.unsplash.com/photo-1449156001935-d259cd227d8b?w=1600&q=80', // Eco-City Modern Architecture
         videos: [
             'https://cdn.pixabay.com/video/2023/12/04/191989-890786523_large.mp4', // Futuristic Urban Vibe
             'https://cdn.pixabay.com/video/2025/05/27/282084_large.mp4',

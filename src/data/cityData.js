@@ -1,33 +1,30 @@
 export const CITY_DATA = [
     {
         name: 'Delhi',
-        image: 'https://images.unsplash.com/photo-1587474260584-1f20d4af08ef?w=1600&q=80', // India Gate & Rajpath Infrastructure
+        image: '/images/delhi_drone.png', // Iconic India Gate Drone View
         videos: [
-            'https://cdn.pixabay.com/video/2024/01/20/197466-904874311_large.mp4',
+            'https://cdn.pixabay.com/video/2024/01/20/197466-904874311_large.mp4', // Majestic Rajpath Vibe
             'https://cdn.pixabay.com/video/2024/04/10/207558_large.mp4',
-            'https://cdn.pixabay.com/video/2021/04/13/71004-539071536_large.mp4',
-            'https://cdn.pixabay.com/video/2024/02/09/199732-911183377_large.mp4'
+            'https://cdn.pixabay.com/video/2021/04/13/71004-539071536_large.mp4'
         ],
         description: 'Capital of History & Modernity'
     },
     {
         name: 'Gurgaon',
-        image: 'https://images.unsplash.com/photo-1616422285623-13ff0167c95c?w=1600&q=80', // Cyber City Modern Skyscrapers
+        image: '/images/gurgaon_drone.png', // Iconic Cyber City Drone View
         videos: [
-            'https://cdn.pixabay.com/video/2023/12/04/191989-890786523_large.mp4',
+            'https://cdn.pixabay.com/video/2023/12/04/191989-890786523_large.mp4', // Futuristic Cyber City Vibe
             'https://cdn.pixabay.com/video/2023/11/05/187889-881512451_large.mp4',
-            'https://cdn.pixabay.com/video/2023/10/05/183658-871638842_large.mp4',
             'https://cdn.pixabay.com/video/2024/06/15/216858_large.mp4'
         ],
         description: 'The Millennium Tech Hub'
     },
     {
         name: 'Noida',
-        image: 'https://images.unsplash.com/photo-1629124403064-07d4b4a62176?w=1600&q=80', // Noida Expressway & Skyscrapers
+        image: '/images/noida_drone.png', // Iconic Noida Expressway Drone View
         videos: [
-            'https://cdn.pixabay.com/video/2022/02/25/108990-682544251_large.mp4',
+            'https://cdn.pixabay.com/video/2022/02/25/108990-682544251_large.mp4', // Noida Expressway Vibe
             'https://cdn.pixabay.com/video/2023/12/30/194888-900542311_large.mp4',
-            'https://cdn.pixabay.com/video/2024/06/15/216858_large.mp4',
             'https://cdn.pixabay.com/video/2020/06/18/42526-431872445_large.mp4'
         ],
         description: 'NCR Development Hub'
@@ -67,12 +64,11 @@ export const CITY_DATA = [
     },
     {
         name: 'Panchkula',
-        image: 'https://images.unsplash.com/photo-1545324418-cc1a3fa10c00?w=1600&q=80', // Modern Residential Apartment Layout
+        image: '/images/panchkula_drone.png', // Iconic Morni Hills Drone View
         videos: [
-            'https://cdn.pixabay.com/video/2023/10/24/186358-877712165_large.mp4',
+            'https://cdn.pixabay.com/video/2023/10/24/186358-877712165_large.mp4', // Peaceful Residential Vibe
             'https://cdn.pixabay.com/video/2024/04/20/208884_large.mp4',
-            'https://cdn.pixabay.com/video/2024/06/20/217558_large.mp4',
-            'https://cdn.pixabay.com/video/2025/01/15/252084_large.mp4'
+            'https://cdn.pixabay.com/video/2024/06/20/217558_large.mp4'
         ],
         description: 'Scenic Peace'
     },
@@ -111,78 +107,71 @@ export const CITY_DATA = [
     },
     {
         name: 'Panipat',
-        image: 'https://images.unsplash.com/photo-1518005020250-ee2b9939e728?w=1600&q=80', // Industrial Refinery Infrastructure
+        image: 'https://images.unsplash.com/photo-1518005020250-ee2b9939e728?w=1600&q=80', // Industrial Vibe
         videos: [
+            'https://cdn.pixabay.com/video/2016/10/24/6027-188613437_large.mp4', // Industrial Landmark Vibe
             'https://cdn.pixabay.com/video/2024/06/25/218258_large.mp4',
-            'https://cdn.pixabay.com/video/2024/05/20/212858_large.mp4',
-            'https://cdn.pixabay.com/video/2024/03/20/205158_large.mp4',
-            'https://cdn.pixabay.com/video/2025/02/15/256084_large.mp4'
+            'https://cdn.pixabay.com/video/2024/05/20/212858_large.mp4'
         ],
         description: 'Land of Tradition and Industry'
     },
     {
         name: 'Hisar',
-        image: 'https://images.unsplash.com/photo-1541888946425-d81bb19240f5?w=1600&q=80', // Construction & Development Site
+        image: 'https://images.unsplash.com/photo-1541888946425-d81bb19240f5?w=1600&q=80', // Steel City Vibe
         videos: [
+            'https://cdn.pixabay.com/video/2024/01/20/197466-904874311_large.mp4', // Heritage & Urban Vibe
             'https://cdn.pixabay.com/video/2024/07/20/222558_large.mp4',
-            'https://cdn.pixabay.com/video/2024/04/15/208258_large.mp4',
-            'https://cdn.pixabay.com/video/2024/06/22/217858_large.mp4',
-            'https://cdn.pixabay.com/video/2025/01/25/253084_large.mp4'
+            'https://cdn.pixabay.com/video/2024/04/15/208258_large.mp4'
         ],
         description: 'Steel City Success and Heritage'
     },
     {
         name: 'Rohtak',
-        image: 'https://images.unsplash.com/photo-1497366216548-37526070297c?w=1600&q=80', // Modern University/Corporate Office Building
+        image: 'https://images.unsplash.com/photo-1497366216548-37526070297c?w=1600&q=80', // Modern Building
         videos: [
-            'https://cdn.pixabay.com/video/2024/08/01/223858_large.mp4',
+            'https://cdn.pixabay.com/video/2024/08/01/223858_large.mp4', // Educational Hub Vibe
             'https://cdn.pixabay.com/video/2024/05/25/213558_large.mp4',
-            'https://cdn.pixabay.com/video/2024/07/01/219258_large.mp4',
-            'https://cdn.pixabay.com/video/2025/02/20/258084_large.mp4'
+            'https://cdn.pixabay.com/video/2024/07/01/219258_large.mp4'
         ],
         description: 'Education & Progress'
     },
     {
         name: 'Rewari',
-        image: 'https://images.unsplash.com/photo-1504917595217-d4dc5ebe6122?w=1600&q=80', // Industrial Model Township Facility
+        image: 'https://images.unsplash.com/photo-1504917595217-d4dc5ebe6122?w=1600&q=80', // Industrial/Logistics
         videos: [
+            'https://cdn.pixabay.com/video/2016/10/24/6027-188613437_large.mp4', // Industrial Model Township Vibe
             'https://cdn.pixabay.com/video/2024/08/10/225084_large.mp4',
-            'https://cdn.pixabay.com/video/2024/06/30/219858_large.mp4',
-            'https://cdn.pixabay.com/video/2024/05/30/214258_large.mp4',
-            'https://cdn.pixabay.com/video/2025/03/10/263084_large.mp4'
+            'https://cdn.pixabay.com/video/2024/06/30/219858_large.mp4'
         ],
         description: 'Heritage & Industry'
     },
     {
         name: 'Zirakpur',
-        image: 'https://images.unsplash.com/photo-1448630360428-65456885c650?w=1600&q=80', // High-rise Residential Corridor
+        image: 'https://images.unsplash.com/photo-1448630360428-65456885c650?w=1600&q=80', // Residential High-rise
         videos: [
-            'https://cdn.pixabay.com/video/2018/06/21/16912-276686307_large.mp4',
+            'https://cdn.pixabay.com/video/2021/04/10/70562-536962451_large.mp4', // Modern City Vibe
             'https://cdn.pixabay.com/video/2023/12/30/194888-900542311_large.mp4',
-            'https://cdn.pixabay.com/video/2024/06/25/218258_large.mp4',
-            'https://cdn.pixabay.com/video/2025/01/10/251084_large.mp4'
+            'https://cdn.pixabay.com/video/2024/06/25/218258_large.mp4'
         ],
         description: 'Gateway to Chandigarh'
     },
     {
         name: 'Kharar',
-        image: 'https://images.unsplash.com/photo-1512917774080-9991f1c4c750?w=1600&q=80', // Modern Luxury Township
+        image: 'https://images.unsplash.com/photo-1512917774080-9991f1c4c750?w=1600&q=80', // Luxury Township
         videos: [
+            'https://cdn.pixabay.com/video/2023/10/24/186358-877712165_large.mp4', // Peaceful Green Living
             'https://cdn.pixabay.com/video/2024/01/24/197942-906226451_large.mp4',
-            'https://cdn.pixabay.com/video/2024/04/25/209558_large.mp4',
-            'https://cdn.pixabay.com/video/2024/06/28/219558_large.mp4',
-            'https://cdn.pixabay.com/video/2025/02/25/259084_large.mp4'
+            'https://cdn.pixabay.com/video/2024/04/25/209558_large.mp4'
         ],
         description: 'Emerging Market'
     },
     {
         name: 'New Chandigarh',
-        image: 'https://images.unsplash.com/photo-1502672260266-1c1ef2d93688?w=1600&q=80', // Eco-City Modern Architecture
+        image: 'https://images.unsplash.com/photo-1502672260266-1c1ef2d93688?w=1600&q=80', // Eco-City
         videos: [
+            'https://cdn.pixabay.com/video/2023/12/04/191989-890786523_large.mp4', // Futuristic Urban Vibe
             'https://cdn.pixabay.com/video/2025/05/27/282084_large.mp4',
-            'https://cdn.pixabay.com/video/2024/05/20/212858_large.mp4',
-            'https://cdn.pixabay.com/video/2024/07/10/220884_large.mp4',
-            'https://cdn.pixabay.com/video/2025/03/05/262884_large.mp4'
+            'https://cdn.pixabay.com/video/2024/05/20/212858_large.mp4'
         ],
         description: 'The Smart City Expansion'
     }

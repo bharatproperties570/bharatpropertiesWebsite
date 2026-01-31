@@ -100,7 +100,7 @@ export const CITY_DATA = [
     },
     {
         name: 'Karnal',
-        image: 'https://images.unsplash.com/photo-1574950578143-858c6fc58221?w=1600&q=80', // Modern Highway Infrastructure
+        image: '/images/karnal_drone.png', // Iconic Karn Lake Landmark Drone View
         videos: [
             'https://cdn.pixabay.com/video/2024/07/15/221558_large.mp4',
             'https://cdn.pixabay.com/video/2024/04/10/207558_large.mp4',

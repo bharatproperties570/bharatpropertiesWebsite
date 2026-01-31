@@ -34,7 +34,7 @@ export const CITY_DATA = [
     },
     {
         name: 'Chandigarh',
-        image: 'https://images.unsplash.com/photo-1503177119275-0aa32b3a9368?w=1600&q=80', // Planned Architecture & Roads
+        image: '/images/chandigarh_drone.png', // Iconic Open Hand Monument Drone View
         videos: [
             'https://cdn.pixabay.com/video/2024/02/20/201242-914942311_large.mp4',
             'https://cdn.pixabay.com/video/2021/04/10/70562-536962451_large.mp4',

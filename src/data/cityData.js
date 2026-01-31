@@ -137,7 +137,7 @@ export const CITY_DATA = [
     },
     {
         name: 'Rewari',
-        image: 'https://images.unsplash.com/photo-1504917595217-d4dc5ebe6122?w=1600&q=80', // Industrial/Logistics
+        image: 'https://images.unsplash.com/photo-1474487585957-a3d1ff04b712?w=1600&q=80', // Iconic Heritage Steam Locomotive Museum
         videos: [
             'https://cdn.pixabay.com/video/2016/10/24/6027-188613437_large.mp4', // Industrial Model Township Vibe
             'https://cdn.pixabay.com/video/2024/08/10/225084_large.mp4',
@@ -147,7 +147,7 @@ export const CITY_DATA = [
     },
     {
         name: 'Zirakpur',
-        image: 'https://images.unsplash.com/photo-1460574283810-2aab119d8511?w=1600&q=80', // Majestic Cityscape & Highway
+        image: 'https://images.unsplash.com/photo-1545143333-11bbac2799cc?w=1600&q=80', // Iconic High-rise & Highway Corridor
         videos: [
             'https://cdn.pixabay.com/video/2021/04/10/70562-536962451_large.mp4', // Modern City Vibe
             'https://cdn.pixabay.com/video/2023/12/30/194888-900542311_large.mp4',
@@ -157,7 +157,7 @@ export const CITY_DATA = [
     },
     {
         name: 'Kharar',
-        image: 'https://images.unsplash.com/photo-1464938050520-ef2270bb8ce8?w=1600&q=80', // Modern Residential Blocks
+        image: 'https://images.unsplash.com/photo-1581235720704-06d3acfcba8e?w=1600&q=80', // Modern Highway Infrastructure & Development
         videos: [
             'https://cdn.pixabay.com/video/2023/10/24/186358-877712165_large.mp4', // Peaceful Green Living
             'https://cdn.pixabay.com/video/2024/01/24/197942-906226451_large.mp4',

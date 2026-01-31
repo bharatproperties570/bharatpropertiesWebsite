@@ -30,6 +30,7 @@ import ContactPopup from './components/ContactPopup'
 import PropertyMapView from './components/PropertyMapView'
 import { Heart, MessageCircle, MapPin } from 'lucide-react'
 import { ContactSection } from './components/Sections'
+import BlogSection from './components/BlogSection'
 import SEO from './components/SEO'
 
 import { PROPERTY_DATA } from './data/propertyData'
@@ -227,45 +228,11 @@ function App() {
             <SearchBarOverlay onSearch={handleSearch} />
             <CityGrid onSelectCity={handleSelectCity} />
 
-            {/* TEST: Project Detail Demo Button */}
-            <div style={{ padding: '3rem 0', textAlign: 'center', backgroundColor: '#FEF3C7' }}>
-              <h3 style={{ marginBottom: '1rem', color: '#92400E' }}>🎯 Demo: Project Detail Page</h3>
-              <button
-                onClick={() => handleSelectProject('proj-001')}
-                style={{
-                  padding: '1rem 2rem',
-                  backgroundColor: 'var(--color-primary)',
-                  color: 'white',
-                  border: 'none',
-                  borderRadius: '8px',
-                  fontSize: '1.1rem',
-                  fontWeight: 600,
-                  cursor: 'pointer'
-                }}
-              >
-                View "Bharat Heights" Project
-              </button>
-              <button
-                onClick={() => handleSelectProperty('prop-101')}
-                style={{
-                  padding: '1rem 2rem',
-                  backgroundColor: 'var(--color-accent)',
-                  color: 'white',
-                  border: 'none',
-                  borderRadius: '8px',
-                  fontSize: '1.1rem',
-                  fontWeight: 600,
-                  cursor: 'pointer'
-                }}
-              >
-                View "Corner House" Individual Property
-              </button>
-            </div>
-
             <ReviewsSection onLeaveFeedback={() => setShowFeedbackModal(true)} />
             <OfficeInfo />
             <MarketTrends />
             <NewsSection />
+            <BlogSection />
             <ContactSection />
           </>
         )}

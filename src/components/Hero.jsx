@@ -7,6 +7,11 @@ const Hero = ({ onSearch, city, videos, image }) => {
     const [searchType, setSearchType] = React.useState('Buy'); // Buy, Rent, Commercial
     const [videoIndex, setVideoIndex] = React.useState(0);
 
+    // Reset video index when city changes
+    React.useEffect(() => {
+        setVideoIndex(0);
+    }, [city]);
+
     const defaultVideos = ["https://cdn.pixabay.com/video/2025/03/04/262412_large.mp4"];
     const currentVideos = (videos && videos.length > 0) ? videos : defaultVideos;
 

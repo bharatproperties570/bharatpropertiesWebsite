@@ -58,10 +58,10 @@ export const CITY_DATA = [
         name: 'Mohali',
         image: '/images/mohali_drone.png', // Iconic Aerocity Drone View
         videos: [
-            'https://cdn.pixabay.com/video/2024/07/20/222258_large.mp4', // Cinematic Urban Highway
+            'https://cdn.pixabay.com/video/2021/04/10/70562-536962451_large.mp4', // Modern City Highway (Mohali vibe)
+            'https://cdn.pixabay.com/video/2024/02/20/201242-914942311_large.mp4', // High-speed Flyover
             'https://cdn.pixabay.com/video/2024/06/05/215358_large.mp4',
-            'https://cdn.pixabay.com/video/2024/05/15/212084_large.mp4',
-            'https://cdn.pixabay.com/video/2020/07/04/43977-438419614_large.mp4'
+            'https://cdn.pixabay.com/video/2024/05/15/212084_large.mp4'
         ],
         description: 'The Sports & IT Capital'
     },

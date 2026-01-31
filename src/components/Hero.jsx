@@ -5,7 +5,9 @@ import PropertyTypeSelector from './PropertyTypeSelector';
 const Hero = ({ onSearch, city, videos, image }) => {
     const [searchValue, setSearchValue] = React.useState('');
     const [searchType, setSearchType] = React.useState('Buy'); // Buy, Rent, Commercial
+    const [videoIndex, setVideoIndex] = React.useState(0);
     const [videoError, setVideoError] = React.useState(false);
+    const defaultVideos = ["https://cdn.pixabay.com/video/2025/03/04/262412_large.mp4"];
     const currentVideos = (videos && videos.length > 0) ? videos : defaultVideos;
 
     // Reset error when city changes

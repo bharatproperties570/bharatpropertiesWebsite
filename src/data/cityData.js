@@ -56,7 +56,7 @@ export const CITY_DATA = [
     },
     {
         name: 'Mohali',
-        image: 'https://images.unsplash.com/photo-1486406146926-c627a92ad1ab?w=1600&q=80', // Modern IT Park/Business Building
+        image: '/images/mohali_drone.png', // Iconic Aerocity Drone View
         videos: [
             'https://cdn.pixabay.com/video/2024/06/05/215358_large.mp4',
             'https://cdn.pixabay.com/video/2024/05/15/212084_large.mp4',

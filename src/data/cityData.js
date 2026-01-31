@@ -45,7 +45,7 @@ export const CITY_DATA = [
     },
     {
         name: 'Kurukshetra',
-        image: 'https://images.unsplash.com/photo-1627440266453-73f1d86d67ca?w=1600&q=80', // Iconic Brahma Sarovar Landmark
+        image: '/images/kurukshetra_drone.png', // Iconic Brahma Sarovar Landmark Drone View
         videos: [
             'https://cdn.pixabay.com/video/2024/01/15/196882-903542311_large.mp4',
             'https://cdn.pixabay.com/video/2024/03/12/203442-920442451_large.mp4',

@@ -89,7 +89,7 @@ export const CITY_DATA = [
     },
     {
         name: 'Sonepat',
-        image: 'https://images.unsplash.com/photo-1582233479366-6d38bc390a08?w=1600&q=80', // Logistics & Industrial Infrastructure
+        image: '/images/sonepat_drone.png', // Modern Residential Drone View
         videos: [
             'https://cdn.pixabay.com/video/2024/05/01/210158_large.mp4',
             'https://cdn.pixabay.com/video/2024/03/15/204258_large.mp4',

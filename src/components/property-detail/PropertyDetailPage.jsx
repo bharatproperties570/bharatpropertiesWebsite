@@ -17,7 +17,13 @@ const PropertyDetailPage = ({ propertyId, onAddToCompare, onBookConsultation }) 
         const fetchProperty = async () => {
             setLoading(true);
             const data = getPropertyById(propertyId);
-            setProperty(data);
+            if (data) {
+                // Ensure title exists for SEO
+                if (!data.title) {
+                    data.title = `${data.unitName || 'Property'} at ${data.projectName || 'Project'}`;
+                }
+                setProperty(data);
+            }
             setLoading(false);
         };
         fetchProperty();
@@ -52,28 +58,24 @@ const PropertyDetailPage = ({ propertyId, onAddToCompare, onBookConsultation }) 
                 description={property.description || `View details for ${property.title} in ${property.location?.city}. Luxury residential property at ${property.price}.`}
                 keywords={`${property.title}, Luxury Property ${property.location?.city}, ${property.type} for sale`}
             />
-            <PropertyHeader
-                property={property}
-                onAddToCompare={onAddToCompare}
-                onBookConsultation={onBookConsultation}
-            />
-
-            <main>
-                <PropertyMedia media={property.media} />
-
-                <div className="container">
-                    <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(300px, 1fr))', gap: '3rem', padding: '4rem 0' }}>
-                        <div style={{ gridColumn: 'span 2' }}>
-                            <PropertyOverview property={property} />
-                            <PropertyBuiltup builtup={property.builtupDetails} furnishing={property.construction} />
-                        </div>
-                        <div>
-                            <PropertyLocation location={property.location} />
-                        </div>
+            <div className="container" style={{ paddingTop: '2rem' }}>
+                <PropertyHeader
+                    property={property}
+                    onAddToCompare={onAddToCompare}
+                    onBookConsultation={onBookConsultation}
+                />
+                <div style={{ display: 'grid', gridTemplateColumns: 'minmax(0, 2fr) minmax(0, 1fr)', gap: '2rem', marginTop: '2rem' }}>
+                    <div style={{ display: 'flex', flexDirection: 'column', gap: '2rem' }}>
+                        {property.media && <PropertyMedia media={property.media} />}
+                        <PropertyOverview property={property} />
+                        {property.builtupDetails && <PropertyBuiltup builtup={property.builtupDetails} furnishing={property.construction} />}
                     </div>
-                    <NewsSection city={property.location.city} />
+                    <div style={{ position: 'sticky', top: '100px', height: 'fit-content' }}>
+                        {property.location && <PropertyLocation location={property.location} />}
+                    </div>
                 </div>
-            </main>
+                <NewsSection city={property.location.city} />
+            </div>
         </div>
     );
 };

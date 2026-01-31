@@ -8,10 +8,10 @@ const ProjectOverview = ({ project }) => {
     };
 
     const highlights = [
-        { icon: <Layers size={24} />, label: 'Architecture', value: `${project.totalBlocks} Blocks`, color: '#6366f1' },
-        { icon: <Building size={24} />, label: 'Elevation', value: `${project.totalFloors} Floors`, color: '#ec4899' },
-        { icon: <Home size={24} />, label: 'Inventory', value: `${project.totalUnits} Units`, color: '#f59e0b' },
-        { icon: <MapPin size={24} />, label: 'Landscape', value: `${project.landArea.value} ${project.landArea.unit}`, color: '#10b981' }
+        { icon: <Layers size={24} />, label: 'Architecture', value: `${project.totalBlocks || 0} Blocks`, color: '#6366f1' },
+        { icon: <Building size={24} />, label: 'Elevation', value: `${project.totalFloors || 0} Floors`, color: '#ec4899' },
+        { icon: <Home size={24} />, label: 'Inventory', value: `${project.totalUnits || 0} Units`, color: '#f59e0b' },
+        { icon: <MapPin size={24} />, label: 'Landscape', value: `${project.landArea?.value || 0} ${project.landArea?.unit || 'Acres'}`, color: '#10b981' }
     ];
 
     return (
@@ -79,7 +79,7 @@ const ProjectOverview = ({ project }) => {
                         <div style={{ marginBottom: '2rem' }}>
                             <div style={{ fontSize: '0.85rem', color: '#64748b', fontWeight: 600, marginBottom: '1rem', textTransform: 'uppercase' }}>Available Parking</div>
                             <div style={{ display: 'flex', gap: '8px', flexWrap: 'wrap' }}>
-                                {project.parkingType.map((type, idx) => (
+                                {project.parkingType && project.parkingType.map((type, idx) => (
                                     <span key={idx} style={{ padding: '0.5rem 1rem', background: '#fff', border: '1px solid #e2e8f0', borderRadius: '12px', fontSize: '0.85rem', fontWeight: 600, color: '#475569' }}>
                                         {type}
                                     </span>
@@ -94,7 +94,7 @@ const ProjectOverview = ({ project }) => {
                                 <span style={{ padding: '0.5rem 1rem', background: 'var(--color-primary)', borderRadius: '12px', fontSize: '0.85rem', fontWeight: 700, color: '#fff' }}>
                                     {project.category}
                                 </span>
-                                {project.subCategory.map((sub, idx) => (
+                                {project.subCategory && project.subCategory.map((sub, idx) => (
                                     <span key={idx} style={{ padding: '0.5rem 1rem', background: '#eef2ff', borderRadius: '12px', fontSize: '0.85rem', fontWeight: 600, color: '#4f46e5' }}>
                                         {sub}
                                     </span>

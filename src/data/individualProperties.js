@@ -1,6 +1,7 @@
 export const INDIVIDUAL_PROPERTIES = [
     {
         id: "prop-101",
+        title: "Corner House at Bharat Heights",
         unitNum: "982 P",
         projectName: "Bharat Heights",
         unitName: "1 SP (Corner)",
@@ -71,6 +72,7 @@ export const INDIVIDUAL_PROPERTIES = [
     },
     {
         id: "prop-102",
+        title: "Studio Apartment at Bharat Heights",
         unitNum: "45",
         projectName: "Bharat Heights",
         unitName: "Studio Apartment",
@@ -86,6 +88,11 @@ export const INDIVIDUAL_PROPERTIES = [
         location: {
             sector: "Sector 12",
             city: "Kurukshetra",
+            address: "Sector 12 Avenue",
+            street: "Street 5",
+            urbanEstate: "Urban Estate",
+            locality: "Central Noida",
+            zip: "136118",
             state: "Haryana",
             country: "India"
         },
@@ -95,8 +102,27 @@ export const INDIVIDUAL_PROPERTIES = [
         ownership: "Freehold",
         stage: "Under Construction",
         construction: {
+            occupationDate: "TBD",
             age: "New",
-            furnishing: "Unfurnished"
+            furnishing: "Unfurnished",
+            furnishingDetails: []
+        },
+        builtupDetails: {
+            type: "Single Floor",
+            floors: [
+                {
+                    name: "Typical Floor",
+                    clusters: [
+                        { name: "Studio Room", length: 15, breadth: 12, area: 180 }
+                    ]
+                }
+            ]
+        },
+        media: {
+            images: [
+                { url: "https://images.unsplash.com/photo-1545324418-cc1a3fa10c00?w=800", description: "Exterior" }
+            ],
+            videos: []
         },
         price: "₹ 45 Lac",
         image: "https://images.unsplash.com/photo-1545324418-cc1a3fa10c00?w=800",
@@ -104,6 +130,7 @@ export const INDIVIDUAL_PROPERTIES = [
     },
     {
         id: "prop-103",
+        title: "Luxury Plot in Green Valley",
         unitNum: "112 B",
         projectName: "Green Valley",
         unitName: "Luxury Plot",
@@ -119,6 +146,11 @@ export const INDIVIDUAL_PROPERTIES = [
         location: {
             sector: "Phase 1",
             city: "Chandigarh",
+            address: "Main Avenue",
+            street: "Lane 2",
+            urbanEstate: "IT Park",
+            locality: "Phase 1",
+            zip: "160101",
             state: "Chandigarh",
             country: "India"
         },
@@ -128,8 +160,19 @@ export const INDIVIDUAL_PROPERTIES = [
         ownership: "Leasehold",
         stage: "Ready to Move",
         construction: {
+            occupationDate: "N/A",
             age: "Resale",
-            furnishing: "N/A"
+            furnishing: "N/A",
+            furnishingDetails: []
+        },
+        builtupDetails: {
+            type: "Plot",
+            floors: []
+        },
+        media: {
+            images: [
+                { url: "https://images.unsplash.com/photo-1500382017468-9049fed747ef?w=800", description: "Aerial View" }
+            ]
         },
         price: "₹ 2.1 Cr",
         image: "https://images.unsplash.com/photo-1500382017468-9049fed747ef?w=800",
@@ -137,6 +180,7 @@ export const INDIVIDUAL_PROPERTIES = [
     },
     {
         id: "prop-104",
+        title: "Family Villa in Mohali Greens",
         unitNum: "223",
         projectName: "Mohali Greens",
         unitName: "Family Villa",
@@ -144,16 +188,48 @@ export const INDIVIDUAL_PROPERTIES = [
         subCategory: "Villa",
         type: "Villa",
         size: { value: 250, unit: "Sq Yard", sqYard: "250" },
-        location: { city: "Mohali", state: "Punjab", country: "India" },
+        block: "Block C",
+        location: {
+            sector: "Sector 70",
+            city: "Mohali",
+            address: "Sector 70",
+            street: "Main Road",
+            urbanEstate: "Urban Estate",
+            locality: "Sector 70",
+            zip: "160070",
+            state: "Punjab",
+            country: "India"
+        },
+        direction: "West",
+        facing: "Park",
+        road: "18 Mtr Wide",
+        ownership: "Freehold",
+        stage: "Active",
+        construction: {
+            occupationDate: "2020",
+            age: "4 yrs",
+            furnishing: "Semi-Furnished",
+            furnishingDetails: ["Lights", "Fans"]
+        },
+        builtupDetails: {
+            type: "Villa",
+            floors: [
+                {
+                    name: "Ground Floor",
+                    clusters: [{ name: "Lounge", length: 20, breadth: 15, area: 300 }]
+                }
+            ]
+        },
         price: "₹ 1.2 Cr",
         image: "https://images.unsplash.com/photo-1600566753086-00f18fb6b3ea?w=800",
         media: {
-            images: [{ url: "https://images.unsplash.com/photo-1600566753086-00f18fb6b3ea?w=800" }],
+            images: [{ url: "https://images.unsplash.com/photo-1600566753086-00f18fb6b3ea?w=800", description: "Front" }],
             videos: []
         }
     },
     {
         id: "prop-105",
+        title: "Modern Flat in Panchkula Heights",
         unitNum: "7B",
         projectName: "Panchkula Heights",
         unitName: "Modern Flat",
@@ -161,16 +237,48 @@ export const INDIVIDUAL_PROPERTIES = [
         subCategory: "Flat",
         type: "Flat",
         size: { value: 1500, unit: "Sq Ft", sqYard: "166" },
-        location: { city: "Panchkula", state: "Haryana", country: "India" },
+        block: "Block D",
+        location: {
+            sector: "Sector 20",
+            city: "Panchkula",
+            address: "Sector 20",
+            street: "Internal Road",
+            urbanEstate: "Urban Estate",
+            locality: "Sector 20",
+            zip: "134109",
+            state: "Haryana",
+            country: "India"
+        },
+        direction: "East",
+        facing: "Club",
+        road: "12 Mtr Wide",
+        ownership: "Freehold",
+        stage: "Under Construction",
+        construction: {
+            occupationDate: "2025",
+            age: "Under Construction",
+            furnishing: "Unfurnished",
+            furnishingDetails: []
+        },
+        builtupDetails: {
+            type: "Flat",
+            floors: [
+                {
+                    name: "Typical Floor",
+                    clusters: [{ name: "Hall", length: 18, breadth: 12, area: 216 }]
+                }
+            ]
+        },
         price: "₹ 85 Lac",
         image: "https://images.unsplash.com/photo-1560448204-e02f11c3d0e2?w=800",
         media: {
-            images: [{ url: "https://images.unsplash.com/photo-1560448204-e02f11c3d0e2?w=800" }],
+            images: [{ url: "https://images.unsplash.com/photo-1560448204-e02f11c3d0e2?w=800", description: "View" }],
             videos: []
         }
     },
     {
         id: "prop-106",
+        title: "Premium Villa in Karnal Elite",
         unitNum: "Site 12",
         projectName: "Karnal Elite",
         unitName: "Premium Villa",
@@ -178,11 +286,42 @@ export const INDIVIDUAL_PROPERTIES = [
         subCategory: "Villa",
         type: "Villa",
         size: { value: 400, unit: "Sq Yard", sqYard: "400" },
-        location: { city: "Karnal", state: "Haryana", country: "India" },
+        block: "Phase II",
+        location: {
+            sector: "Sector 32",
+            city: "Karnal",
+            address: "Sector 32",
+            street: "Avenue 1",
+            urbanEstate: "Urban Estate",
+            locality: "Sector 32",
+            zip: "132001",
+            state: "Haryana",
+            country: "India"
+        },
+        direction: "North",
+        facing: "Main Road",
+        road: "24 Mtr Wide",
+        ownership: "Freehold",
+        stage: "Active",
+        construction: {
+            occupationDate: "2022",
+            age: "2 yrs",
+            furnishing: "Semi-Furnished",
+            furnishingDetails: ["AC", "Heater"]
+        },
+        builtupDetails: {
+            type: "Villa",
+            floors: [
+                {
+                    name: "Ground Floor",
+                    clusters: [{ name: "Living", length: 25, breadth: 20, area: 500 }]
+                }
+            ]
+        },
         price: "₹ 2.1 Cr",
         image: "https://images.unsplash.com/photo-1600047509807-ba8f99d2cdde?w=800",
         media: {
-            images: [{ url: "https://images.unsplash.com/photo-1600047509807-ba8f99d2cdde?w=800" }],
+            images: [{ url: "https://images.unsplash.com/photo-1600047509807-ba8f99d2cdde?w=800", description: "Pool Side" }],
             videos: []
         }
     }

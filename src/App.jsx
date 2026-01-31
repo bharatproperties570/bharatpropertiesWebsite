@@ -276,7 +276,8 @@ function App() {
             <Hero
               onSearch={handleSearch}
               city={selectedCity}
-              video={CITY_DATA.find(c => c.name === selectedCity)?.video}
+              videos={CITY_DATA.find(c => c.name === selectedCity)?.videos}
+              image={CITY_DATA.find(c => c.name === selectedCity)?.image}
             />
             {(() => {
               const cityProperties = PROPERTY_DATA.filter(p => p.location === selectedCity);

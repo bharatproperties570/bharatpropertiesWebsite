@@ -4,13 +4,21 @@ import { Camera, Play, ChevronLeft, ChevronRight } from 'lucide-react';
 const PropertyMedia = ({ media }) => {
     const [selectedImg, setSelectedImg] = useState(0);
 
+    if (!media || !media.images || media.images.length === 0) {
+        return (
+            <div style={{ height: '400px', backgroundColor: '#f3f4f6', display: 'flex', alignItems: 'center', justifyContent: 'center', borderRadius: 'var(--radius-lg)' }}>
+                <p style={{ color: 'var(--color-text-muted)' }}>No media available for this property</p>
+            </div>
+        );
+    }
+
     return (
         <section style={{ paddingBottom: '0' }}>
             <div style={{ position: 'relative', height: '600px', backgroundColor: '#000', overflow: 'hidden' }}>
                 <img
-                    src={media.images[selectedImg].url}
+                    src={media.images[selectedImg]?.url || ''}
                     style={{ width: '100%', height: '100%', objectFit: 'cover', opacity: 0.8 }}
-                    alt={media.images[selectedImg].description}
+                    alt={media.images[selectedImg]?.description || 'Property Image'}
                 />
 
                 {/* Overlay Gradient */}

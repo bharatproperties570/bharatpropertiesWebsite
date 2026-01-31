@@ -2,11 +2,19 @@ import React from 'react';
 import { Search } from 'lucide-react';
 import PropertyTypeSelector from './PropertyTypeSelector';
 
-const Hero = ({ onSearch, city, video }) => {
+const Hero = ({ onSearch, city, videos, image }) => {
     const [searchValue, setSearchValue] = React.useState('');
     const [searchType, setSearchType] = React.useState('Buy'); // Buy, Rent, Commercial
+    const [videoIndex, setVideoIndex] = React.useState(0);
 
-    const defaultVideo = "https://cdn.pixabay.com/video/2025/03/04/262412_large.mp4";
+    const defaultVideos = ["https://cdn.pixabay.com/video/2025/03/04/262412_large.mp4"];
+    const currentVideos = (videos && videos.length > 0) ? videos : defaultVideos;
+
+    const handleVideoEnd = () => {
+        if (currentVideos.length > 1) {
+            setVideoIndex((prev) => (prev + 1) % currentVideos.length);
+        }
+    };
 
     return (
         <div style={{
@@ -18,31 +26,47 @@ const Hero = ({ onSearch, city, video }) => {
             justifyContent: 'center',
             color: 'white',
             marginTop: '-80px',
-            overflow: 'hidden'
+            overflow: 'hidden',
+            backgroundColor: '#1a1a1a' // Dark fallback
         }}>
-            {/* Video Background */}
-            <video
-                key={video || defaultVideo} // Force reload on video change
-                autoPlay
-                loop
-                muted
-                playsInline
-                aria-hidden="true"
-                style={{
+            {/* Background Image / Video */}
+            {currentVideos.length > 0 ? (
+                <video
+                    key={currentVideos[videoIndex]} // Force reload on video change
+                    autoPlay
+                    muted
+                    onEnded={handleVideoEnd}
+                    playsInline
+                    aria-hidden="true"
+                    poster={image} // Use city image as poster
+                    style={{
+                        position: 'absolute',
+                        top: '50%',
+                        left: '50%',
+                        minWidth: '100%',
+                        minHeight: '100%',
+                        width: 'auto',
+                        height: 'auto',
+                        transform: 'translate(-50%, -50%)',
+                        objectFit: 'cover',
+                        zIndex: 0
+                    }}
+                >
+                    <source src={currentVideos[videoIndex]} type="video/mp4" />
+                </video>
+            ) : image && (
+                <div style={{
                     position: 'absolute',
-                    top: '50%',
-                    left: '50%',
-                    minWidth: '100%',
-                    minHeight: '100%',
-                    width: 'auto',
-                    height: 'auto',
-                    transform: 'translate(-50%, -50%)',
-                    objectFit: 'cover',
+                    top: 0,
+                    left: 0,
+                    width: '100%',
+                    height: '100%',
+                    backgroundImage: `url(${image})`,
+                    backgroundSize: 'cover',
+                    backgroundPosition: 'center',
                     zIndex: 0
-                }}
-            >
-                <source src={video || defaultVideo} type="video/mp4" />
-            </video>
+                }}></div>
+            )}
 
             {/* Overlay */}
             <div style={{

@@ -21,7 +21,9 @@ const ProjectDetailPage = ({ projectId, onBookConsultation, onAddToCompare }) =>
             try {
                 setLoading(true);
                 const data = getProjectById(projectId);
-                setProject(data);
+                if (data) {
+                    setProject(data);
+                }
             } catch (error) {
                 console.error('Error fetching project:', error);
             } finally {
@@ -61,24 +63,27 @@ const ProjectDetailPage = ({ projectId, onBookConsultation, onAddToCompare }) =>
     return (
         <div style={{ backgroundColor: '#fff', minHeight: '100vh', scrollBehavior: 'smooth' }}>
             <SEO
-                title={`${project.name} | ${project.address?.city} | Bharat Properties`}
-                description={project.description || `Discover ${project.name}, a premium real estate project in ${project.address?.city}. Exclusive details, pricing, and amenities.`}
-                keywords={`${project.name}, ${project.address?.city} Real Estate, ${project.type || 'Project'} in ${project.address?.city}`}
+                title={`${project.name || 'Unknown Project'} | ${project.address?.city || 'Unknown City'} | Bharat Properties`}
+                description={project.description || `Discover ${project.name || 'a premium real estate project'}, a premium real estate project in ${project.address?.city || 'an undisclosed location'}. Exclusive details, pricing, and amenities.`}
+                keywords={`${project.name || 'Real Estate Project'}, ${project.address?.city || 'Property'} Real Estate, ${project.type || 'Project'} in ${project.address?.city || 'India'}`}
             />
             {/* Project Header (Sticky) */}
             <ProjectHeader
                 project={project}
+                onBookConsultation={onBookConsultation}
                 onAddToCompare={() => onAddToCompare(project)}
             />
 
             <main>
                 {/* Visual Showcase (Gallery) */}
-                <ImageGallery images={project.images} projectName={project.name} />
+                {project.images && project.images.length > 0 && (
+                    <ImageGallery images={project.images} projectName={project.name} />
+                )}
 
                 {/* Core Details Container */}
                 <div style={{ position: 'relative' }}>
                     {/* Overview & Highlights */}
-                    <ProjectOverview project={project} />
+                    {project.overview && <ProjectOverview project={project} />}
 
                     {/* Architectural Detail */}
                     {project.blocks && project.blocks.length > 0 && (

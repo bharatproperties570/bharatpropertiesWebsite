@@ -5,15 +5,14 @@ import PropertyTypeSelector from './PropertyTypeSelector';
 const Hero = ({ onSearch, city, videos, image }) => {
     const [searchValue, setSearchValue] = React.useState('');
     const [searchType, setSearchType] = React.useState('Buy'); // Buy, Rent, Commercial
-    const [videoIndex, setVideoIndex] = React.useState(0);
+    const [videoError, setVideoError] = React.useState(false);
+    const currentVideos = (videos && videos.length > 0) ? videos : defaultVideos;
 
-    // Reset video index when city changes
+    // Reset error when city changes
     React.useEffect(() => {
         setVideoIndex(0);
+        setVideoError(false);
     }, [city]);
-
-    const defaultVideos = ["https://cdn.pixabay.com/video/2025/03/04/262412_large.mp4"];
-    const currentVideos = (videos && videos.length > 0) ? videos : defaultVideos;
 
     const handleVideoEnd = () => {
         if (currentVideos.length > 1) {
@@ -21,10 +20,15 @@ const Hero = ({ onSearch, city, videos, image }) => {
         }
     };
 
+    const handleVideoError = () => {
+        console.error("Hero video failed to load, falling back to image.");
+        setVideoError(true);
+    };
+
     return (
         <div style={{
             position: 'relative',
-            height: '80vh', // Slightly shorter for inner pages
+            height: '80vh',
             minHeight: '500px',
             display: 'flex',
             alignItems: 'center',
@@ -32,18 +36,19 @@ const Hero = ({ onSearch, city, videos, image }) => {
             color: 'white',
             marginTop: '-80px',
             overflow: 'hidden',
-            backgroundColor: '#1a1a1a' // Dark fallback
+            backgroundColor: '#1a1a1a'
         }}>
-            {/* Background Image / Video */}
-            {currentVideos.length > 0 ? (
+            {/* Background Image / Video with Fallback */}
+            {(!videoError && currentVideos.length > 0) ? (
                 <video
-                    key={currentVideos[videoIndex]} // Force reload on video change
+                    key={`${city}-${videoIndex}`}
                     autoPlay
                     muted
                     onEnded={handleVideoEnd}
+                    onError={handleVideoError}
                     playsInline
                     aria-hidden="true"
-                    poster={image} // Use city image as poster
+                    poster={image}
                     style={{
                         position: 'absolute',
                         top: '50%',

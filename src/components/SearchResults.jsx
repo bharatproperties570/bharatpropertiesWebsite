@@ -1,3 +1,5 @@
+'use client';
+
 import React, { useState } from 'react';
 import PropertyListItem from './PropertyListItem';
 import PropertyMapView from './PropertyMapView';

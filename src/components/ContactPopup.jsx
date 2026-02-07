@@ -194,6 +194,13 @@ const ContactPopup = ({ isOpen, onClose }) => {
                                     ></textarea>
                                 </div>
 
+                                <div style={{ display: 'flex', gap: '0.75rem', alignItems: 'flex-start', textAlign: 'left', marginTop: '0.5rem' }}>
+                                    <input type="checkbox" id="popup-consent" style={{ marginTop: '0.25rem', width: 'auto', flexShrink: 0 }} required />
+                                    <label htmlFor="popup-consent" style={{ fontSize: '0.8rem', color: '#94a3b8', lineHeight: '1.4', cursor: 'pointer' }}>
+                                        I consent to receiving RCS, WhatsApp, Email or SMS from Bharat Properties & I have reviewed and agree to Terms & Conditions and Privacy Policy.
+                                    </label>
+                                </div>
+
                                 <button type="submit" style={{
                                     width: '100%',
                                     padding: '1.25rem',
@@ -214,16 +221,6 @@ const ContactPopup = ({ isOpen, onClose }) => {
                                     <Send size={18} /> Send Message
                                 </button>
 
-                                <div style={{
-                                    display: 'flex',
-                                    alignItems: 'center',
-                                    justifyContent: 'center',
-                                    gap: '8px',
-                                    fontSize: '0.8rem',
-                                    color: '#94a3b8'
-                                }}>
-                                    <Shield size={14} /> Aapka data hamare paas surakshit hai.
-                                </div>
                             </div>
                         </form>
                     </>

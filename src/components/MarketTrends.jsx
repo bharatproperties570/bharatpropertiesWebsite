@@ -1,3 +1,4 @@
+'use client';
 import React from 'react';
 import { TrendingUp, Award, BarChart3, ShieldCheck } from 'lucide-react';
 

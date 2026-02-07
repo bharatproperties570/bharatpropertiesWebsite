@@ -1,3 +1,5 @@
+'use client';
+
 import React from 'react';
 import { ArrowDown } from 'lucide-react';
 
@@ -10,6 +12,11 @@ const HERO_VIDEOS = [
 
 const BrandHero = ({ onExplore }) => {
     const [videoIndex, setVideoIndex] = React.useState(0);
+
+    const defaultExplore = () => {
+        const el = document.getElementById('cities');
+        if (el) el.scrollIntoView({ behavior: 'smooth' });
+    };
 
     const handleVideoEnd = () => {
         setVideoIndex((prev) => (prev + 1) % HERO_VIDEOS.length);
@@ -31,9 +38,11 @@ const BrandHero = ({ onExplore }) => {
                 key={HERO_VIDEOS[videoIndex]} // Use key to force reload when index changes
                 autoPlay
                 muted
+                loop={false}
                 onEnded={handleVideoEnd}
                 playsInline
                 aria-hidden="true"
+                poster="https://images.unsplash.com/photo-1512917774080-9991f1c4c750?auto=format&fit=crop&w=1200&q=80"
                 style={{
                     position: 'absolute',
                     top: '50%',
@@ -91,7 +100,7 @@ const BrandHero = ({ onExplore }) => {
                 </p>
 
                 <button
-                    onClick={onExplore}
+                    onClick={onExplore || defaultExplore}
                     className="btn-premium"
                     style={{
                         backgroundColor: 'var(--color-gold)',

@@ -1,10 +1,27 @@
+'use client';
 import React from 'react';
+import { useRouter } from 'next/navigation';
 import { Search } from 'lucide-react';
 import PropertyTypeSelector from './PropertyTypeSelector';
 
 const SearchBarOverlay = ({ onSearch }) => {
+    const router = useRouter();
     const [searchValue, setSearchValue] = React.useState('');
     const [searchType, setSearchType] = React.useState('Buy');
+
+    const handleSearchSubmit = (e) => {
+        e.preventDefault();
+        const term = searchValue;
+        if (onSearch) {
+            onSearch(term);
+        } else {
+            if (term) {
+                router.push(`/search?q=${encodeURIComponent(term)}`);
+            } else {
+                router.push('/search');
+            }
+        }
+    };
 
     return (
         <div style={{
@@ -48,6 +65,7 @@ const SearchBarOverlay = ({ onSearch }) => {
                                     transition: 'all 0.2s',
                                     borderRadius: searchType === type ? '10px 10px 0 0' : '0'
                                 }}
+                                className="search-tab-btn"
                             >
                                 {type}
                             </button>
@@ -56,7 +74,7 @@ const SearchBarOverlay = ({ onSearch }) => {
 
                     {/* Search Form */}
                     <form
-                        onSubmit={(e) => { e.preventDefault(); onSearch(searchValue); }}
+                        onSubmit={handleSearchSubmit}
                         style={{
                             backgroundColor: 'white',
                             padding: '0.5rem',
@@ -65,7 +83,7 @@ const SearchBarOverlay = ({ onSearch }) => {
                             width: '100%',
                             display: 'flex',
                             alignItems: 'center',
-                            boxShadow: '0 10px 25px rgba(0,0,0,0.2)',
+                            boxShadow: 'var(--shadow-xl)',
                             flexWrap: 'wrap',
                             gap: '0.5rem',
                             position: 'relative',
@@ -118,8 +136,7 @@ const SearchBarOverlay = ({ onSearch }) => {
                             transition: 'transform 0.2s',
                             whiteSpace: 'nowrap'
                         }}
-                            onMouseEnter={(e) => e.target.style.transform = 'scale(1.05)'}
-                            onMouseLeave={(e) => e.target.style.transform = 'scale(1)'}
+                            className="btn-premium"
                         >
                             Search
                         </button>

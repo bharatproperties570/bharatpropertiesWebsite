@@ -10,7 +10,7 @@ const Footer = ({ onPrivacyClick, onTermsClick, onCalculatorClick, onAboutClick 
                 {/* Brand */}
                 <div>
                     <div style={{ display: 'flex', alignItems: 'center', gap: '0.75rem', marginBottom: '1rem' }}>
-                        <img src={logo} alt="Bharat Properties" style={{ height: '50px', width: 'auto' }} />
+                        <img src={logo.src} alt="Bharat Properties" style={{ height: '50px', width: 'auto' }} />
                         <h3 style={{ fontSize: '1.5rem', color: 'var(--color-gold)', margin: 0 }}>Bharat Properties</h3>
                     </div>
                     <p style={{ color: 'var(--color-text-light)', opacity: 0.8, marginBottom: '1.5rem' }}>

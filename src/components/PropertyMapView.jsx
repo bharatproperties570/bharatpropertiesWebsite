@@ -1,3 +1,5 @@
+'use client';
+
 import React, { useEffect, useRef, useState } from 'react';
 import { MapPin, Info, X, AlertTriangle } from 'lucide-react';
 
@@ -20,7 +22,8 @@ const PropertyMapView = ({ properties = [], onPropertySelect, onClose, embedded 
             }
 
             // Check if script is already loading
-            if (document.getElementById('google-maps-script')) {
+            const existingScript = document.getElementById('google-maps-script');
+            if (existingScript) {
                 const interval = setInterval(() => {
                     if (window.google?.maps) {
                         if (isMounted) setLibLoaded(true);
@@ -31,20 +34,28 @@ const PropertyMapView = ({ properties = [], onPropertySelect, onClose, embedded 
             }
 
             // Load Google Maps script
+            window.gm_authFailure = () => {
+                if (isMounted) setError('Google Maps Authentication Failed. Please check API key.');
+            };
+
             const script = document.createElement('script');
             script.id = 'google-maps-script';
-            // Using a demo API key - replace with your own for production
-            script.src = `https://maps.googleapis.com/maps/api/js?key=AIzaSyB41DRUbKWJHPxaFjMAwdrzWzbVKartNGg&libraries=places`;
+            // Added callback and more libraries
+            const apiKey = process.env.NEXT_PUBLIC_GOOGLE_MAPS_API_KEY;
+            script.src = `https://maps.googleapis.com/maps/api/js?key=${apiKey}&libraries=places,geometry&loading=async`;
             script.async = true;
             script.defer = true;
             script.onload = () => {
                 if (isMounted) {
                     console.log('Google Maps Script Loaded');
-                    setLibLoaded(true);
+                    // Small delay to ensure maps object is fully initialized
+                    setTimeout(() => {
+                        if (isMounted) setLibLoaded(true);
+                    }, 200);
                 }
             };
             script.onerror = () => {
-                if (isMounted) setError('Failed to load Google Maps');
+                if (isMounted) setError('Failed to load Google Maps script. Check your internet connection.');
             };
             document.head.appendChild(script);
         };
@@ -150,7 +161,9 @@ const PropertyMapView = ({ properties = [], onPropertySelect, onClose, embedded 
     const containerStyle = embedded ? {
         width: '100%',
         height: '100%',
-        position: 'relative'
+        position: 'relative',
+        display: 'flex',
+        flexDirection: 'column'
     } : {
         position: 'fixed',
         top: 0,
@@ -222,7 +235,7 @@ const PropertyMapView = ({ properties = [], onPropertySelect, onClose, embedded 
                     </div>
                 )}
 
-                <div ref={mapRef} style={{ width: '100%', height: '100%', zIndex: 1 }} />
+                <div ref={mapRef} style={{ width: '100%', height: '100%', zIndex: 1, position: 'absolute', top: 0, left: 0 }} />
 
                 {selectedProperty && (
                     <div style={{

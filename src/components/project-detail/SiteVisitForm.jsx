@@ -1,3 +1,5 @@
+'use client';
+
 import React, { useState } from 'react';
 import { Calendar, Clock, User, Phone, Mail, Send, CheckCircle } from 'lucide-react';
 import { countryCodes } from '../../data/countryCodes';

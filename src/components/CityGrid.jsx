@@ -1,15 +1,29 @@
+'use client';
 import React from 'react';
+import { useRouter } from 'next/navigation';
+import { useGlobal } from '../context/GlobalContext';
 import { CITY_DATA } from '../data/cityData';
 import { ArrowRight } from 'lucide-react';
 import './CityTicker.css';
 
 const CityGrid = ({ onSelectCity }) => {
+    const router = useRouter();
+    const { setSelectedCity } = useGlobal();
     const track = [...CITY_DATA, ...CITY_DATA];
+
+    const handleCityClick = (cityName) => {
+        if (onSelectCity) {
+            onSelectCity(cityName);
+        } else {
+            setSelectedCity(cityName);
+            router.push(`/city/${encodeURIComponent(cityName)}`);
+        }
+    };
 
     const CityCard = ({ city }) => (
         <div
             className="city-card-ticker"
-            onClick={() => onSelectCity(city.name)}
+            onClick={() => handleCityClick(city.name)}
         >
             <img src={city.image} alt={city.name} loading="lazy" />
             <div className="city-card-overlay">
@@ -39,13 +53,13 @@ const CityGrid = ({ onSelectCity }) => {
     };
 
     return (
-        <section id="cities" style={{ padding: '5rem 0', backgroundColor: 'white', overflow: 'hidden' }}>
+        <section id="cities" style={{ padding: 'var(--spacing-lg) 0', backgroundColor: 'white', overflow: 'hidden' }}>
             <div className="container">
                 <div style={{ textAlign: 'center', marginBottom: '4rem' }}>
-                    <h2 style={{ fontSize: '3rem', fontWeight: 800, marginBottom: '1rem', color: '#0F172A', letterSpacing: '-0.02em' }}>
-                        Explore Our <span style={{ color: 'var(--color-primary)' }}>Prime Locations</span>
+                    <h2 style={{ fontSize: '3rem', fontWeight: 800, marginBottom: '1rem', color: 'var(--color-primary)', letterSpacing: '-0.02em' }}>
+                        Explore Our <span style={{ color: 'var(--color-accent)' }}>Prime Locations</span>
                     </h2>
-                    <p style={{ color: '#64748B', fontSize: '1.2rem', maxWidth: '600px', margin: '0 auto' }}>
+                    <p style={{ color: 'var(--color-text-muted)', fontSize: '1.2rem', maxWidth: '600px', margin: '0 auto' }}>
                         Browse through our curated collection of properties across India's most vibrant cities.
                     </p>
                 </div>

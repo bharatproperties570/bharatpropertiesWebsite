@@ -1,4 +1,7 @@
+'use client';
+
 import React, { useState, useEffect } from 'react';
+import Image from 'next/image';
 import { Menu, X, Phone, Calendar } from 'lucide-react';
 import logo from '../assets/logo.png';
 
@@ -77,7 +80,7 @@ const Header = ({ onLogoClick, selectedCity, onSelectCity, onPostProperty, onBoo
                     role="button"
                     aria-label="Bharat Properties Home"
                     style={{ fontFamily: 'var(--font-heading)', fontSize: '1.5rem', fontWeight: 700, display: 'flex', alignItems: 'center', gap: '0.75rem', cursor: 'pointer' }}>
-                    <img src={logo} alt="" style={{ height: '70px', width: 'auto' }} aria-hidden="true" />
+                    <Image src={logo} alt="Bharat Properties Logo" height={70} width={200} style={{ width: 'auto', height: '70px' }} priority />
                     <span>Bharat Properties</span>
                 </div>
 

@@ -1,3 +1,5 @@
+'use client';
+
 import React from 'react';
 import { Calendar, Layers, Building, Home, MapPin, CheckCircle2, BadgeCheck, ShieldCheck, Wallet } from 'lucide-react';
 

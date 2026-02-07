@@ -1,3 +1,5 @@
+'use client';
+
 import React, { useState } from 'react';
 import { Building2, MapPin, Calendar, CheckCircle, Download, Share2, Heart, ShieldCheck, ArrowRight, Plus } from 'lucide-react';
 

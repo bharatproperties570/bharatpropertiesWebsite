@@ -1,3 +1,4 @@
+'use client';
 import React from 'react';
 import { Shield, Star, Users, Phone, Mail, MapPin } from 'lucide-react';
 import { countryCodes } from '../data/countryCodes';
@@ -91,6 +92,12 @@ export const ContactSection = () => {
                             <input type="tel" placeholder="Phone Number" style={{ ...inputStyle, flex: 1 }} />
                         </div>
                         <textarea placeholder="Message" rows="4" style={inputStyle}></textarea>
+                        <div style={{ display: 'flex', gap: '0.75rem', alignItems: 'flex-start', textAlign: 'left', marginTop: '0.5rem' }}>
+                            <input type="checkbox" id="consent" style={{ marginTop: '0.25rem', width: 'auto', flexShrink: 0 }} required />
+                            <label htmlFor="consent" style={{ fontSize: '0.85rem', color: 'var(--color-text-muted)', lineHeight: '1.4', cursor: 'pointer' }}>
+                                I consent to receiving RCS, WhatsApp, Email or SMS from Bharat Properties & I have reviewed and agree to Terms & Conditions and Privacy Policy.
+                            </label>
+                        </div>
                         <button type="submit" style={{
                             backgroundColor: 'var(--color-accent)',
                             color: 'white',

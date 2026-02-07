@@ -1,6 +1,8 @@
+'use client';
 import React, { useState } from 'react';
 import ReviewCard from './ReviewCard';
 import { ChevronLeft, ChevronRight } from 'lucide-react';
+import { useGlobal } from '../context/GlobalContext';
 
 // Sample review data - mix of social media and form submissions
 const SAMPLE_REVIEWS = [
@@ -67,6 +69,7 @@ const SAMPLE_REVIEWS = [
 ];
 
 const ReviewsSection = ({ onLeaveFeedback }) => {
+    const { setShowFeedbackModal } = useGlobal();
     const [currentIndex, setCurrentIndex] = useState(0);
     const reviewsPerPage = 3;
 
@@ -80,6 +83,14 @@ const ReviewsSection = ({ onLeaveFeedback }) => {
         setCurrentIndex((prev) =>
             prev === 0 ? Math.max(0, SAMPLE_REVIEWS.length - reviewsPerPage) : Math.max(0, prev - reviewsPerPage)
         );
+    };
+
+    const handleFeedbackClick = () => {
+        if (onLeaveFeedback) {
+            onLeaveFeedback();
+        } else {
+            setShowFeedbackModal(true);
+        }
     };
 
     const visibleReviews = SAMPLE_REVIEWS.slice(currentIndex, currentIndex + reviewsPerPage);
@@ -134,14 +145,7 @@ const ReviewsSection = ({ onLeaveFeedback }) => {
                                     justifyContent: 'center',
                                     transition: 'all 0.2s'
                                 }}
-                                onMouseEnter={(e) => {
-                                    e.target.style.backgroundColor = 'var(--color-primary)';
-                                    e.target.style.color = 'white';
-                                }}
-                                onMouseLeave={(e) => {
-                                    e.target.style.backgroundColor = 'white';
-                                    e.target.style.color = 'var(--color-primary)';
-                                }}
+                                className="carousel-nav-btn"
                             >
                                 <ChevronLeft size={24} />
                             </button>
@@ -160,14 +164,7 @@ const ReviewsSection = ({ onLeaveFeedback }) => {
                                     justifyContent: 'center',
                                     transition: 'all 0.2s'
                                 }}
-                                onMouseEnter={(e) => {
-                                    e.target.style.backgroundColor = 'var(--color-primary)';
-                                    e.target.style.color = 'white';
-                                }}
-                                onMouseLeave={(e) => {
-                                    e.target.style.backgroundColor = 'white';
-                                    e.target.style.color = 'var(--color-primary)';
-                                }}
+                                className="carousel-nav-btn"
                             >
                                 <ChevronRight size={24} />
                             </button>
@@ -197,7 +194,8 @@ const ReviewsSection = ({ onLeaveFeedback }) => {
                         Had a great experience with us?
                     </p>
                     <button
-                        onClick={onLeaveFeedback}
+                        onClick={handleFeedbackClick}
+                        className="btn-premium"
                         style={{
                             backgroundColor: 'var(--color-accent)',
                             color: 'white',
@@ -207,16 +205,19 @@ const ReviewsSection = ({ onLeaveFeedback }) => {
                             fontSize: '1rem',
                             border: 'none',
                             cursor: 'pointer',
-                            transition: 'transform 0.2s',
                             boxShadow: 'var(--shadow-md)'
                         }}
-                        onMouseEnter={(e) => e.target.style.transform = 'translateY(-2px)'}
-                        onMouseLeave={(e) => e.target.style.transform = 'translateY(0)'}
                     >
                         Share Your Feedback
                     </button>
                 </div>
             </div>
+            <style jsx>{`
+                .carousel-nav-btn:hover {
+                    background-color: var(--color-primary) !important;
+                    color: white !important;
+                }
+            `}</style>
         </section>
     );
 };

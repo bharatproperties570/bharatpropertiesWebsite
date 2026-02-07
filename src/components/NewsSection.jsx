@@ -1,24 +1,39 @@
+'use client';
+
 import React, { useState, useEffect } from 'react';
-import { Newspaper, ChevronRight, RefreshCw } from 'lucide-react';
+import { Newspaper, ChevronRight, RefreshCw, AlertCircle } from 'lucide-react';
 import NewsCard from './NewsCard';
 import { fetchRealEstateNews } from '../services/NewsService';
 
 const NewsSection = ({ city = null }) => {
     const [news, setNews] = useState([]);
     const [loading, setLoading] = useState(true);
+    const [error, setError] = useState(null);
 
     useEffect(() => {
+        let isMounted = true;
         const loadNews = async () => {
-            setLoading(true);
-            const data = await fetchRealEstateNews(city);
-            setNews(data);
-            setLoading(false);
+            try {
+                setLoading(true);
+                setError(null);
+                const data = await fetchRealEstateNews(city);
+                if (isMounted) {
+                    setNews(data);
+                    setLoading(false);
+                }
+            } catch (err) {
+                if (isMounted) {
+                    setError('Failed to load news updates.');
+                    setLoading(false);
+                }
+            }
         };
         loadNews();
+        return () => { isMounted = false; };
     }, [city]);
 
     return (
-        <section style={{ padding: 'var(--spacing-xl) 0', backgroundColor: 'white' }}>
+        <section style={{ padding: 'var(--spacing-lg) 0', backgroundColor: 'var(--color-bg-white)' }}>
             <div className="container reveal">
                 <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-end', marginBottom: '3rem' }}>
                     <div>
@@ -36,6 +51,11 @@ const NewsSection = ({ city = null }) => {
                         <RefreshCw className="animate-spin" size={40} style={{ margin: '0 auto 1rem', display: 'block' }} />
                         <p>Fetching latest updates...</p>
                     </div>
+                ) : error ? (
+                    <div style={{ padding: '4rem', textAlign: 'center', color: 'var(--color-accent)', backgroundColor: '#fff5f5', borderRadius: 'var(--radius-lg)' }}>
+                        <AlertCircle size={40} style={{ margin: '0 auto 1rem', display: 'block' }} />
+                        <p>{error}</p>
+                    </div>
                 ) : news.length > 0 ? (
                     <div className="ticker-wrapper" style={{
                         overflow: 'hidden',
@@ -50,7 +70,7 @@ const NewsSection = ({ city = null }) => {
                         }}>
                             {/* Duplicate news for seamless loop */}
                             {[...news, ...news].map((item, index) => (
-                                <div key={index} style={{
+                                <div key={`${item.title}-${index}`} style={{
                                     flex: '0 0 350px', // Fixed width for ticker items
                                 }}>
                                     <NewsCard news={item} />
@@ -59,12 +79,12 @@ const NewsSection = ({ city = null }) => {
                         </div>
                     </div>
                 ) : (
-                    <div style={{ padding: '4rem', textAlign: 'center', color: 'var(--color-text-muted)', backgroundColor: '#f8fafc', borderRadius: 'var(--radius-lg)' }}>
+                    <div style={{ padding: '4rem', textAlign: 'center', color: 'var(--color-text-muted)', backgroundColor: 'var(--color-bg-light)', borderRadius: 'var(--radius-lg)' }}>
                         <p>No new updates found for this region at the moment.</p>
                     </div>
                 )}
 
-                <style>{`
+                <style jsx>{`
                     @keyframes spin {
                         from { transform: rotate(0deg); }
                         to { transform: rotate(360deg); }

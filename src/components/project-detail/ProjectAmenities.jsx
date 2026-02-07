@@ -1,3 +1,5 @@
+'use client';
+
 import React from 'react';
 import {
     Waves, Dumbbell, Users, Shield, Zap, Baby, Footprints,

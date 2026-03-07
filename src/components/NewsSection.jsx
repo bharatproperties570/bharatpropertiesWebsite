@@ -21,7 +21,7 @@ const NewsSection = ({ city = null }) => {
                     setNews(data);
                     setLoading(false);
                 }
-            } catch (err) {
+            } catch {
                 if (isMounted) {
                     setError('Failed to load news updates.');
                     setLoading(false);

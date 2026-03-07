@@ -3,6 +3,9 @@
 import React, { useEffect, useRef, useState } from 'react';
 import { MapPin, Info, X, AlertTriangle } from 'lucide-react';
 
+/* global process */
+const MAPS_API_KEY = process.env.NEXT_PUBLIC_GOOGLE_MAPS_API_KEY || '';
+
 const PropertyMapView = ({ properties = [], onPropertySelect, onClose, embedded = false }) => {
     const mapRef = useRef(null);
     const [mapInstance, setMapInstance] = useState(null);
@@ -41,7 +44,7 @@ const PropertyMapView = ({ properties = [], onPropertySelect, onClose, embedded 
             const script = document.createElement('script');
             script.id = 'google-maps-script';
             // Added callback and more libraries
-            const apiKey = process.env.NEXT_PUBLIC_GOOGLE_MAPS_API_KEY;
+            const apiKey = MAPS_API_KEY;
             script.src = `https://maps.googleapis.com/maps/api/js?key=${apiKey}&libraries=places,geometry&loading=async`;
             script.async = true;
             script.defer = true;

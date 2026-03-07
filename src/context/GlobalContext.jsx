@@ -1,6 +1,6 @@
 'use client';
 
-import React, { createContext, useContext, useState, useEffect } from 'react';
+import React, { createContext, useContext, useState } from 'react';
 import { PROPERTY_DATA } from '../data/propertyData';
 import { INDIVIDUAL_PROPERTIES } from '../data/individualProperties';
 

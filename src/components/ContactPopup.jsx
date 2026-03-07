@@ -14,11 +14,13 @@ const ContactPopup = ({ isOpen, onClose }) => {
     const [isVisible, setIsVisible] = useState(false);
 
     useEffect(() => {
+        let timer;
         if (isOpen) {
-            setTimeout(() => setIsVisible(true), 10);
+            timer = setTimeout(() => setIsVisible(true), 10);
         } else {
-            setIsVisible(false);
+            timer = setTimeout(() => setIsVisible(false), 0);
         }
+        return () => clearTimeout(timer);
     }, [isOpen]);
 
     const handleSubmit = (e) => {

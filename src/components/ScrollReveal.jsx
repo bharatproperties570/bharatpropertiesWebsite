@@ -27,7 +27,7 @@ export default function ScrollReveal() {
         observeElements();
 
         // Create a mutation observer to handle dynamically loaded content
-        const mutationObserver = new MutationObserver((mutations) => {
+        const mutationObserver = new MutationObserver(() => {
             observeElements();
         });
 

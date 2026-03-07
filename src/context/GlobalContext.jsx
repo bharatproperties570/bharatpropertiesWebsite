@@ -6,8 +6,6 @@ import { INDIVIDUAL_PROPERTIES } from '../data/individualProperties';
 
 const GlobalContext = createContext();
 
-export const useGlobal = () => useContext(GlobalContext);
-
 export const GlobalProvider = ({ children }) => {
     const [selectedCity, setSelectedCity] = useState(null);
     const [wishlist, setWishlist] = useState([]);
@@ -80,3 +78,6 @@ export const GlobalProvider = ({ children }) => {
         </GlobalContext.Provider>
     );
 };
+
+// eslint-disable-next-line react-refresh/only-export-components
+export const useGlobal = () => useContext(GlobalContext);

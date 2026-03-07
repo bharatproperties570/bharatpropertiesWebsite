@@ -7,12 +7,19 @@ const ProjectUnits = ({ unitSizes, floorPlans }) => {
 
     // Group units by type
     const groupedUnits = unitSizes.reduce((acc, unit) => {
-        if (!acc[unit.unitType]) {
-            acc[unit.unitType] = [];
+        const typeKey = unit.unitType || unit.type || 'Standard';
+        if (!acc[typeKey]) {
+            acc[typeKey] = [];
         }
-        acc[unit.unitType].push(unit);
+        acc[typeKey].push(unit);
         return acc;
     }, {});
+
+    const splitPrice = (price) => {
+        if (!price) return ['Contact', 'for Price'];
+        const parts = price.split(' ');
+        return [parts[0], parts.slice(1).join(' ')];
+    };
 
     return (
         <section style={{ padding: '5rem 0', backgroundColor: 'white' }}>
@@ -114,11 +121,11 @@ const ProjectUnits = ({ unitSizes, floorPlans }) => {
                                     }}>
                                         <div style={{ display: 'flex', alignItems: 'baseline', gap: '4px' }}>
                                             <span style={{ fontSize: '1.1rem', fontWeight: 800, color: '#166534' }}>₹</span>
-                                            <span style={{ fontSize: '2.2rem', fontWeight: 900, color: '#166534', letterSpacing: '-0.02em' }}>{unit.price.split(' ')[0]}</span>
-                                            <span style={{ fontSize: '1.1rem', fontWeight: 700, color: '#166534' }}>{unit.price.split(' ')[1]}</span>
+                                            <span style={{ fontSize: '2.2rem', fontWeight: 900, color: '#166534', letterSpacing: '-0.02em' }}>{splitPrice(unit.price)[0]}</span>
+                                            <span style={{ fontSize: '1.1rem', fontWeight: 700, color: '#166534' }}>{splitPrice(unit.price)[1]}</span>
                                         </div>
                                         <div style={{ fontSize: '0.85rem', color: '#15803d', fontWeight: 600, marginTop: '4px', opacity: 0.8 }}>
-                                            approx. ₹{unit.pricePerSqFt} / sq.ft
+                                            approx. ₹{unit.pricePerSqFt || 'N/A'} / sq.ft
                                         </div>
                                     </div>
 
@@ -127,13 +134,17 @@ const ProjectUnits = ({ unitSizes, floorPlans }) => {
                                         <div style={{ display: 'flex', justifyContent: 'space-between', padding: '1rem 1.25rem', backgroundColor: '#f8fafc', borderRadius: '16px', border: '1px solid #f1f5f9' }}>
                                             <span style={{ color: '#64748b', fontSize: '0.9rem', fontWeight: 600 }}>Carpet Area</span>
                                             <span style={{ fontWeight: 800, color: '#1e293b', display: 'flex', alignItems: 'center', gap: '6px' }}>
-                                                <Maximize size={16} /> {unit.carpetArea} <span style={{ fontSize: '0.8rem', opacity: 0.6 }}>SQ.FT</span>
+                                                <Maximize size={16} /> {unit.carpetArea || 'N/A'} <span style={{ fontSize: '0.8rem', opacity: 0.6 }}>SQ.FT</span>
                                             </span>
                                         </div>
                                         <div style={{ display: 'flex', justifyContent: 'space-between', padding: '1rem 1.25rem', backgroundColor: '#f8fafc', borderRadius: '16px', border: '1px solid #f1f5f9' }}>
                                             <span style={{ color: '#64748b', fontSize: '0.9rem', fontWeight: 600 }}>Architecture</span>
                                             <span style={{ fontWeight: 800, color: '#1e293b' }}>
-                                                {unit.dimensions.length.value}' × {unit.dimensions.breadth.value}' <span style={{ fontSize: '0.8rem', opacity: 0.6 }}>FT</span>
+                                                {unit.dimensions?.length?.value && unit.dimensions?.breadth?.value ? (
+                                                    <>{unit.dimensions.length.value}' × {unit.dimensions.breadth.value}' <span style={{ fontSize: '0.8rem', opacity: 0.6 }}>FT</span></>
+                                                ) : (
+                                                    <>{unit.dimensions?.area?.value || 'N/A'} <span style={{ fontSize: '0.8rem', opacity: 0.6 }}>{unit.dimensions?.area?.unit || 'SQ.FT'}</span></>
+                                                )}
                                             </span>
                                         </div>
                                     </div>

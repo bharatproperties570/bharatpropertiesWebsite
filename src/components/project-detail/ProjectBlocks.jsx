@@ -3,7 +3,9 @@ import { Building2, Layers, Home, Calendar, ShieldCheck, Map, LayoutPanelLeft } 
 
 const ProjectBlocks = ({ blocks }) => {
     const formatDate = (dateString) => {
+        if (!dateString) return 'TBD';
         const date = new Date(dateString);
+        if (isNaN(date.getTime())) return 'TBD';
         return date.toLocaleDateString('en-IN', { year: 'numeric', month: 'short' });
     };
 

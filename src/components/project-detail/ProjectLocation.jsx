@@ -21,14 +21,20 @@ const ProjectLocation = ({ address, projectName }) => {
                     Location & Address
                 </h2>
 
-                <div style={{
-                    display: 'grid',
-                    gridTemplateColumns: '1fr 1fr',
-                    gap: '2rem',
-                    '@media (max-width: 768px)': {
-                        gridTemplateColumns: '1fr'
+                <style>{`
+                    .project-location-grid {
+                        display: grid;
+                        grid-template-columns: 1fr 1fr;
+                        gap: 2rem;
                     }
-                }}>
+                    @media (max-width: 768px) {
+                        .project-location-grid {
+                            grid-template-columns: 1fr;
+                        }
+                    }
+                `}</style>
+
+                <div className="project-location-grid">
                     {/* Address Details */}
                     <div style={{
                         backgroundColor: 'white',

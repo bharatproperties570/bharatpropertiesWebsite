@@ -25,7 +25,7 @@ const Hero = ({ onSearch, city, videos, image }) => {
     };
 
     const handleVideoError = () => {
-        console.error("Hero video failed to load, falling back to image.");
+        console.warn("Hero video failed to load, falling back to image.");
         setVideoError(true);
     };
 

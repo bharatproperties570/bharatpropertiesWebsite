@@ -5,7 +5,9 @@ import { Calendar, Layers, Building, Home, MapPin, CheckCircle2, BadgeCheck, Shi
 
 const ProjectOverview = ({ project }) => {
     const formatDate = (dateString) => {
+        if (!dateString) return 'TBD';
         const date = new Date(dateString);
+        if (isNaN(date.getTime())) return 'TBD';
         return date.toLocaleDateString('en-IN', { year: 'numeric', month: 'short' });
     };
 

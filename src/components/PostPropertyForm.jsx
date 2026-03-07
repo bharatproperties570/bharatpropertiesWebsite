@@ -1,17 +1,16 @@
 import React, { useState } from 'react';
-import { X, CheckCircle, IndianRupee, MapPin, User, Phone, Info, Building2, Tag, Ruler, FileCheck, Layers } from 'lucide-react';
+import { X, CheckCircle, IndianRupee, MapPin, User, Building2, Tag, Ruler } from 'lucide-react';
 import { countryCodes } from '../data/countryCodes';
 
 const PostPropertyForm = ({ onClose }) => {
     const [formData, setFormData] = useState({
         availableFor: 'Sale',
+        city: 'Kurukshetra',
         project: 'Divine City',
-        sector: 'Sector 3 Kurukshetra',
         block: 'First Block',
         unitNo: '18 P',
         expectedPrice: '',
         type: 'calculated',
-        price: '',
         totalArea: '250',
         areaUnit: 'Sq Yard',
         transactionType: 'Registry',
@@ -28,6 +27,7 @@ const PostPropertyForm = ({ onClose }) => {
 
     const [submitted, setSubmitted] = useState(false);
     const [activeField, setActiveField] = useState(null);
+    const [hoveredButton, setHoveredButton] = useState(null);
 
     const unitSizes = {
         '18 P': { area: '250', unit: 'Sq Yard' },
@@ -53,148 +53,163 @@ const PostPropertyForm = ({ onClose }) => {
         });
     };
 
+    const theme = {
+        primary: '#2563eb',
+        primaryHover: '#1d4ed8',
+        surface: '#ffffff',
+        background: '#f8fafc',
+        border: '#e2e8f0',
+        textMain: '#0f172a',
+        textMuted: '#64748b',
+        success: '#10b981'
+    };
+
+    const labelStyle = (isActive) => ({
+        display: 'block',
+        fontSize: '0.8rem',
+        fontWeight: 700,
+        color: isActive ? theme.primary : theme.textMuted,
+        marginBottom: '0.5rem',
+        transition: 'color 0.3s ease',
+        textTransform: 'uppercase',
+        letterSpacing: '0.05em'
+    });
+
+    const inputBaseStyle = (isActive) => ({
+        width: '100%',
+        padding: '0.875rem 1rem',
+        fontSize: '0.95rem',
+        color: theme.textMain,
+        backgroundColor: isActive ? theme.surface : theme.background,
+        border: `1px solid ${isActive ? theme.primary : theme.border}`,
+        borderRadius: '12px',
+        boxShadow: isActive ? '0 0 0 4px rgba(37, 99, 235, 0.1)' : 'inset 0 2px 4px 0 rgba(0,0,0,0.02)',
+        outline: 'none',
+        transition: 'all 0.3s ease',
+        boxSizing: 'border-box',
+        fontWeight: 500
+    });
+
+    const selectStyle = (isActive) => ({
+        ...inputBaseStyle(isActive),
+        appearance: 'none',
+        backgroundImage: `url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='20' height='20' viewBox='0 0 24 24' fill='none' stroke='%2364748b' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpolyline points='6 9 12 15 18 9'%3E%3C/polyline%3E%3C/svg%3E")`,
+        backgroundRepeat: 'no-repeat',
+        backgroundPosition: 'right 1rem center',
+        paddingRight: '2.5rem',
+        cursor: 'pointer'
+    });
+
+    const sectionContainerStyle = {
+        backgroundColor: theme.surface,
+        borderRadius: '16px',
+        padding: '1.5rem',
+        marginBottom: '1.5rem',
+        border: `1px solid ${theme.border}`,
+        boxShadow: '0 4px 6px -1px rgba(0, 0, 0, 0.05)'
+    };
+
+    const sectionHeaderStyle = {
+        display: 'flex',
+        alignItems: 'center',
+        gap: '0.75rem',
+        marginBottom: '1.5rem',
+        paddingBottom: '1rem',
+        borderBottom: `1px solid ${theme.border}`
+    };
+
+    const sectionTitleStyle = {
+        fontSize: '1.05rem',
+        fontWeight: 700,
+        color: theme.textMain,
+        margin: 0
+    };
+
+    const iconStyle = {
+        backgroundColor: '#eff6ff',
+        color: theme.primary,
+        padding: '0.5rem',
+        borderRadius: '10px',
+        display: 'flex',
+        alignItems: 'center',
+        justifyContent: 'center'
+    };
+
     if (submitted) {
         return (
-            <div style={{ position: 'fixed', top: 0, left: 0, width: '100%', height: '100%', backgroundColor: 'rgba(15, 23, 42, 0.4)', zIndex: 3000, display: 'flex', alignItems: 'center', justifyContent: 'center', backdropFilter: 'blur(12px)', animation: 'fadeIn 0.4s ease-out' }}>
-                <div style={{ backgroundColor: 'white', padding: '3.5rem', borderRadius: '40px', textAlign: 'center', maxWidth: '450px', boxShadow: '0 25px 50px -12px rgba(0,0,0,0.25)' }}>
-                    <div style={{ color: '#22c55e', marginBottom: '2rem' }}>
-                        <div style={{ width: '80px', height: '80px', backgroundColor: '#f0fdf4', borderRadius: '50%', display: 'flex', alignItems: 'center', justifyContent: 'center', margin: '0 auto' }}>
-                            <CheckCircle size={48} />
-                        </div>
+            <div style={{ position: 'fixed', inset: 0, backgroundColor: 'rgba(15, 23, 42, 0.6)', zIndex: 9999, display: 'flex', alignItems: 'center', justifyContent: 'center', backdropFilter: 'blur(8px)', animation: 'fadeIn 0.3s ease-out' }}>
+                <div style={{ backgroundColor: theme.surface, padding: '3rem', borderRadius: '24px', textAlign: 'center', maxWidth: '400px', width: '90%', boxShadow: '0 25px 50px -12px rgba(0,0,0,0.5)', animation: 'scaleUp 0.4s cubic-bezier(0.16, 1, 0.3, 1)' }}>
+                    <div style={{ width: '80px', height: '80px', backgroundColor: '#d1fae5', borderRadius: '50%', display: 'flex', alignItems: 'center', justifyContent: 'center', margin: '0 auto 1.5rem' }}>
+                        <CheckCircle size={40} color={theme.success} />
                     </div>
-                    <h2 style={{ fontSize: '2.2rem', fontWeight: 900, color: '#0F172A', marginBottom: '1rem', fontFamily: 'var(--font-heading)' }}>Property Posted!</h2>
-                    <p style={{ color: '#64748b', fontSize: '1.1rem', lineHeight: '1.6' }}>Success! Aapki listing Bharat Properties platform par review ke liye bhej di gayi hai. Hum aapko jald contact karenge.</p>
+                    <h2 style={{ fontSize: '1.75rem', fontWeight: 800, color: theme.textMain, marginBottom: '0.75rem' }}>Property Posted!</h2>
+                    <p style={{ color: theme.textMuted, fontSize: '1rem', lineHeight: '1.5', margin: 0 }}>Success! Aapki listing Bharat Properties platform par review ke liye bhej di gayi hai. Hum aapko jald contact karenge.</p>
                 </div>
+                <style>{`
+                    @keyframes fadeIn { from { opacity: 0; } to { opacity: 1; } }
+                    @keyframes scaleUp { from { opacity: 0; transform: scale(0.9); } to { opacity: 1; transform: scale(1); } }
+                `}</style>
             </div>
         );
     }
 
-    const sectionHeaderStyle = {
-        padding: '1.2rem 1.5rem',
-        backgroundColor: '#F8FAFC',
-        borderRadius: '20px',
-        marginBottom: '2rem',
-        display: 'flex',
-        alignItems: 'center',
-        gap: '12px',
-        border: '1px solid #f1f5f9'
-    };
-
-    const sectionTitleStyle = {
-        fontSize: '0.9rem',
-        fontWeight: 900,
-        textTransform: 'uppercase',
-        letterSpacing: '0.15em',
-        color: '#0F172A',
-        margin: 0
-    };
-
-    const inputGroupStyle = {
-        display: 'flex',
-        flexDirection: 'column',
-        gap: '10px',
-        marginBottom: '1.8rem'
-    };
-
-    const labelStyle = (isActive) => ({
-        fontSize: '0.85rem',
-        fontWeight: 800,
-        color: isActive ? 'var(--color-primary)' : '#475569',
-        transition: 'color 0.2s',
-        display: 'flex',
-        alignItems: 'center',
-        gap: '4px'
-    });
-
-    const inputStyle = (isActive) => ({
-        padding: '1rem 1.25rem',
-        borderRadius: '16px',
-        border: isActive ? '2px solid var(--color-primary)' : '2px solid #f1f5f9',
-        fontSize: '1rem',
-        backgroundColor: '#fff',
-        width: '100%',
-        boxSizing: 'border-box',
-        transition: 'all 0.2s ease',
-        color: '#1e293b',
-        fontWeight: 600,
-        boxShadow: isActive ? '0 10px 15px -3px rgba(37, 99, 235, 0.1)' : 'none',
-        outline: 'none'
-    });
-
-    const selectStyle = (isActive) => ({
-        ...inputStyle(isActive),
-        appearance: 'none',
-        backgroundImage: 'url("data:image/svg+xml,%3Csvg xmlns=\'http://www.w3.org/2000/svg\' width=\'24\' height=\'24\' viewBox=\'0 0 24 24\' fill=\'none\' stroke=\'%2364748b\' stroke-width=\'2\' stroke-linecap=\'round\' stroke-linejoin=\'round\'%3E%3Cpolyline points=\'6 9 12 15 18 9\'%3E%3C/polyline%3E%3C/svg%3E")',
-        backgroundRepeat: 'no-repeat',
-        backgroundPosition: 'right 1.25rem center',
-        backgroundSize: '1.2rem',
-        cursor: 'pointer'
-    });
-
-    const manualBadge = {
-        fontSize: '0.65rem',
-        padding: '2px 8px',
-        backgroundColor: '#FEF3C7',
-        color: '#92400E',
-        borderRadius: '50px',
-        marginLeft: 'auto'
-    };
-
     return (
-        <div style={{ position: 'fixed', top: 0, left: 0, width: '100%', height: '100%', backgroundColor: 'rgba(15, 23, 42, 0.4)', zIndex: 3000, display: 'flex', alignItems: 'center', justifyContent: 'center', backdropFilter: 'blur(12px)', padding: '20px' }}>
+        <div style={{ position: 'fixed', inset: 0, backgroundColor: 'rgba(15, 23, 42, 0.5)', zIndex: 9999, display: 'flex', alignItems: 'center', justifyContent: 'center', backdropFilter: 'blur(10px)', padding: '1rem' }}>
             <style>{`
-                @keyframes slideIn {
-                    from { opacity: 0; transform: translateY(30px) scale(0.95); }
-                    to { opacity: 1; transform: translateY(0) scale(1); }
+                @keyframes slideUp {
+                    from { opacity: 0; transform: translateY(20px); }
+                    to { opacity: 1; transform: translateY(0); }
                 }
+                .scroll-container::-webkit-scrollbar { width: 8px; }
+                .scroll-container::-webkit-scrollbar-track { background: transparent; }
+                .scroll-container::-webkit-scrollbar-thumb { background-color: #cbd5e1; border-radius: 20px; border: 3px solid #fcfcfd; }
+                .input-group { position: relative; margin-bottom: 1.25rem; }
             `}</style>
 
             <div style={{
-                backgroundColor: 'white',
+                backgroundColor: theme.surface,
                 width: '100%',
-                maxWidth: '900px',
-                maxHeight: '92vh',
-                borderRadius: '40px',
-                overflow: 'hidden',
+                maxWidth: '850px',
+                height: '92vh',
+                maxHeight: '900px',
+                borderRadius: '24px',
                 display: 'flex',
                 flexDirection: 'column',
-                boxShadow: '0 40px 100px -20px rgba(0, 0, 0, 0.3)',
-                animation: 'slideIn 0.5s ease-out'
+                boxShadow: '0 40px 100px -20px rgba(0, 0, 0, 0.4)',
+                animation: 'slideUp 0.4s cubic-bezier(0.16, 1, 0.3, 1)',
+                overflow: 'hidden'
             }}>
-
-                {/* Modern Header */}
-                <div style={{ padding: '2rem 2.5rem', borderBottom: '1px solid #f1f5f9', display: 'flex', justifyContent: 'space-between', alignItems: 'center', backgroundColor: '#fff' }}>
-                    <div style={{ display: 'flex', alignItems: 'center', gap: '20px' }}>
-                        <div style={{ width: '60px', height: '60px', backgroundColor: '#eff6ff', borderRadius: '18px', display: 'flex', alignItems: 'center', justifyContent: 'center', color: 'var(--color-primary)' }}>
-                            <Building2 size={32} />
+                <div style={{ padding: '1.5rem 2rem', background: `linear-gradient(to right, ${theme.surface}, #f8fafc)`, borderBottom: `1px solid ${theme.border}`, display: 'flex', justifyContent: 'space-between', alignItems: 'center', flexShrink: 0 }}>
+                    <div style={{ display: 'flex', alignItems: 'center', gap: '1.25rem' }}>
+                        <div style={{ width: '56px', height: '56px', background: `linear-gradient(135deg, ${theme.primary}, #3b82f6)`, borderRadius: '16px', display: 'flex', alignItems: 'center', justifyContent: 'center', color: '#fff', boxShadow: '0 10px 20px -5px rgba(37, 99, 235, 0.4)' }}>
+                            <Building2 size={28} />
                         </div>
                         <div>
-                            <h2 style={{ margin: 0, fontSize: '1.8rem', fontWeight: 900, color: '#0F172A', fontFamily: 'var(--font-heading)' }}>Post Your Property</h2>
-                            <p style={{ margin: 0, fontSize: '0.95rem', color: '#64748b', fontWeight: 500 }}>Sell or Rent your property faster with Bharat Properties</p>
+                            <h2 style={{ margin: 0, fontSize: '1.5rem', fontWeight: 800, color: theme.textMain, letterSpacing: '-0.02em' }}>Post Your Property</h2>
+                            <p style={{ margin: '0.25rem 0 0 0', fontSize: '0.9rem', color: theme.textMuted, fontWeight: 500 }}>Sell or Rent your property faster with Bharat Properties</p>
                         </div>
                     </div>
                     <button
+                        type="button"
                         onClick={onClose}
-                        style={{ width: '45px', height: '45px', borderRadius: '50%', border: '2px solid #f1f5f9', backgroundColor: '#fff', cursor: 'pointer', transition: 'all 0.2s', display: 'flex', alignItems: 'center', justifyContent: 'center', color: '#64748b' }}
-                        onMouseEnter={(e) => { e.currentTarget.style.backgroundColor = '#f1f5f9'; e.currentTarget.style.color = '#0F172A'; }}
-                        onMouseLeave={(e) => { e.currentTarget.style.backgroundColor = '#fff'; e.currentTarget.style.color = '#64748b'; }}
+                        onMouseEnter={() => setHoveredButton('close')}
+                        onMouseLeave={() => setHoveredButton(null)}
+                        style={{ width: '44px', height: '44px', borderRadius: '50%', border: 'none', backgroundColor: hoveredButton === 'close' ? '#fee2e2' : theme.background, color: hoveredButton === 'close' ? '#ef4444' : theme.textMuted, display: 'flex', alignItems: 'center', justifyContent: 'center', cursor: 'pointer', transition: 'all 0.2s ease', outline: 'none' }}
                     >
                         <X size={22} />
                     </button>
                 </div>
 
-                {/* Form Body */}
-                <div style={{ padding: '2.5rem', overflowY: 'auto', flex: 1, backgroundColor: '#fff' }}>
-                    <form onSubmit={handleSubmit}>
+                <div className="scroll-container" style={{ padding: '2rem', overflowY: 'auto', flex: 1, backgroundColor: '#fcfcfd' }}>
+                    <form id="property-form" onSubmit={handleSubmit} style={{ display: 'flex', flexDirection: 'column', gap: '0.5rem' }}>
 
                         {/* 1. Configuration */}
-                        <div style={sectionHeaderStyle}>
-                            <Tag size={20} color="var(--color-primary)" />
-                            <h3 style={sectionTitleStyle}>Basic Configuration</h3>
-                        </div>
-
-                        <div style={{ marginBottom: '1rem' }}>
-                            <div style={inputGroupStyle}>
+                        <div style={sectionContainerStyle}>
+                            <div style={sectionHeaderStyle}>
+                                <div style={iconStyle}><Tag size={20} /></div>
+                                <h3 style={sectionTitleStyle}>Basic Configuration</h3>
+                            </div>
+                            <div className="input-group" style={{ marginBottom: 0 }}>
                                 <label style={labelStyle(activeField === 'availableFor')}>Available For</label>
                                 <select
                                     style={selectStyle(activeField === 'availableFor')}
@@ -210,108 +225,111 @@ const PostPropertyForm = ({ onClose }) => {
                         </div>
 
                         {/* 2. Property Location */}
-                        <div style={{ ...sectionHeaderStyle, marginTop: '1rem' }}>
-                            <MapPin size={20} color="var(--color-primary)" />
-                            <h3 style={sectionTitleStyle}>Property Location</h3>
-                        </div>
-
-                        <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(200px, 1fr))', gap: '2rem', marginBottom: '1rem' }}>
-                            <div style={inputGroupStyle}>
-                                <label style={labelStyle(activeField === 'project')}>Project</label>
-                                <select style={selectStyle(activeField === 'project')} onFocus={() => setActiveField('project')} onBlur={() => setActiveField(null)} value={formData.project} onChange={e => setFormData({ ...formData, project: e.target.value })}>
-                                    <option>Divine City</option>
-                                    <option>Brahma Residency</option>
-                                    <option>Independent Plot</option>
-                                </select>
+                        <div style={sectionContainerStyle}>
+                            <div style={sectionHeaderStyle}>
+                                <div style={iconStyle}><MapPin size={20} /></div>
+                                <h3 style={sectionTitleStyle}>Property Location</h3>
                             </div>
-                            <div style={inputGroupStyle}>
-                                <label style={labelStyle(activeField === 'sector')}>Sector</label>
-                                <select style={selectStyle(activeField === 'sector')} onFocus={() => setActiveField('sector')} onBlur={() => setActiveField(null)} value={formData.sector} onChange={e => setFormData({ ...formData, sector: e.target.value })}>
-                                    <option>Sector 3 Kurukshetra</option>
-                                    <option>Sector 4 Kurukshetra</option>
-                                    <option>Sector 7 Kurukshetra</option>
-                                </select>
-                            </div>
-                            <div style={inputGroupStyle}>
-                                <label style={labelStyle(activeField === 'block')}>Block</label>
-                                <select style={selectStyle(activeField === 'block')} onFocus={() => setActiveField('block')} onBlur={() => setActiveField(null)} value={formData.block} onChange={e => setFormData({ ...formData, block: e.target.value })}>
-                                    <option>First Block</option>
-                                    <option>Second Block</option>
-                                    <option>Third Block</option>
-                                </select>
-                            </div>
-                            <div style={{ ...inputGroupStyle, gridColumn: 'span 2' }}>
-                                <label style={labelStyle(activeField === 'unitNo')}>Unit No. & Size (Auto-fill)</label>
-                                <div style={{ display: 'flex', gap: '12px' }}>
-                                    <select
-                                        style={{ ...selectStyle(activeField === 'unitNo'), flex: 1.5 }}
-                                        onFocus={() => setActiveField('unitNo')}
-                                        onBlur={() => setActiveField(null)}
-                                        value={formData.unitNo}
-                                        onChange={e => handleUnitChange(e.target.value)}
-                                    >
-                                        <option value="18 P">18 P</option>
-                                        <option value="45">45</option>
-                                        <option value="112 B">112 B</option>
+                            <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(200px, 1fr))', gap: '1.25rem' }}>
+                                <div className="input-group" style={{ marginBottom: 0 }}>
+                                    <label style={labelStyle(activeField === 'city')}>City</label>
+                                    <select style={selectStyle(activeField === 'city')} onFocus={() => setActiveField('city')} onBlur={() => setActiveField(null)} value={formData.city} onChange={e => setFormData({ ...formData, city: e.target.value })}>
+                                        <option>Kurukshetra</option>
+                                        <option>Ambala</option>
+                                        <option>Chandigarh</option>
+                                        <option>Mohali</option>
                                     </select>
-                                    <div style={{
-                                        ...inputStyle(false),
-                                        flex: 1,
-                                        backgroundColor: '#F8FAFC',
-                                        color: '#64748B',
-                                        cursor: 'not-allowed',
-                                        display: 'flex',
-                                        alignItems: 'center',
-                                        gap: '8px',
-                                        borderStyle: 'dashed'
-                                    }}>
-                                        <Ruler size={16} />
-                                        <span>{formData.totalArea ? `${formData.totalArea} ${formData.areaUnit}` : 'Select Unit'}</span>
+                                </div>
+                                <div className="input-group" style={{ marginBottom: 0 }}>
+                                    <label style={labelStyle(activeField === 'project')}>Project Name</label>
+                                    <select style={selectStyle(activeField === 'project')} onFocus={() => setActiveField('project')} onBlur={() => setActiveField(null)} value={formData.project} onChange={e => setFormData({ ...formData, project: e.target.value })}>
+                                        <option>Divine City</option>
+                                        <option>Brahma Residency</option>
+                                        <option>Independent Plot</option>
+                                    </select>
+                                </div>
+                                <div className="input-group" style={{ marginBottom: 0 }}>
+                                    <label style={labelStyle(activeField === 'block')}>Block</label>
+                                    <select style={selectStyle(activeField === 'block')} onFocus={() => setActiveField('block')} onBlur={() => setActiveField(null)} value={formData.block} onChange={e => setFormData({ ...formData, block: e.target.value })}>
+                                        <option>First Block</option>
+                                        <option>Second Block</option>
+                                        <option>Third Block</option>
+                                    </select>
+                                </div>
+                                <div className="input-group" style={{ gridColumn: '1 / -1', marginBottom: 0 }}>
+                                    <label style={labelStyle(activeField === 'unitNo')}>Unit Number & Size</label>
+                                    <div style={{ display: 'flex', gap: '1rem', alignItems: 'center' }}>
+                                        <select
+                                            style={{ ...selectStyle(activeField === 'unitNo'), flex: 1.5 }}
+                                            onFocus={() => setActiveField('unitNo')}
+                                            onBlur={() => setActiveField(null)}
+                                            value={formData.unitNo}
+                                            onChange={e => handleUnitChange(e.target.value)}
+                                        >
+                                            <option value="18 P">18 P</option>
+                                            <option value="45">45</option>
+                                            <option value="112 B">112 B</option>
+                                        </select>
+                                        <div style={{
+                                            flex: 1,
+                                            height: '46px',
+                                            backgroundColor: theme.background,
+                                            border: `1px dashed #94a3b8`,
+                                            borderRadius: '12px',
+                                            display: 'flex',
+                                            alignItems: 'center',
+                                            justifyContent: 'center',
+                                            gap: '0.5rem',
+                                            color: theme.textMuted,
+                                            fontWeight: 600,
+                                            fontSize: '0.95rem'
+                                        }}>
+                                            <Ruler size={18} />
+                                            <span>{formData.totalArea ? `${formData.totalArea} ${formData.areaUnit}` : 'Auto-filled'}</span>
+                                        </div>
                                     </div>
                                 </div>
                             </div>
                         </div>
 
-                        {/* 3. Pricing & Areas */}
-                        <div style={{ ...sectionHeaderStyle, marginTop: '1rem' }}>
-                            <IndianRupee size={20} color="var(--color-primary)" />
-                            <h3 style={sectionTitleStyle}>Pricing & Dimensions</h3>
-                        </div>
-
-                        <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(280px, 1fr))', gap: '2rem' }}>
-                            <div style={inputGroupStyle}>
-                                <label style={labelStyle(activeField === 'transactionType')}>Transaction Type</label>
-                                <select style={selectStyle(activeField === 'transactionType')} onFocus={() => setActiveField('transactionType')} onBlur={() => setActiveField(null)} value={formData.transactionType} onChange={e => setFormData({ ...formData, transactionType: e.target.value })}>
-                                    <option>Registry</option>
-                                    <option>Transfer</option>
-                                    <option>GPA</option>
-                                    <option>LOI</option>
-                                </select>
+                        {/* 3. Pricing & Dimensions */}
+                        <div style={sectionContainerStyle}>
+                            <div style={sectionHeaderStyle}>
+                                <div style={iconStyle}><IndianRupee size={20} /></div>
+                                <h3 style={sectionTitleStyle}>Pricing Details</h3>
                             </div>
-                            <div style={inputGroupStyle}>
-                                <label style={labelStyle(activeField === 'associateWith')}>Associate With</label>
-                                <select style={selectStyle(activeField === 'associateWith')} onFocus={() => setActiveField('associateWith')} onBlur={() => setActiveField(null)} value={formData.associateWith} onChange={e => setFormData({ ...formData, associateWith: e.target.value })}>
-                                    <option>Property Owner</option>
-                                    <option>Broker</option>
-                                    <option>Booked</option>
-                                    <option>Relative</option>
-                                    <option>Friend</option>
-                                </select>
-                            </div>
-                        </div>
-
-                        <div style={{ display: 'grid', gridTemplateColumns: '1fr', gap: '2rem' }}>
-                            <div style={inputGroupStyle}>
-                                <div style={{ display: 'flex', alignItems: 'center', width: '100%' }}>
-                                    <label style={labelStyle(activeField === 'expectedPrice')}>Expected Price</label>
-                                    <span style={manualBadge}>Manual Entry</span>
+                            <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(200px, 1fr))', gap: '1.25rem', marginBottom: '1.25rem' }}>
+                                <div className="input-group" style={{ marginBottom: 0 }}>
+                                    <label style={labelStyle(activeField === 'transactionType')}>Transaction Type</label>
+                                    <select style={selectStyle(activeField === 'transactionType')} onFocus={() => setActiveField('transactionType')} onBlur={() => setActiveField(null)} value={formData.transactionType} onChange={e => setFormData({ ...formData, transactionType: e.target.value })}>
+                                        <option>Registry</option>
+                                        <option>Transfer</option>
+                                        <option>GPA</option>
+                                        <option>LOI</option>
+                                    </select>
                                 </div>
+                                <div className="input-group" style={{ marginBottom: 0 }}>
+                                    <label style={labelStyle(activeField === 'associateWith')}>Associate With</label>
+                                    <select style={selectStyle(activeField === 'associateWith')} onFocus={() => setActiveField('associateWith')} onBlur={() => setActiveField(null)} value={formData.associateWith} onChange={e => setFormData({ ...formData, associateWith: e.target.value })}>
+                                        <option>Property Owner</option>
+                                        <option>Broker</option>
+                                        <option>Booked</option>
+                                        <option>Relative</option>
+                                        <option>Friend</option>
+                                    </select>
+                                </div>
+                            </div>
+                            
+                            <div className="input-group">
+                                <label style={labelStyle(activeField === 'expectedPrice')}>Expected Price</label>
                                 <div style={{ position: 'relative' }}>
-                                    <span style={{ position: 'absolute', left: '1rem', top: '50%', transform: 'translateY(-50%)', fontWeight: 800, color: '#94a3b8' }}>₹</span>
+                                    <div style={{ position: 'absolute', left: '1.25rem', top: '50%', transform: 'translateY(-50%)', color: activeField === 'expectedPrice' ? theme.primary : theme.textMuted, transition: 'color 0.3s', display: 'flex', alignItems: 'center' }}>
+                                        <IndianRupee size={20} />
+                                    </div>
                                     <input
-                                        style={{ ...inputStyle(activeField === 'expectedPrice'), paddingLeft: '2.5rem' }}
+                                        style={{ ...inputBaseStyle(activeField === 'expectedPrice'), paddingLeft: '3rem', fontSize: '1.1rem', fontWeight: 700 }}
                                         type="number"
-                                        placeholder="00,00,000"
+                                        placeholder="0.00"
                                         onFocus={() => setActiveField('expectedPrice')}
                                         onBlur={() => setActiveField(null)}
                                         value={formData.expectedPrice}
@@ -320,96 +338,149 @@ const PostPropertyForm = ({ onClose }) => {
                                     />
                                 </div>
                             </div>
-                        </div>
 
-                        <div style={inputGroupStyle}>
-                            <div style={{ display: 'flex', alignItems: 'center' }}>
+                            <div className="input-group" style={{ marginBottom: 0 }}>
                                 <label style={labelStyle(activeField === 'remarks')}>Remarks & Description</label>
-                                <span style={manualBadge}>Manual Entry</span>
+                                <textarea
+                                    style={{ ...inputBaseStyle(activeField === 'remarks'), minHeight: '100px', resize: 'vertical' }}
+                                    placeholder="Add features, highlights or special terms..."
+                                    onFocus={() => setActiveField('remarks')}
+                                    onBlur={() => setActiveField(null)}
+                                    value={formData.remarks}
+                                    onChange={e => setFormData({ ...formData, remarks: e.target.value })}
+                                />
                             </div>
-                            <textarea
-                                style={{ ...inputStyle(activeField === 'remarks'), minHeight: '100px', resize: 'none' }}
-                                placeholder="Add features, highlights or special terms..."
-                                onFocus={() => setActiveField('remarks')}
-                                onBlur={() => setActiveField(null)}
-                                value={formData.remarks}
-                                onChange={e => setFormData({ ...formData, remarks: e.target.value })}
-                            />
                         </div>
 
-                        {/* 4. Contact Details */}
-                        <div style={{ ...sectionHeaderStyle, marginTop: '1rem' }}>
-                            <User size={20} color="var(--color-primary)" />
-                            <h3 style={sectionTitleStyle}>Owner/Consultant Details</h3>
-                        </div>
-
-                        <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '2rem', marginBottom: '1.5rem' }}>
-                            <div style={inputGroupStyle}>
-                                <label style={labelStyle(activeField === 'contactName')}>Full Name</label>
-                                <input style={inputStyle(activeField === 'contactName')} type="text" placeholder="e.g. Rahul Sharma" onFocus={() => setActiveField('contactName')} onBlur={() => setActiveField(null)} value={formData.contact.name} onChange={e => setFormData({ ...formData, contact: { ...formData.contact, name: e.target.value } })} required />
+                        {/* 4. Owner Details */}
+                        <div style={sectionContainerStyle}>
+                            <div style={sectionHeaderStyle}>
+                                <div style={iconStyle}><User size={20} /></div>
+                                <h3 style={sectionTitleStyle}>Owner Details</h3>
                             </div>
-                            <div style={inputGroupStyle}>
-                                <label style={labelStyle(activeField === 'contactMobile')}>Mobile Number</label>
-                                <div style={{ display: 'flex', gap: '8px' }}>
-                                    <select
-                                        style={{ ...selectStyle(activeField === 'contactMobile'), width: '100px', paddingRight: '1rem', backgroundPosition: 'right 0.5rem center' }}
-                                        value={formData.contact.countryCode}
-                                        onChange={e => setFormData({ ...formData, contact: { ...formData.contact, countryCode: e.target.value } })}
-                                        onFocus={() => setActiveField('contactMobile')}
-                                        onBlur={() => setActiveField(null)}
-                                    >
-                                        {countryCodes.map((item) => (
-                                            <option key={`${item.country}-${item.code}`} value={item.code}>
-                                                {item.flag} {item.code}
-                                            </option>
-                                        ))}
-                                    </select>
-                                    <input
-                                        style={{ ...inputStyle(activeField === 'contactMobile'), flex: 1 }}
-                                        type="tel"
-                                        placeholder="XXXXX XXXXX"
-                                        onFocus={() => setActiveField('contactMobile')}
-                                        onBlur={() => setActiveField(null)}
-                                        value={formData.contact.mobile}
-                                        onChange={e => setFormData({ ...formData, contact: { ...formData.contact, mobile: e.target.value } })}
-                                        required
+                            
+                            <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(280px, 1fr))', gap: '1.5rem' }}>
+                                <div className="input-group" style={{ marginBottom: 0 }}>
+                                    <label style={labelStyle(activeField === 'contactName')}>Full Name</label>
+                                    <div style={{ position: 'relative' }}>
+                                        <input 
+                                            style={{...inputBaseStyle(activeField === 'contactName'), paddingLeft: '3rem'}} 
+                                            type="text" 
+                                            placeholder="Rahul Sharma" 
+                                            onFocus={() => setActiveField('contactName')} 
+                                            onBlur={() => setActiveField(null)} 
+                                            value={formData.contact.name} 
+                                            onChange={e => setFormData({ ...formData, contact: { ...formData.contact, name: e.target.value } })} 
+                                            required 
+                                        />
+                                        <User size={18} color={activeField === 'contactName' ? theme.primary : '#94a3b8'} style={{ position: 'absolute', left: '1.25rem', top: '50%', transform: 'translateY(-50%)', transition: 'color 0.3s' }} />
+                                    </div>
+                                </div>
+                                <div className="input-group" style={{ marginBottom: 0 }}>
+                                    <label style={labelStyle(activeField === 'contactMobile')}>Mobile Number</label>
+                                    <div style={{ display: 'flex', gap: '0.5rem' }}>
+                                        <select
+                                            style={{ ...selectStyle(activeField === 'contactMobile'), width: '110px', paddingRight: '1.5rem', backgroundPosition: 'right 0.25rem center', fontSize: '0.9rem' }}
+                                            value={formData.contact.countryCode}
+                                            onChange={e => setFormData({ ...formData, contact: { ...formData.contact, countryCode: e.target.value } })}
+                                            onFocus={() => setActiveField('contactMobile')}
+                                            onBlur={() => setActiveField(null)}
+                                        >
+                                            {countryCodes.map((item) => (
+                                                <option key={`${item.country}-${item.code}`} value={item.code}>
+                                                    {item.flag} {item.code}
+                                                </option>
+                                            ))}
+                                        </select>
+                                        <input
+                                            style={{ ...inputBaseStyle(activeField === 'contactMobile'), flex: 1 }}
+                                            type="tel"
+                                            placeholder="98765 43210"
+                                            onFocus={() => setActiveField('contactMobile')}
+                                            onBlur={() => setActiveField(null)}
+                                            value={formData.contact.mobile}
+                                            onChange={e => setFormData({ ...formData, contact: { ...formData.contact, mobile: e.target.value } })}
+                                            required
+                                        />
+                                    </div>
+                                </div>
+                            </div>
+                            
+                            <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(280px, 1fr))', gap: '1.5rem', marginTop: '1.5rem' }}>
+                                <div className="input-group" style={{ marginBottom: 0 }}>
+                                    <label style={labelStyle(activeField === 'contactEmail')}>Email Address</label>
+                                    <input 
+                                        style={inputBaseStyle(activeField === 'contactEmail')} 
+                                        type="email" 
+                                        placeholder="rahul@example.com" 
+                                        onFocus={() => setActiveField('contactEmail')} 
+                                        onBlur={() => setActiveField(null)} 
+                                        value={formData.contact.email} 
+                                        onChange={e => setFormData({ ...formData, contact: { ...formData.contact, email: e.target.value } })} 
+                                    />
+                                </div>
+                                <div className="input-group" style={{ marginBottom: 0 }}>
+                                    <label style={labelStyle(activeField === 'contactCity')}>City</label>
+                                    <input 
+                                        style={inputBaseStyle(activeField === 'contactCity')} 
+                                        type="text" 
+                                        placeholder="Kurukshetra" 
+                                        onFocus={() => setActiveField('contactCity')} 
+                                        onBlur={() => setActiveField(null)} 
+                                        value={formData.contact.city} 
+                                        onChange={e => setFormData({ ...formData, contact: { ...formData.contact, city: e.target.value } })} 
                                     />
                                 </div>
                             </div>
                         </div>
-                        <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '2rem' }}>
-                            <div style={inputGroupStyle}>
-                                <label style={labelStyle(activeField === 'contactEmail')}>Email Address</label>
-                                <input style={inputStyle(activeField === 'contactEmail')} type="email" placeholder="rahul@example.com" onFocus={() => setActiveField('contactEmail')} onBlur={() => setActiveField(null)} value={formData.contact.email} onChange={e => setFormData({ ...formData, contact: { ...formData.contact, email: e.target.value } })} />
-                            </div>
-                            <div style={inputGroupStyle}>
-                                <label style={labelStyle(activeField === 'contactCity')}>City</label>
-                                <input style={inputStyle(activeField === 'contactCity')} type="text" placeholder="e.g. Kurukshetra" onFocus={() => setActiveField('contactCity')} onBlur={() => setActiveField(null)} value={formData.contact.city} onChange={e => setFormData({ ...formData, contact: { ...formData.contact, city: e.target.value } })} />
-                            </div>
-                        </div>
-
-                        {/* Modern Footer Actions */}
-                        <div style={{ display: 'flex', gap: '1.5rem', marginTop: '3rem', padding: '2.5rem 0', borderTop: '2px dashed #f1f5f9' }}>
-                            <button
-                                type="button"
-                                onClick={onClose}
-                                style={{ flex: 1, padding: '1.25rem', borderRadius: '20px', border: 'none', backgroundColor: '#f1f5f9', fontWeight: 800, cursor: 'pointer', color: '#64748b', transition: 'all 0.2s' }}
-                                onMouseEnter={(e) => e.currentTarget.style.backgroundColor = '#e2e8f0'}
-                                onMouseLeave={(e) => e.currentTarget.style.backgroundColor = '#f1f5f9'}
-                            >
-                                Discard Listing
-                            </button>
-                            <button
-                                type="submit"
-                                style={{ flex: 2, padding: '1.25rem', borderRadius: '20px', border: 'none', backgroundColor: 'var(--color-primary)', color: 'white', fontWeight: 800, cursor: 'pointer', boxShadow: '0 20px 25px -5px rgba(37, 99, 235, 0.2)', transition: 'all 0.3s' }}
-                                onMouseEnter={(e) => { e.currentTarget.style.transform = 'translateY(-2px)'; e.currentTarget.style.boxShadow = '0 25px 30px -5px rgba(37, 99, 235, 0.3)'; }}
-                                onMouseLeave={(e) => { e.currentTarget.style.transform = 'translateY(0)'; e.currentTarget.style.boxShadow = '0 20px 25px -5px rgba(37, 99, 235, 0.2)'; }}
-                            >
-                                Publish Property Listing
-                            </button>
-                        </div>
-
                     </form>
+                </div>
+
+                <div style={{ padding: '1.25rem 2rem', borderTop: `1px solid ${theme.border}`, backgroundColor: theme.surface, display: 'flex', gap: '1rem', flexShrink: 0 }}>
+                    <button
+                        type="button"
+                        onClick={onClose}
+                        onMouseEnter={() => setHoveredButton('discard')}
+                        onMouseLeave={() => setHoveredButton(null)}
+                        style={{
+                            flex: 1,
+                            padding: '1rem',
+                            borderRadius: '12px',
+                            border: `1px solid ${theme.border}`,
+                            backgroundColor: hoveredButton === 'discard' ? theme.border : theme.surface,
+                            color: theme.textMain,
+                            fontWeight: 600,
+                            fontSize: '1rem',
+                            cursor: 'pointer',
+                            transition: 'all 0.2s',
+                            outline: 'none'
+                        }}
+                    >
+                        Discard
+                    </button>
+                    <button
+                        type="submit"
+                        form="property-form"
+                        onMouseEnter={() => setHoveredButton('submit')}
+                        onMouseLeave={() => setHoveredButton(null)}
+                        style={{
+                            flex: 2,
+                            padding: '1rem',
+                            borderRadius: '12px',
+                            border: 'none',
+                            background: hoveredButton === 'submit' ? `linear-gradient(135deg, ${theme.primaryHover}, #1d4ed8)` : `linear-gradient(135deg, ${theme.primary}, #3b82f6)`,
+                            color: 'white',
+                            fontWeight: 700,
+                            fontSize: '1rem',
+                            cursor: 'pointer',
+                            boxShadow: hoveredButton === 'submit' ? '0 10px 15px -3px rgba(37, 99, 235, 0.4)' : '0 4px 6px -1px rgba(37, 99, 235, 0.2)',
+                            transform: hoveredButton === 'submit' ? 'translateY(-1px)' : 'translateY(0)',
+                            transition: 'all 0.2s',
+                            outline: 'none'
+                        }}
+                    >
+                        Publish Property Listing
+                    </button>
                 </div>
             </div>
         </div>

@@ -66,13 +66,13 @@ const ProjectHeader = ({ project, onAddToCompare }) => {
                         <div style={{ display: 'flex', alignItems: 'center', gap: '1.5rem', flexWrap: 'wrap' }}>
                             <div style={{ display: 'flex', alignItems: 'center', gap: '6px', color: '#64748b', fontSize: '0.95rem', fontWeight: 500 }}>
                                 <MapPin size={16} className="text-primary" />
-                                {project.address.locality}, {project.address.city}
+                                {project.address?.locality ? `${project.address.locality}, ` : ''}{project.address?.city}
                             </div>
                             <div style={{ display: 'flex', alignItems: 'center', gap: '6px', color: '#64748b', fontSize: '0.95rem', fontWeight: 500 }}>
                                 <Building2 size={16} />
-                                By <span style={{ color: '#1e293b', fontWeight: 700 }}>{project.developer.name}</span>
+                                By <span style={{ color: '#1e293b', fontWeight: 700 }}>{project.developer?.name}</span>
                             </div>
-                            {project.approvals.reraCertificate && (
+                            {project.approvals?.reraCertificate && (
                                 <div style={{ display: 'flex', alignItems: 'center', gap: '6px', color: '#166534', fontSize: '0.85rem', fontWeight: 700, backgroundColor: '#f0fdf4', padding: '2px 8px', borderRadius: '6px' }}>
                                     <ShieldCheck size={14} />
                                     RERA: {project.reraNumber}

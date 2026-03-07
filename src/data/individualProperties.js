@@ -1,6 +1,6 @@
 export const INDIVIDUAL_PROPERTIES = [
     {
-        id: "prop-101",
+        id: "prop-kkr-101",
         title: "Corner House at Bharat Heights",
         unitNum: "982 P",
         projectName: "Bharat Heights",
@@ -71,7 +71,7 @@ export const INDIVIDUAL_PROPERTIES = [
         brochure: "#"
     },
     {
-        id: "prop-102",
+        id: "prop-kkr-102",
         title: "Studio Apartment at Bharat Heights",
         unitNum: "45",
         projectName: "Bharat Heights",

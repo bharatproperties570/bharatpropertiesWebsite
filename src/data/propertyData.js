@@ -82,5 +82,19 @@ export const PROPERTY_DATA = [
         type: "Residential",
         subType: "Villa",
         coords: { lat: 29.6857, lng: 76.9907 }
+    },
+    {
+        id: "prop-kkr-101",
+        title: "1 SP Corner House",
+        price: "₹ 1.85 Cr",
+        location: "Kurukshetra",
+        beds: 4,
+        baths: 3,
+        sqft: "2,368",
+        image: "https://images.unsplash.com/photo-1580587771525-78b9dba3b914?ixlib=rb-4.0.3&auto=format&fit=crop&w=1470&q=80",
+        status: "Active",
+        type: "Residential",
+        subType: "House",
+        coords: { lat: 29.9695, lng: 76.8783 }
     }
 ];

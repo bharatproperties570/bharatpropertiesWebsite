@@ -271,13 +271,76 @@ export const SAMPLE_PROJECTS = [
         floorPlans: ['/floor-plans/green-valley-3bhk-villa.pdf'],
         brochure: '/brochures/green-valley-brochure.pdf',
         videos: []
+    },
+    {
+        id: 'mohali-hills',
+        name: 'Mohali Hills',
+        developer: { name: 'Emaar India', secondaryDeveloper: null, isJointVenture: false },
+        reraNumber: 'RERA-PB-SAS-2023-00789',
+        description: 'Mohali Hills is a hallmark of luxury and elegance, offering a range of residential plots, villas, and apartments in SAS Nagar. Spread over 3000 acres, it provides a serene environment with world-class infrastructure.',
+        category: 'Residential',
+        subCategory: ['Plots', 'Villas', 'Apartments'],
+        landArea: { value: 3000, unit: 'Acres' },
+        totalBlocks: 12,
+        totalUnits: 1500,
+        status: 'Active',
+        launchedOn: '2023-03-01',
+        possession: '2025-12-31',
+        parkingType: ['Open Parking', 'Covered Parking'],
+        approvedBanks: ['HDFC', 'SBI', 'ICICI'],
+        address: { 
+            street: 'Sector 108', 
+            locality: 'Sector 108',
+            city: 'Mohali', 
+            state: 'Punjab', 
+            country: 'India' 
+        },
+        approvals: {
+            reraCertificate: true,
+            registrationNo: 'RERA-PB-SAS-2023-00789',
+            date: '2023-01-01',
+            location: 'Mohali'
+        },
+        images: [
+            'https://images.unsplash.com/photo-1512917774080-9991f1c4c750?w=800',
+            'https://images.unsplash.com/photo-1545324418-cc1a3fa10c00?w=800'
+        ],
+        overview: true,
+        blocks: [],
+        unitSizes: [
+            { 
+                name: 'Residential Plot', 
+                type: 'Plot', 
+                unitType: 'Plot',
+                block: 'Sector 108',
+                dimensions: { 
+                    length: { value: 60, unit: 'Feet' },
+                    breadth: { value: 37.5, unit: 'Feet' },
+                    area: { value: 250, unit: 'Sq Yard' } 
+                },
+                carpetArea: 2250,
+                price: '₹ 1.5 Cr',
+                pricePerSqFt: '6,666'
+            }
+        ],
+        amenities: {
+            basic: ['Water', 'Electricity', 'Security'],
+            security: ['24x7 Security', 'CCTV'],
+            others: ['Clubhouse', 'Parks']
+        }
     }
 ];
 
-export const getProjectById = (id) => {
-    return SAMPLE_PROJECTS.find(project => project.id === id);
+export const getProjectById = (idOrName) => {
+    if (!idOrName) return null;
+    const decoded = decodeURIComponent(idOrName).toLowerCase();
+    return SAMPLE_PROJECTS.find(project => 
+        project.id.toLowerCase() === decoded || 
+        project.name.toLowerCase() === decoded ||
+        project.name.toLowerCase().replace(/\s+/g, '-') === decoded
+    );
 };
 
 export const getProjectsByCity = (city) => {
-    return SAMPLE_PROJECTS.filter(project => project.address.city === city);
+    return SAMPLE_PROJECTS.filter(project => project.address.city.toLowerCase() === city.toLowerCase());
 };

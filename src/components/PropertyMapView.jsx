@@ -4,7 +4,7 @@ import React, { useEffect, useRef, useState } from 'react';
 import { MapPin, Info, X, AlertTriangle } from 'lucide-react';
 
 /* global process */
-const MAPS_API_KEY = process.env.NEXT_PUBLIC_GOOGLE_MAPS_API_KEY || '';
+const MAPS_API_KEY = process.env.NEXT_PUBLIC_GOOGLE_MAPS_API_KEY || 'AIzaSyB41DRUbKWJHPxaFjMAwdrzWzbVKartNGg';
 
 const PropertyMapView = ({ properties = [], onPropertySelect, onClose, embedded = false }) => {
     const mapRef = useRef(null);

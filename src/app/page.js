@@ -6,7 +6,6 @@ import ReviewsSection from '../components/ReviewsSection';
 import OfficeInfo from '../components/OfficeInfo';
 import MarketTrends from '../components/MarketTrends';
 import NewsSection from '../components/NewsSection';
-import BlogSection from '../components/BlogSection';
 import { AboutSection, ContactSection } from '../components/Sections';
 
 export default function HomePage() {
@@ -21,10 +20,9 @@ export default function HomePage() {
 
             <ReviewsSection />
             <OfficeInfo />
+            <NewsSection />
             <AboutSection />
             <MarketTrends />
-            <NewsSection />
-            <BlogSection />
             <ContactSection />
         </>
     );

@@ -265,6 +265,7 @@ const Header = ({ onLogoClick, selectedCity, onSelectCity, onPostProperty, onBoo
                     >
                         About
                     </a>
+                    <a href="/blog" style={navLinkStyles}>Blog</a>
                     <a href="#contact" style={navLinkStyles}>Contact</a>
                     <button
                         onClick={onBookConsultation}
@@ -364,6 +365,7 @@ const Header = ({ onLogoClick, selectedCity, onSelectCity, onPostProperty, onBoo
                     >
                         About
                     </a>
+                    <a href="/blog" onClick={() => setIsMobileMenuOpen(false)}>Blog</a>
                     <a href="#contact" onClick={() => setIsMobileMenuOpen(false)}>Contact</a>
                 </div>
             )}

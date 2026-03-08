@@ -143,7 +143,7 @@ const ProjectLocation = ({ address, projectName }) => {
                         {/* Google Maps Embed - Replace with actual Google Maps API */}
                         <iframe
                             title={`${projectName} Location`}
-                            src={`https://www.google.com/maps/embed/v1/place?key=YOUR_GOOGLE_MAPS_API_KEY&q=${encodeURIComponent(fullAddress)}`}
+                            src={`https://www.google.com/maps/embed/v1/place?key=${process.env.NEXT_PUBLIC_GOOGLE_MAPS_API_KEY}&q=${encodeURIComponent(fullAddress)}`}
                             width="100%"
                             height="100%"
                             style={{ border: 0 }}

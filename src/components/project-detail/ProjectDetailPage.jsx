@@ -7,9 +7,11 @@ import ProjectAmenities from './ProjectAmenities';
 import SiteVisitForm from './SiteVisitForm';
 import ImageGallery from './ImageGallery';
 import ProjectLocation from './ProjectLocation';
-import NewsSection from '../NewsSection';
+import ProjectDeals from './ProjectDeals';
+
 import SEO from '../SEO';
-import { getProjectById } from '../../data/sampleProjects';
+import { fetchProjectBySlug } from '../../services/crmService';
+import SkeletonLoader from '../SkeletonLoader';
 
 const ProjectDetailPage = ({ projectId, onBookConsultation, onAddToCompare }) => {
     const [project, setProject] = useState(null);
@@ -20,7 +22,7 @@ const ProjectDetailPage = ({ projectId, onBookConsultation, onAddToCompare }) =>
         const fetchProject = async () => {
             try {
                 setLoading(true);
-                const data = getProjectById(projectId);
+                const data = await fetchProjectBySlug(projectId);
                 if (data) {
                     setProject(data);
                 }
@@ -37,15 +39,7 @@ const ProjectDetailPage = ({ projectId, onBookConsultation, onAddToCompare }) =>
     }, [projectId]);
 
     if (loading) {
-        return (
-            <div style={{ display: 'flex', justifyContent: 'center', alignItems: 'center', minHeight: '80vh', backgroundColor: '#fff' }}>
-                <div style={{ textAlign: 'center' }}>
-                    <div style={{ width: '40px', height: '40px', border: '3px solid #f3f3f3', borderTop: '3px solid var(--color-primary)', borderRadius: '50%', animation: 'spin 1s linear infinite', margin: '0 auto 1rem' }}></div>
-                    <div style={{ fontSize: '1.2rem', fontWeight: 600, color: '#64748b' }}>Curating Experience...</div>
-                </div>
-                <style>{`@keyframes spin { 0% { transform: rotate(0deg); } 100% { transform: rotate(360deg); } }`}</style>
-            </div>
-        );
+        return <SkeletonLoader type="detail" />;
     }
 
     if (!project) {
@@ -63,9 +57,9 @@ const ProjectDetailPage = ({ projectId, onBookConsultation, onAddToCompare }) =>
     return (
         <div style={{ backgroundColor: '#fff', minHeight: '100vh', scrollBehavior: 'smooth' }}>
             <SEO
-                title={`${project.name || 'Unknown Project'} | ${project.address?.city || 'Unknown City'} | Bharat Properties`}
-                description={project.description || `Discover ${project.name || 'a premium real estate project'}, a premium real estate project in ${project.address?.city || 'an undisclosed location'}. Exclusive details, pricing, and amenities.`}
-                keywords={`${project.name || 'Real Estate Project'}, ${project.address?.city || 'Property'} Real Estate, ${project.type || 'Project'} in ${project.address?.city || 'India'}`}
+                title={project.seo?.title || `${project.name} | ${project.address?.city} | Bharat Properties`}
+                description={project.seo?.description || project.overview?.substring(0, 160) || `Discover ${project.name}, a premium real estate project.`}
+                keywords={project.seo?.tags?.join(', ') || `${project.name}, Real Estate Project, ${project.address?.city}`}
             />
             {/* Project Header (Sticky) */}
             <ProjectHeader
@@ -100,6 +94,11 @@ const ProjectDetailPage = ({ projectId, onBookConsultation, onAddToCompare }) =>
                         <ProjectAmenities amenities={project.amenities} />
                     )}
 
+                    {/* Associated Listings/Deals */}
+                    {project.deals && project.deals.length > 0 && (
+                        <ProjectDeals deals={project.deals} projectName={project.name} />
+                    )}
+
                     {/* Geography */}
                     {project.address && (
                         <div style={{ padding: '2rem 0', backgroundColor: '#fff' }}>
@@ -107,8 +106,7 @@ const ProjectDetailPage = ({ projectId, onBookConsultation, onAddToCompare }) =>
                         </div>
                     )}
 
-                    {/* Regional News context */}
-                    <NewsSection city={project.address.city} />
+
                 </div>
 
                 {/* Conversion Section (Form) */}

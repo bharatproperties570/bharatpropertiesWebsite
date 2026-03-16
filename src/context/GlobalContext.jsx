@@ -1,8 +1,8 @@
 'use client';
 
-import React, { createContext, useContext, useState } from 'react';
-import { PROPERTY_DATA } from '../data/propertyData';
-import { INDIVIDUAL_PROPERTIES } from '../data/individualProperties';
+import React, { createContext, useContext, useState, useEffect } from 'react';
+import { fetchProjects, fetchListings } from '../services/crmService';
+// Live CRM data only
 
 const GlobalContext = createContext();
 
@@ -23,6 +23,48 @@ export const GlobalProvider = ({ children }) => {
     const [showExpertModal, setShowExpertModal] = useState(false);
     const [showContactPopup, setShowContactPopup] = useState(false);
     const [showMapView, setShowMapView] = useState(false);
+
+    const [allProjects, setAllProjects] = useState([]);
+    const [allListings, setAllListings] = useState([]);
+    const [loading, setLoading] = useState(false);
+
+    useEffect(() => {
+        const loadInitialData = async () => {
+            setLoading(true);
+            try {
+                const [projects, listings] = await Promise.all([
+                    fetchProjects(),
+                    fetchListings()
+                ]);
+                setAllProjects(projects);
+                setAllListings(listings);
+            } catch (error) {
+                console.error("Error loading initial CRM data:", error);
+            } finally {
+                setLoading(false);
+            }
+        };
+        loadInitialData();
+    }, []);
+
+    const groupedData = React.useMemo(() => {
+        const projectsByCity = {};
+        const listingsByCity = {};
+
+        allProjects.forEach(project => {
+            const city = project.location || 'Other';
+            if (!projectsByCity[city]) projectsByCity[city] = [];
+            projectsByCity[city].push(project);
+        });
+
+        allListings.forEach(listing => {
+            const city = (typeof listing.location === 'object' ? listing.location.city : listing.location) || 'Other';
+            if (!listingsByCity[city]) listingsByCity[city] = [];
+            listingsByCity[city].push(listing);
+        });
+
+        return { projectsByCity, listingsByCity };
+    }, [allProjects, allListings]);
 
     // Wishlist Handlers
     const handleToggleWishlist = (property) => {
@@ -47,12 +89,9 @@ export const GlobalProvider = ({ children }) => {
 
     // Property Comparison
     const handleAddToPropertyComparison = (property) => {
-        const richProperty = INDIVIDUAL_PROPERTIES.find(p => p.id === property.id || p.id === `prop-${property.id}`);
-        const propertyToCompare = richProperty || property;
-
         setComparisonProperties(prev => {
-            if (prev.find(p => p.id === propertyToCompare.id)) return prev;
-            return [...prev, propertyToCompare];
+            if (prev.find(p => p.id === property.id)) return prev;
+            return [...prev, property];
         });
         setShowPropertyComparison(true);
     };
@@ -72,7 +111,8 @@ export const GlobalProvider = ({ children }) => {
             showConsultationModal, setShowConsultationModal,
             showExpertModal, setShowExpertModal,
             showContactPopup, setShowContactPopup,
-            showMapView, setShowMapView
+            showMapView, setShowMapView,
+            allProjects, allListings, groupedData, loading
         }}>
             {children}
         </GlobalContext.Provider>

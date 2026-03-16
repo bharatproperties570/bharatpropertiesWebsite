@@ -14,9 +14,12 @@ import {
     Layers,
     Hash,
     Map,
-    Video
+    Video,
+    Loader2,
+    AlertCircle
 } from 'lucide-react';
 import { countryCodes } from '../data/countryCodes';
+import { submitLead } from '../services/crmService';
 
 const ConsultationForm = ({ onClose }) => {
     const [formData, setFormData] = useState({
@@ -38,6 +41,8 @@ const ConsultationForm = ({ onClose }) => {
     });
 
     const [submitted, setSubmitted] = useState(false);
+    const [loading, setLoading] = useState(false);
+    const [error, setError] = useState(null);
     const [showMapPlaceholder, setShowMapPlaceholder] = useState(false);
 
     // Dynamic Title Logic (Derived state)
@@ -47,13 +52,22 @@ const ConsultationForm = ({ onClose }) => {
 
     const dynamicTitle = `${formData.activityType.toUpperCase()} for ${formData.reason} ${inventoryText} at ${formData.locationType} @ ${formData.dueDate}T${formData.dueTime}`;
 
-    const handleSubmit = (e) => {
+    const handleSubmit = async (e) => {
         e.preventDefault();
-        setSubmitted(true);
-        console.log('Consultation Booked:', formData);
-        setTimeout(() => {
-            onClose();
-        }, 3000);
+        setLoading(true);
+        setError(null);
+        try {
+            await submitLead(formData);
+            setSubmitted(true);
+            setTimeout(() => {
+                onClose();
+            }, 3000);
+        } catch (err) {
+            console.error('Submission failed:', err);
+            setError('Submission failed. Please try again or contact us directly.');
+        } finally {
+            setLoading(false);
+        }
     };
 
     const handleChange = (e) => {
@@ -208,7 +222,25 @@ const ConsultationForm = ({ onClose }) => {
                     </div>
                 </div>
 
-                <form onSubmit={handleSubmit} style={{ padding: '2rem 3rem' }}>
+
+                <form onSubmit={handleSubmit} style={{ padding: '0 3rem 2rem' }}>
+                    {error && (
+                        <div style={{ 
+                            padding: '1rem', 
+                            backgroundColor: '#fef2f2', 
+                            border: '1px solid #fee2e2', 
+                            borderRadius: '12px', 
+                            color: '#dc2626', 
+                            fontSize: '0.9rem', 
+                            display: 'flex', 
+                            alignItems: 'center', 
+                            gap: '0.75rem', 
+                            marginBottom: '1rem' 
+                        }}>
+                            <AlertCircle size={18} />
+                            <span>{error}</span>
+                        </div>
+                    )}
 
                     {/* Basic Activity Info */}
                     <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '1.5rem', marginBottom: '2rem' }}>
@@ -307,7 +339,7 @@ const ConsultationForm = ({ onClose }) => {
                                     ) : (
                                         <>
                                             <img
-                                                src="https://maps.googleapis.com/maps/api/staticmap?center=30.00,76.85&zoom=13&size=800x200&sensor=false&key="
+                                                src={`https://maps.googleapis.com/maps/api/staticmap?center=30.00,76.85&zoom=13&size=800x200&sensor=false&key=${process.env.NEXT_PUBLIC_GOOGLE_MAPS_API_KEY || 'AIzaSyBd2gdMJVt5C_tgYqWoRbBiatzmevYdB9U'}`}
                                                 alt="Map Preview"
                                                 style={{ width: '100%', height: '100%', objectFit: 'cover', opacity: 0.6 }}
                                             />
@@ -505,7 +537,7 @@ const ConsultationForm = ({ onClose }) => {
                     {/* Submit Button */}
                     <button
                         type="submit"
-                        disabled={!formData.name || !formData.mobile}
+                        disabled={!formData.name || !formData.mobile || loading}
                         style={{
                             width: '100%',
                             padding: '1.25rem',
@@ -515,17 +547,17 @@ const ConsultationForm = ({ onClose }) => {
                             borderRadius: '16px',
                             fontSize: '1.1rem',
                             fontWeight: 700,
-                            cursor: 'pointer',
+                            cursor: (loading || !formData.name || !formData.mobile) ? 'not-allowed' : 'pointer',
                             display: 'flex',
                             alignItems: 'center',
                             justifyContent: 'center',
                             gap: '0.75rem',
                             transition: 'all 0.3s',
-                            opacity: (!formData.name || !formData.mobile) ? 0.5 : 1,
+                            opacity: (loading || !formData.name || !formData.mobile) ? 0.5 : 1,
                             boxShadow: '0 10px 15px -3px rgba(79, 70, 229, 0.4)'
                         }}
                         onMouseEnter={(e) => {
-                            if (formData.name && formData.mobile) {
+                            if (formData.name && formData.mobile && !loading) {
                                 e.currentTarget.style.transform = 'translateY(-2px)';
                                 e.currentTarget.style.backgroundColor = 'var(--color-secondary)';
                             }
@@ -535,8 +567,7 @@ const ConsultationForm = ({ onClose }) => {
                             e.currentTarget.style.backgroundColor = 'var(--color-primary)';
                         }}
                     >
-                        <Calendar size={22} />
-                        Confirm Booking
+                        {loading ? <Loader2 className="animate-spin" size={22} /> : <><Calendar size={22} /> Confirm Booking</>}
                     </button>
                 </form>
             </div>

@@ -6,7 +6,9 @@ import PropertyLocation from './PropertyLocation';
 import PropertyMedia from './PropertyMedia';
 import NewsSection from '../NewsSection';
 import SEO from '../SEO';
-import { getPropertyById } from '../../data/individualProperties';
+// No static imports anymore
+import { fetchListingBySlug } from '../../services/crmService';
+import SkeletonLoader from '../SkeletonLoader';
 
 const PropertyDetailPage = ({ propertyId, onAddToCompare, onBookConsultation }) => {
     const [property, setProperty] = useState(null);
@@ -16,29 +18,26 @@ const PropertyDetailPage = ({ propertyId, onAddToCompare, onBookConsultation }) 
         window.scrollTo(0, 0);
         const fetchProperty = async () => {
             setLoading(true);
-            const data = getPropertyById(propertyId);
-            if (data) {
-                // Ensure title exists for SEO
-                if (!data.title) {
-                    data.title = `${data.unitName || 'Property'} at ${data.projectName || 'Project'}`;
+            try {
+                // Try CRM only
+                const data = await fetchListingBySlug(propertyId);
+                if (data) {
+                    setProperty(data);
+                } else {
+                    setProperty(null);
                 }
-                setProperty(data);
+            } catch (error) {
+                console.error("Error fetching dynamic property:", error);
+                setProperty(null);
+            } finally {
+                setLoading(false);
             }
-            setLoading(false);
         };
         fetchProperty();
     }, [propertyId]);
 
     if (loading) {
-        return (
-            <div style={{ display: 'flex', justifyContent: 'center', alignItems: 'center', minHeight: '80vh' }}>
-                <div style={{ textAlign: 'center' }}>
-                    <div style={{ width: '40px', height: '40px', border: '3px solid #f3f3f3', borderTop: '3px solid var(--color-primary)', borderRadius: '50%', animation: 'spin 1s linear infinite', margin: '0 auto 1rem' }}></div>
-                    <div style={{ fontSize: '1.2rem', color: '#64748b' }}>Fetching Property Data...</div>
-                </div>
-                <style>{`@keyframes spin { 0% { transform: rotate(0deg); } 100% { transform: rotate(360deg); } }`}</style>
-            </div>
-        );
+        return <SkeletonLoader type="detail" />;
     }
 
     if (!property) {
@@ -54,9 +53,9 @@ const PropertyDetailPage = ({ propertyId, onAddToCompare, onBookConsultation }) 
     return (
         <div style={{ backgroundColor: '#fff', minHeight: '100vh', paddingTop: '20px' }}>
             <SEO
-                title={`${property.title} | ${property.location?.city} | Bharat Properties`}
-                description={property.description || `View details for ${property.title} in ${property.location?.city}. Luxury residential property at ${property.price}.`}
-                keywords={`${property.title}, Luxury Property ${property.location?.city}, ${property.type} for sale`}
+                title={property.seo?.title || `${property.title} | ${typeof property.location === 'object' ? (property.location.city || property.location.display) : property.location} | Bharat Properties`}
+                description={property.seo?.description || property.description?.substring(0, 160) || `View details for ${property.title}. Luxury residential property at ${property.price}.`}
+                keywords={property.seo?.tags?.join(', ') || `${property.title}, Luxury Property, ${property.type} for sale`}
             />
             <div className="container" style={{ paddingTop: '2rem' }}>
                 <PropertyHeader
@@ -74,7 +73,7 @@ const PropertyDetailPage = ({ propertyId, onAddToCompare, onBookConsultation }) 
                         {property.location && <PropertyLocation location={property.location} />}
                     </div>
                 </div>
-                <NewsSection city={property.location.city} />
+                <NewsSection city={typeof property.location === 'object' ? property.location.city : property.location} />
             </div>
         </div>
     );

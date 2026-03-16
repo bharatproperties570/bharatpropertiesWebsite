@@ -1,8 +1,9 @@
 'use client';
 
 import React, { useState } from 'react';
-import { Calendar, Clock, User, Phone, Mail, Send, CheckCircle } from 'lucide-react';
+import { Calendar, Clock, User, Phone, Mail, Send, CheckCircle, Loader2 } from 'lucide-react';
 import { countryCodes } from '../../data/countryCodes';
+import { submitLead } from '../../services/crmService';
 
 const SiteVisitForm = ({ projectName }) => {
     const [formData, setFormData] = useState({
@@ -14,17 +15,39 @@ const SiteVisitForm = ({ projectName }) => {
         time: '',
         message: ''
     });
+    const [error, setError] = useState(null);
+    const [loading, setLoading] = useState(false);
     const [submitted, setSubmitted] = useState(false);
 
-    const handleSubmit = (e) => {
+    const handleSubmit = async (e) => {
         e.preventDefault();
-        // TODO: Replace with actual API call to your CRM
-        console.log('Site visit request:', { ...formData, project: projectName });
-        setSubmitted(true);
-        setTimeout(() => {
-            setSubmitted(false);
-            setFormData({ name: '', email: '', phone: '', date: '', time: '', message: '' });
-        }, 3000);
+        setError(null);
+        setLoading(true);
+
+        try {
+            await submitLead({
+                name: formData.name,
+                mobile: `${formData.countryCode}${formData.phone}`,
+                email: formData.email,
+                activityType: 'Site Visit',
+                reason: `Site Visit for ${projectName}`,
+                remarks: formData.message,
+                projectName: projectName,
+                dueDate: formData.date,
+                dueTime: formData.time
+            });
+            setSubmitted(true);
+            setFormData({ name: '', email: '', countryCode: '+91', phone: '', date: '', time: '', message: '' });
+            
+            setTimeout(() => {
+                setSubmitted(false);
+            }, 5000);
+        } catch (err) {
+            setError('Failed to schedule site visit. Please try again later.');
+            console.error('Site visit error:', err);
+        } finally {
+            setLoading(false);
+        }
     };
 
     const handleChange = (e) => {
@@ -315,30 +338,37 @@ const SiteVisitForm = ({ projectName }) => {
                                 />
                             </div>
 
+                            {error && (
+                                <div style={{ color: '#ef4444', backgroundColor: '#fef2f2', padding: '1rem', borderRadius: '12px', marginBottom: '1.5rem', fontSize: '0.9rem', textAlign: 'center', border: '1px solid #fee2e2' }}>
+                                    {error}
+                                </div>
+                            )}
+
                             {/* Submit Button */}
                             <button
                                 type="submit"
+                                disabled={loading}
                                 style={{
                                     width: '100%',
                                     padding: '1rem',
-                                    backgroundColor: 'var(--color-primary)',
+                                    backgroundColor: loading ? '#94a3b8' : 'var(--color-primary)',
                                     color: 'white',
                                     border: 'none',
                                     borderRadius: 'var(--radius-md)',
                                     fontSize: '1.1rem',
                                     fontWeight: 600,
-                                    cursor: 'pointer',
+                                    cursor: loading ? 'not-allowed' : 'pointer',
                                     display: 'flex',
                                     alignItems: 'center',
                                     justifyContent: 'center',
                                     gap: '0.5rem',
                                     transition: 'background-color 0.2s'
                                 }}
-                                onMouseEnter={(e) => e.target.style.backgroundColor = 'var(--color-secondary)'}
-                                onMouseLeave={(e) => e.target.style.backgroundColor = 'var(--color-primary)'}
+                                onMouseEnter={(e) => !loading && (e.target.style.backgroundColor = 'var(--color-secondary)')}
+                                onMouseLeave={(e) => !loading && (e.target.style.backgroundColor = 'var(--color-primary)')}
                             >
-                                <Send size={20} />
-                                Schedule Site Visit
+                                {loading ? <Loader2 className="animate-spin" size={20} /> : <Send size={20} />}
+                                {loading ? 'Scheduling...' : 'Schedule Site Visit'}
                             </button>
                         </form>
                     )}

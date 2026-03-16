@@ -4,13 +4,13 @@ import React, { useEffect, useRef, useState } from 'react';
 import { MapPin, Info, X, AlertTriangle } from 'lucide-react';
 
 /* global process */
-const MAPS_API_KEY = process.env.NEXT_PUBLIC_GOOGLE_MAPS_API_KEY || 'AIzaSyB41DRUbKWJHPxaFjMAwdrzWzbVKartNGg';
+const MAPS_API_KEY = process.env.NEXT_PUBLIC_GOOGLE_MAPS_API_KEY || 'AIzaSyBd2gdMJVt5C_tgYqWoRbBiatzmevYdB9U';
 
 const PropertyMapView = ({ properties = [], onPropertySelect, onClose, embedded = false }) => {
     const mapRef = useRef(null);
     const [mapInstance, setMapInstance] = useState(null);
     const [selectedProperty, setSelectedProperty] = useState(null);
-    const [libLoaded, setLibLoaded] = useState(!!window.google?.maps);
+    const [libLoaded, setLibLoaded] = useState(typeof window !== 'undefined' && !!window.google?.maps?.Map);
     const [error, setError] = useState(null);
     const markersRef = useRef([]);
 
@@ -19,7 +19,7 @@ const PropertyMapView = ({ properties = [], onPropertySelect, onClose, embedded 
         let isMounted = true;
 
         const loadGoogleMaps = () => {
-            if (window.google?.maps) {
+            if (window.google?.maps?.Map) {
                 if (isMounted) setLibLoaded(true);
                 return;
             }
@@ -28,7 +28,7 @@ const PropertyMapView = ({ properties = [], onPropertySelect, onClose, embedded 
             const existingScript = document.getElementById('google-maps-script');
             if (existingScript) {
                 const interval = setInterval(() => {
-                    if (window.google?.maps) {
+                    if (window.google?.maps?.Map) {
                         if (isMounted) setLibLoaded(true);
                         clearInterval(interval);
                     }
@@ -45,16 +45,22 @@ const PropertyMapView = ({ properties = [], onPropertySelect, onClose, embedded 
             script.id = 'google-maps-script';
             // Added callback and more libraries
             const apiKey = MAPS_API_KEY;
-            script.src = `https://maps.googleapis.com/maps/api/js?key=${apiKey}&libraries=places,geometry&loading=async`;
+            // Removed loading=async as it requires a callback to be reliable
+            script.src = `https://maps.googleapis.com/maps/api/js?key=${apiKey}&libraries=places,geometry`;
             script.async = true;
             script.defer = true;
             script.onload = () => {
                 if (isMounted) {
                     console.log('Google Maps Script Loaded');
-                    // Small delay to ensure maps object is fully initialized
-                    setTimeout(() => {
-                        if (isMounted) setLibLoaded(true);
-                    }, 200);
+                    // Small delay to ensure maps object is fully attached to window
+                    const checkInterval = setInterval(() => {
+                        if (window.google?.maps?.Map) {
+                            if (isMounted) setLibLoaded(true);
+                            clearInterval(checkInterval);
+                        }
+                    }, 50);
+                    // Timeout after 2 seconds
+                    setTimeout(() => clearInterval(checkInterval), 2000);
                 }
             };
             script.onerror = () => {

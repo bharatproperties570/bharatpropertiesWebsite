@@ -157,7 +157,7 @@ const PropertyCard = ({ property, onClick }) => {
 
                 <div style={{ display: 'flex', alignItems: 'center', gap: '0.5rem', marginBottom: '1.5rem', color: 'var(--color-text-muted)', fontSize: '0.95rem' }}>
                     <MapPin size={16} />
-                    <span>{property.location}</span>
+                    <span>{typeof property.location === 'object' ? property.location.city : property.location}</span>
                 </div>
 
                 {/* Future Feature: Appreciation Indicator */}

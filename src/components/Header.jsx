@@ -5,37 +5,9 @@ import Image from 'next/image';
 import { Menu, X, Phone, Calendar } from 'lucide-react';
 import logo from '../assets/logo.png';
 
-const CITY_PROJECTS = {
-    'Chandigarh': ['Chandigarh Heights', 'The Chandigarh Crown', 'City Center'],
-    'Mohali': ['Mohali Hills', 'Airport Road Towers', 'Sector 82 Plazas'],
-    'Panchkula': ['Panchkula Eco City', 'Valley View', 'Riverdale'],
-    'Kurukshetra': ['Divine City', 'Brahma Residency'],
-    'Karnal': ['Karnal Lake View', 'Smart City Hub'],
-    'Ambala': ['Ambala Cantt Homes', 'Model Town Villas'],
-    'Gurgaon': ['Cyber City Lofts', 'Golf Course Extn', 'Sky High Apartments'],
-    'Faridabad': ['Town Park Lands', 'Smart Fari Estate'],
-    'Panipat': ['Textile City Homes', 'Panipat Green'],
-    'Yamunanagar': ['Yamuna Enclave', 'Twin City Towers']
-};
 
-const CITY_PROPERTIES = {
-    'Chandigarh': [{ name: 'Luxury Plot in Phase 1', id: 'prop-103' }, { name: '3 BHK Villa', id: 'prop-104' }, { name: 'Modern Flat', id: 'prop-105' }],
-    'Mohali': [{ name: '3 BHK Flat Sector 82', id: 'prop-104' }, { name: 'Commercial Booth', id: 'prop-105' }, { name: 'Studio Unit', id: 'prop-106' }],
-    'Panchkula': [{ name: 'Independent Floor', id: 'prop-105' }, { name: 'Sector 20 Plot', id: 'prop-106' }, { name: 'Luxury Penthouse', id: 'prop-103' }],
-    'Kurukshetra': [
-        { name: '1 SP Corner House', id: 'prop-kkr-101' },
-        { name: 'Studio Apartment', id: 'prop-kkr-102' },
-        { name: 'Residential Plot', id: 'prop-kkr-103' }
-    ],
-    'Karnal': [{ name: '2 BHK Apartment', id: 'prop-106' }, { name: 'Model Town Plot', id: 'prop-103' }],
-    'Ambala': [{ name: 'City Plot', id: 'prop-103' }, { name: 'Double Storey House', id: 'prop-104' }],
-    'Gurgaon': [{ name: '3 BHK Sky Home', id: 'prop-102' }, { name: 'Luxury Villa', id: 'prop-101' }],
-    'Faridabad': [{ name: 'Industrial Plot', id: 'prop-104' }, { name: 'Sector 15 Flat', id: 'prop-105' }],
-    'Panipat': [{ name: 'Model Town Plot', id: 'prop-103' }, { name: 'Shop in Market', id: 'prop-104' }],
-    'Yamunanagar': [{ name: 'Residential Plot', id: 'prop-105' }, { name: 'New Colony House', id: 'prop-106' }]
-};
-
-const Header = ({ onLogoClick, selectedCity, onSelectCity, onPostProperty, onBookConsultation, onAboutClick }) => {
+const Header = ({ onLogoClick, selectedCity, onSelectCity, onPostProperty, onBookConsultation, onAboutClick, groupedData, isLoading }) => {
+    const { projectsByCity = {}, listingsByCity = {} } = groupedData || {};
     const [isScrolled, setIsScrolled] = useState(false);
     const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
 
@@ -111,11 +83,11 @@ const Header = ({ onLogoClick, selectedCity, onSelectCity, onPostProperty, onBoo
                                 gap: '0.5rem',
                                 color: 'var(--color-text-main)'
                             }}>
-                                {CITY_PROJECTS[selectedCity]?.map(project => (
-                                    <a key={project} href={`/project/${project}`} style={{ padding: '0.5rem', borderRadius: 'var(--radius-sm)', textDecoration: 'none', color: 'inherit', transition: 'background 0.2s', fontSize: '0.9rem' }} className="dropdown-item">
-                                        {project}
+                                {projectsByCity[selectedCity]?.map(project => (
+                                    <a key={project.id} href={`/project/${project.id}`} style={{ padding: '0.5rem', borderRadius: 'var(--radius-sm)', textDecoration: 'none', color: 'inherit', transition: 'background 0.2s', fontSize: '0.9rem' }} className="dropdown-item">
+                                        {project.name}
                                     </a>
-                                )) || <div style={{ padding: '0.5rem' }}>No projects listed</div>}
+                                )) || <div style={{ padding: '0.5rem' }}>{isLoading ? 'Loading...' : 'No projects listed'}</div>}
                             </div>
                         </div>
                     ) : (
@@ -137,7 +109,7 @@ const Header = ({ onLogoClick, selectedCity, onSelectCity, onPostProperty, onBoo
                                 flexDirection: 'column',
                                 color: 'var(--color-text-main)'
                             }}>
-                                {Object.keys(CITY_PROJECTS).map(city => (
+                                {Object.keys(projectsByCity).length > 0 ? Object.keys(projectsByCity).map(city => (
                                     <div key={city} className="submenu-trigger" style={{ position: 'relative' }}>
                                         <div
                                             style={{ padding: '0.75rem 1rem', display: 'flex', justifyContent: 'space-between', borderRadius: 'var(--radius-sm)', textDecoration: 'none', color: 'inherit', transition: 'background 0.2s', fontSize: '0.9rem', cursor: 'pointer' }}
@@ -162,14 +134,14 @@ const Header = ({ onLogoClick, selectedCity, onSelectCity, onPostProperty, onBoo
                                             flexDirection: 'column',
                                             zIndex: 1001
                                         }}>
-                                            {CITY_PROJECTS[city].map(project => (
-                                                <a key={project} href={`/project/${project}`} style={{ padding: '0.5rem', borderRadius: 'var(--radius-sm)', textDecoration: 'none', color: 'inherit', transition: 'background 0.2s', fontSize: '0.9rem' }} className="dropdown-item">
-                                                    {project}
+                                            {projectsByCity[city].map(project => (
+                                                <a key={project.id} href={`/project/${project.id}`} style={{ padding: '0.5rem', borderRadius: 'var(--radius-sm)', textDecoration: 'none', color: 'inherit', transition: 'background 0.2s', fontSize: '0.9rem' }} className="dropdown-item">
+                                                    {project.name}
                                                 </a>
                                             ))}
                                         </div>
                                     </div>
-                                ))}
+                                )) : <div style={{ padding: '1rem', textAlign: 'center' }}>{isLoading ? 'Loading projects...' : 'No projects found'}</div>}
                             </div>
                         </div>
                     )}
@@ -194,11 +166,11 @@ const Header = ({ onLogoClick, selectedCity, onSelectCity, onPostProperty, onBoo
                                 gap: '0.5rem',
                                 color: 'var(--color-text-main)'
                             }}>
-                                {CITY_PROPERTIES[selectedCity]?.map(prop => (
+                                {listingsByCity[selectedCity]?.map(prop => (
                                     <a key={prop.id} href={`/property/${prop.id}`} style={{ padding: '0.5rem', borderRadius: 'var(--radius-sm)', textDecoration: 'none', color: 'inherit', transition: 'background 0.2s', fontSize: '0.9rem' }} className="dropdown-item">
-                                        {prop.name}
+                                        {prop.title}
                                     </a>
-                                )) || <div style={{ padding: '0.5rem' }}>No properties listed</div>}
+                                )) || <div style={{ padding: '0.5rem' }}>{isLoading ? 'Loading...' : 'No properties listed'}</div>}
                             </div>
                         </div>
                     ) : (
@@ -219,7 +191,7 @@ const Header = ({ onLogoClick, selectedCity, onSelectCity, onPostProperty, onBoo
                                 flexDirection: 'column',
                                 color: 'var(--color-text-main)'
                             }}>
-                                {Object.keys(CITY_PROPERTIES).map(city => (
+                                {Object.keys(listingsByCity).length > 0 ? Object.keys(listingsByCity).map(city => (
                                     <div key={city} className="submenu-trigger" style={{ position: 'relative' }}>
                                         <a
                                             href="#"
@@ -244,14 +216,14 @@ const Header = ({ onLogoClick, selectedCity, onSelectCity, onPostProperty, onBoo
                                             flexDirection: 'column',
                                             zIndex: 1001
                                         }}>
-                                            {CITY_PROPERTIES[city].map(prop => (
+                                            {listingsByCity[city].map(prop => (
                                                 <a key={prop.id} href={`/property/${prop.id}`} style={{ padding: '0.5rem', borderRadius: 'var(--radius-sm)', textDecoration: 'none', color: 'inherit', transition: 'background 0.2s', fontSize: '0.9rem' }} className="dropdown-item">
-                                                    {prop.name}
+                                                    {prop.title}
                                                 </a>
                                             ))}
                                         </div>
                                     </div>
-                                ))}
+                                )) : <div style={{ padding: '1rem', textAlign: 'center' }}>{isLoading ? 'Loading properties...' : 'No properties found'}</div>}
                             </div>
                         </div>
                     )}

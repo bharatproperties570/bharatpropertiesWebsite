@@ -15,7 +15,7 @@ const ProjectOverview = ({ project }) => {
         { icon: <Layers size={24} />, label: 'Architecture', value: `${project.totalBlocks || 0} Blocks`, color: '#6366f1' },
         { icon: <Building size={24} />, label: 'Elevation', value: `${project.totalFloors || 0} Floors`, color: '#ec4899' },
         { icon: <Home size={24} />, label: 'Inventory', value: `${project.totalUnits || 0} Units`, color: '#f59e0b' },
-        { icon: <MapPin size={24} />, label: 'Landscape', value: `${project.landArea?.value || 0} ${project.landArea?.unit || 'Acres'}`, color: '#10b981' }
+        { icon: <MapPin size={24} />, label: 'Landscape', value: project.landArea || 'N/A', color: '#10b981' }
     ];
 
     return (

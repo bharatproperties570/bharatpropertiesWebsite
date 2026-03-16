@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from 'react';
-import { X, Send, User, Mail, Phone, MessageSquare, CheckCircle, Shield } from 'lucide-react';
+import { X, Send, User, Mail, Phone, MessageSquare, CheckCircle, Shield, Loader2, AlertCircle } from 'lucide-react';
 import { countryCodes } from '../data/countryCodes';
+import { submitLead } from '../services/crmService';
 
 const ContactPopup = ({ isOpen, onClose }) => {
     const [formData, setFormData] = useState({
@@ -12,6 +13,8 @@ const ContactPopup = ({ isOpen, onClose }) => {
     });
     const [isSubmitted, setIsSubmitted] = useState(false);
     const [isVisible, setIsVisible] = useState(false);
+    const [loading, setLoading] = useState(false);
+    const [error, setError] = useState(null);
 
     useEffect(() => {
         let timer;
@@ -23,14 +26,28 @@ const ContactPopup = ({ isOpen, onClose }) => {
         return () => clearTimeout(timer);
     }, [isOpen]);
 
-    const handleSubmit = (e) => {
+    const handleSubmit = async (e) => {
         e.preventDefault();
-        console.log('Contact Form Data:', formData);
-        setIsSubmitted(true);
-        setTimeout(() => {
-            setIsSubmitted(false);
-            onClose();
-        }, 3000);
+        setLoading(true);
+        setError(null);
+        try {
+            await submitLead({
+                ...formData,
+                mobile: formData.phone,
+                activityType: 'Note',
+                reason: 'Contact Request'
+            });
+            setIsSubmitted(true);
+            setTimeout(() => {
+                setIsSubmitted(false);
+                onClose();
+            }, 3000);
+        } catch (err) {
+            console.error('Submission failed:', err);
+            setError('Submission failed. Please try again later.');
+        } finally {
+            setLoading(false);
+        }
     };
 
     if (!isOpen) return null;
@@ -116,7 +133,24 @@ const ContactPopup = ({ isOpen, onClose }) => {
                             <h2 style={{ color: 'white', fontSize: '1.75rem', fontWeight: 800, margin: 0 }}>Contact Us</h2>
                         </div>
 
-                        <form onSubmit={handleSubmit} style={{ padding: '2.5rem' }}>
+                        <form onSubmit={handleSubmit} style={{ padding: '2rem 2.5rem 2.5rem' }}>
+                            {error && (
+                                <div style={{ 
+                                    padding: '0.75rem', 
+                                    backgroundColor: '#fef2f2', 
+                                    border: '1px solid #fee2e2', 
+                                    borderRadius: '12px', 
+                                    color: '#dc2626', 
+                                    fontSize: '0.85rem', 
+                                    display: 'flex', 
+                                    alignItems: 'center', 
+                                    gap: '0.5rem', 
+                                    marginBottom: '1rem' 
+                                }}>
+                                    <AlertCircle size={16} />
+                                    <span>{error}</span>
+                                </div>
+                            )}
                             <p style={{ color: '#64748b', marginBottom: '2rem', fontSize: '0.95rem' }}>
                                 Property se related kisi bhi jaankari ke liye humein message karein.
                             </p>
@@ -203,24 +237,28 @@ const ContactPopup = ({ isOpen, onClose }) => {
                                     </label>
                                 </div>
 
-                                <button type="submit" style={{
-                                    width: '100%',
-                                    padding: '1.25rem',
-                                    backgroundColor: 'var(--color-primary)',
-                                    color: 'white',
-                                    border: 'none',
-                                    borderRadius: '18px',
-                                    fontSize: '1.1rem',
-                                    fontWeight: 800,
-                                    cursor: 'pointer',
-                                    display: 'flex',
-                                    alignItems: 'center',
-                                    justifyContent: 'center',
-                                    gap: '10px',
-                                    boxShadow: '0 15px 30px -10px rgba(15, 23, 42, 0.4)',
-                                    transition: 'all 0.3s'
-                                }}>
-                                    <Send size={18} /> Send Message
+                                <button 
+                                    type="submit" 
+                                    disabled={loading}
+                                    style={{
+                                        width: '100%',
+                                        padding: '1.25rem',
+                                        backgroundColor: loading ? '#94a3b8' : 'var(--color-primary)',
+                                        color: 'white',
+                                        border: 'none',
+                                        borderRadius: '18px',
+                                        fontSize: '1.1rem',
+                                        fontWeight: 800,
+                                        cursor: loading ? 'not-allowed' : 'pointer',
+                                        display: 'flex',
+                                        alignItems: 'center',
+                                        justifyContent: 'center',
+                                        gap: '10px',
+                                        boxShadow: '0 15px 30px -10px rgba(15, 23, 42, 0.4)',
+                                        transition: 'all 0.3s'
+                                    }}
+                                >
+                                    {loading ? <Loader2 className="animate-spin" size={18} /> : <><Send size={18} /> Send Message</>}
                                 </button>
 
                             </div>

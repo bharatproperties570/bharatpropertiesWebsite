@@ -5,7 +5,7 @@ import { useGlobal } from '../context/GlobalContext';
 import { useRouter } from 'next/navigation';
 
 export default function ConnectedHeader() {
-    const { setShowPostProperty, setShowConsultationModal, selectedCity, setSelectedCity } = useGlobal();
+    const { setShowPostProperty, setShowConsultationModal, selectedCity, setSelectedCity, groupedData, loading } = useGlobal();
     const router = useRouter();
 
     const handleSelectCity = (city) => {
@@ -30,6 +30,8 @@ export default function ConnectedHeader() {
             onPostProperty={() => setShowPostProperty(true)}
             onBookConsultation={() => setShowConsultationModal(true)}
             onAboutClick={handleAbout}
+            groupedData={groupedData}
+            isLoading={loading}
         />
     );
 }

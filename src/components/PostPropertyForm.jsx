@@ -1,6 +1,6 @@
-import React, { useState } from 'react';
-import { X, CheckCircle, IndianRupee, MapPin, User, Building2, Tag, Ruler } from 'lucide-react';
+import { X, CheckCircle, IndianRupee, MapPin, User, Building2, Tag, Ruler, Loader2, AlertCircle } from 'lucide-react';
 import { countryCodes } from '../data/countryCodes';
+import { submitListing } from '../services/crmService';
 
 const PostPropertyForm = ({ onClose }) => {
     const [formData, setFormData] = useState({
@@ -26,6 +26,8 @@ const PostPropertyForm = ({ onClose }) => {
     });
 
     const [submitted, setSubmitted] = useState(false);
+    const [loading, setLoading] = useState(false);
+    const [error, setError] = useState(null);
     const [activeField, setActiveField] = useState(null);
     const [hoveredButton, setHoveredButton] = useState(null);
 
@@ -35,12 +37,22 @@ const PostPropertyForm = ({ onClose }) => {
         '112 B': { area: '320', unit: 'Sq Yard' }
     };
 
-    const handleSubmit = (e) => {
+    const handleSubmit = async (e) => {
         e.preventDefault();
-        setSubmitted(true);
-        setTimeout(() => {
-            onClose();
-        }, 2000);
+        setLoading(true);
+        setError(null);
+        try {
+            await submitListing(formData);
+            setSubmitted(true);
+            setTimeout(() => {
+                onClose();
+            }, 3000);
+        } catch (err) {
+            console.error('Submission failed:', err);
+            setError('System temporarily unavailable. Please try again later or contact us directly.');
+        } finally {
+            setLoading(false);
+        }
     };
 
     const handleUnitChange = (val) => {
@@ -436,10 +448,28 @@ const PostPropertyForm = ({ onClose }) => {
                     </form>
                 </div>
 
-                <div style={{ padding: '1.25rem 2rem', borderTop: `1px solid ${theme.border}`, backgroundColor: theme.surface, display: 'flex', gap: '1rem', flexShrink: 0 }}>
+                <div style={{ padding: '1.25rem 2rem', borderTop: `1px solid ${theme.border}`, backgroundColor: theme.surface, display: 'flex', flexWrap: 'wrap', gap: '1rem', flexShrink: 0 }}>
+                    {error && (
+                        <div style={{ 
+                            padding: '1rem', 
+                            backgroundColor: '#fef2f2', 
+                            border: '1px solid #fee2e2', 
+                            borderRadius: '12px', 
+                            color: '#dc2626', 
+                            fontSize: '0.9rem', 
+                            display: 'flex', 
+                            alignItems: 'center', 
+                            gap: '0.75rem', 
+                            marginBottom: '1rem' 
+                        }}>
+                            <AlertCircle size={18} />
+                            <span>{error}</span>
+                        </div>
+                    )}
                     <button
                         type="button"
                         onClick={onClose}
+                        disabled={loading}
                         onMouseEnter={() => setHoveredButton('discard')}
                         onMouseLeave={() => setHoveredButton(null)}
                         style={{
@@ -468,18 +498,22 @@ const PostPropertyForm = ({ onClose }) => {
                             padding: '1rem',
                             borderRadius: '12px',
                             border: 'none',
-                            background: hoveredButton === 'submit' ? `linear-gradient(135deg, ${theme.primaryHover}, #1d4ed8)` : `linear-gradient(135deg, ${theme.primary}, #3b82f6)`,
+                            background: loading ? '#94a3b8' : (hoveredButton === 'submit' ? `linear-gradient(135deg, ${theme.primaryHover}, #1d4ed8)` : `linear-gradient(135deg, ${theme.primary}, #3b82f6)`),
                             color: 'white',
                             fontWeight: 700,
                             fontSize: '1rem',
-                            cursor: 'pointer',
+                            cursor: loading ? 'not-allowed' : 'pointer',
                             boxShadow: hoveredButton === 'submit' ? '0 10px 15px -3px rgba(37, 99, 235, 0.4)' : '0 4px 6px -1px rgba(37, 99, 235, 0.2)',
                             transform: hoveredButton === 'submit' ? 'translateY(-1px)' : 'translateY(0)',
                             transition: 'all 0.2s',
-                            outline: 'none'
+                            outline: 'none',
+                            display: 'flex',
+                            alignItems: 'center',
+                            justifyContent: 'center',
+                            gap: '0.5rem'
                         }}
                     >
-                        Publish Property Listing
+                        {loading ? <Loader2 className="animate-spin" size={20} /> : 'Publish Property Listing'}
                     </button>
                 </div>
             </div>

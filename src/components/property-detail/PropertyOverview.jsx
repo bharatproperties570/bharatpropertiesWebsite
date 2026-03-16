@@ -4,11 +4,11 @@ import { Maximize2, Compass, MoveUpRight, FastForward, Hash, Layers } from 'luci
 const PropertyOverview = ({ property }) => {
     const details = [
         { icon: <Hash size={20} />, label: 'Unit Number', value: property.unitNum },
-        { icon: <Layers size={20} />, label: 'Unit Type', value: property.unitName.includes('Corner') ? 'Corner' : 'Standard' },
-        { icon: <Maximize2 size={20} />, label: 'Plot Size', value: `${property.size.value} ${property.size.unit} (${property.size.sqYard} Sq Yard)` },
-        { icon: <Compass size={20} />, label: 'Direction', value: property.direction },
-        { icon: <MoveUpRight size={20} />, label: 'Facing', value: property.facing },
-        { icon: <FastForward size={20} />, label: 'Main Road', value: property.road }
+        { icon: <Layers size={20} />, label: 'Unit Type', value: property?.unitName?.includes('Corner') ? 'Corner' : 'Standard' },
+        { icon: <Maximize2 size={20} />, label: 'Plot Size', value: property?.size ? `${property.size.value} ${property.size.unit} (${property.size.sqYard} Sq Yard)` : '-' },
+        { icon: <Compass size={20} />, label: 'Direction', value: property?.direction || '-' },
+        { icon: <MoveUpRight size={20} />, label: 'Facing', value: property?.facing || '-' },
+        { icon: <FastForward size={20} />, label: 'Main Road', value: property?.road || '-' }
     ];
 
     return (

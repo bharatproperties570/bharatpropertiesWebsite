@@ -1,6 +1,7 @@
 import React, { useState } from 'react';
-import { X, Send, User, Mail, Phone, MessageSquare, CheckCircle } from 'lucide-react';
+import { X, Send, User, Mail, Phone, MessageSquare, CheckCircle, Loader2, AlertCircle } from 'lucide-react';
 import { countryCodes } from '../data/countryCodes';
+import { submitLead } from '../services/crmService';
 
 const TalkToExpertForm = ({ onClose }) => {
     const [formData, setFormData] = useState({
@@ -11,13 +12,29 @@ const TalkToExpertForm = ({ onClose }) => {
         message: ''
     });
     const [isSubmitted, setIsSubmitted] = useState(false);
+    const [loading, setLoading] = useState(false);
+    const [error, setError] = useState(null);
     const [activeField, setActiveField] = useState(null);
     const [hoveredButton, setHoveredButton] = useState(null);
 
-    const handleSubmit = (e) => {
+    const handleSubmit = async (e) => {
         e.preventDefault();
-        console.log('Talk to Expert Inquiry:', formData);
-        setIsSubmitted(true);
+        setLoading(true);
+        setError(null);
+        try {
+            await submitLead({
+                ...formData,
+                mobile: formData.phone,
+                activityType: 'Note',
+                reason: 'Expert Consultation'
+            });
+            setIsSubmitted(true);
+        } catch (err) {
+            console.error('Submission failed:', err);
+            setError('Submission failed. Please try again or contact us.');
+        } finally {
+            setLoading(false);
+        }
     };
 
     // Premium styling constants (matching PostPropertyForm)
@@ -137,6 +154,22 @@ const TalkToExpertForm = ({ onClose }) => {
                 {/* Form Section */}
                 <div style={{ padding: '2rem', backgroundColor: theme.surface }}>
                     <form onSubmit={handleSubmit} style={{ display: 'flex', flexDirection: 'column', gap: '1.25rem' }}>
+                        {error && (
+                            <div style={{ 
+                                padding: '1rem', 
+                                backgroundColor: '#fef2f2', 
+                                border: '1px solid #fee2e2', 
+                                borderRadius: '12px', 
+                                color: '#dc2626', 
+                                fontSize: '0.9rem', 
+                                display: 'flex', 
+                                alignItems: 'center', 
+                                gap: '0.75rem' 
+                            }}>
+                                <AlertCircle size={18} />
+                                <span>{error}</span>
+                            </div>
+                        )}
                         <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(200px, 1fr))', gap: '1rem' }}>
                             <div className="input-group" style={{ marginBottom: 0 }}>
                                 <label style={labelStyle(activeField === 'name')}>Pura Naam *</label>
@@ -217,6 +250,7 @@ const TalkToExpertForm = ({ onClose }) => {
 
                         <button
                             type="submit"
+                            disabled={loading}
                             onMouseEnter={() => setHoveredButton('submit')}
                             onMouseLeave={() => setHoveredButton(null)}
                             style={{
@@ -225,11 +259,11 @@ const TalkToExpertForm = ({ onClose }) => {
                                 padding: '1.125rem',
                                 borderRadius: '14px',
                                 border: 'none',
-                                background: hoveredButton === 'submit' ? `linear-gradient(135deg, ${theme.primaryHover}, #1d4ed8)` : `linear-gradient(135deg, ${theme.primary}, #3b82f6)`,
+                                background: loading ? '#94a3b8' : (hoveredButton === 'submit' ? `linear-gradient(135deg, ${theme.primaryHover}, #1d4ed8)` : `linear-gradient(135deg, ${theme.primary}, #3b82f6)`),
                                 color: 'white',
                                 fontWeight: 700,
                                 fontSize: '1.05rem',
-                                cursor: 'pointer',
+                                cursor: loading ? 'not-allowed' : 'pointer',
                                 boxShadow: hoveredButton === 'submit' ? '0 12px 20px -5px rgba(37, 99, 235, 0.4)' : '0 4px 6px -1px rgba(37, 99, 235, 0.2)',
                                 transform: hoveredButton === 'submit' ? 'translateY(-2px)' : 'translateY(0)',
                                 transition: 'all 0.3s cubic-bezier(0.16, 1, 0.3, 1)',
@@ -240,8 +274,7 @@ const TalkToExpertForm = ({ onClose }) => {
                                 gap: '0.75rem'
                             }}
                         >
-                            <Send size={20} />
-                            Send Inquiry
+                            {loading ? <Loader2 className="animate-spin" size={20} /> : <><Send size={20} /> Send Inquiry</>}
                         </button>
                     </form>
                 </div>

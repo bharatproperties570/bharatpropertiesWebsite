@@ -11,6 +11,8 @@ import NewsSection from '../../../components/NewsSection';
 import CityShowcase from '../../../components/CityShowcase';
 import { useGlobal } from '../../../context/GlobalContext';
 import { MapPin } from 'lucide-react';
+import { fetchListings, fetchProjects } from '../../../services/crmService';
+import SkeletonLoader from '../../../components/SkeletonLoader';
 
 export default function CityPage() {
     const params = useParams();
@@ -21,8 +23,48 @@ export default function CityPage() {
         setShowMapView
     } = useGlobal();
 
+    const [cityProperties, setCityProperties] = React.useState([]);
+    const [cityProjects, setCityProjects] = React.useState([]);
+    const [loading, setLoading] = React.useState(true);
+
     useEffect(() => {
         if (cityName) setSelectedCity(cityName);
+
+        const loadCrmData = async () => {
+            setLoading(true);
+            try {
+                const [listings, projects] = await Promise.all([
+                    fetchListings(),
+                    fetchProjects()
+                ]);
+                
+                // Filter listings by city
+                const filteredLiveProps = listings.filter(p => {
+                    const city = (typeof p.location === 'object' ? p.location.city : p.location)?.toLowerCase() || '';
+                    const target = cityName.toLowerCase();
+                    return city === target || city.includes(target) || (p.title || '').toLowerCase().includes(target);
+                });
+
+                // Filter projects by city
+                const filteredLiveProjects = projects.filter(p => {
+                    const city = (p.address?.city || '').toLowerCase();
+                    const loc = (p.locationSearch || '').toLowerCase();
+                    const target = cityName.toLowerCase();
+                    return city === target || loc.includes(target) || p.name.toLowerCase().includes(target);
+                });
+
+                setCityProperties(filteredLiveProps);
+                setCityProjects(filteredLiveProjects);
+            } catch (error) {
+                console.error("Error loading CRM data:", error);
+                setCityProperties([]);
+                setCityProjects([]);
+            } finally {
+                setLoading(false);
+            }
+        };
+
+        loadCrmData();
     }, [cityName, setSelectedCity]);
 
     const cityData = CITY_DATA.find(c => c.name === cityName);
@@ -32,8 +74,6 @@ export default function CityPage() {
     };
 
     const handleSelectProperty = (id) => router.push(`/property/${id}`);
-
-    const cityProperties = PROPERTY_DATA.filter(p => p.location === cityName);
 
     return (
         <>
@@ -46,25 +86,34 @@ export default function CityPage() {
 
             <CityShowcase city={cityData} />
 
-            <FeaturedProperties
-                properties={cityProperties.map(p => ({
-                    ...p,
-                    onCompare: handleAddToPropertyComparison,
-                    onWishlist: handleToggleWishlist,
-                    isWishlisted: wishlist.some(w => w.id === p.id)
-                }))}
-                onPropertySelect={handleSelectProperty}
-            />
+            {loading ? (
+                <div style={{ padding: '4rem 1rem' }}>
+                    <div className="container">
+                        <SkeletonLoader type="card" count={3} />
+                    </div>
+                </div>
+            ) : (
+                <FeaturedProperties
+                    properties={cityProperties.map(p => ({
+                        ...p,
+                        onCompare: handleAddToPropertyComparison,
+                        onWishlist: handleToggleWishlist,
+                        isWishlisted: wishlist.some(w => w.id === p.id)
+                    }))}
+                    onPropertySelect={handleSelectProperty}
+                />
+            )}
 
             <div style={{ padding: '4rem 1rem', backgroundColor: '#fcfcfc' }}>
                 <div className="container">
                     <h3 style={{ fontSize: '2rem', fontWeight: 800, marginBottom: '2rem', color: '#1e293b', textAlign: 'center' }}>
                         Active Projects in <span style={{ color: 'var(--color-primary)' }}>{cityName}</span>
                     </h3>
-                    
-                    {getProjectsByCity(cityName).length > 0 ? (
+                    {loading ? (
+                        <SkeletonLoader type="card" count={3} />
+                    ) : cityProjects.length > 0 ? (
                         <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fill, minmax(300px, 1fr))', gap: '2rem' }}>
-                            {getProjectsByCity(cityName).map(project => (
+                            {cityProjects.map(project => (
                                 <div 
                                     key={project.id}
                                     onClick={() => router.push(`/project/${project.id}`)}

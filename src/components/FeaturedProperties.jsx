@@ -31,7 +31,7 @@ const FeaturedProperties = ({ properties, onPropertySelect }) => {
                             <PropertyCard
                                 key={property.id}
                                 property={property}
-                                onClick={() => onPropertySelect(property.id === 1 ? 'prop-101' : property.id)}
+                                onClick={() => onPropertySelect(property.id)}
                             />
                         ))}
                     </div>

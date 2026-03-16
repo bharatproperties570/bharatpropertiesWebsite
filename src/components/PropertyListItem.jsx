@@ -86,7 +86,7 @@ const PropertyListItem = ({ property, onClick }) => {
                             </h3>
                             <div style={{ display: 'flex', alignItems: 'center', gap: '0.5rem', color: 'var(--color-text-muted)', fontSize: '0.9rem' }}>
                                 <MapPin size={16} />
-                                {property.location}
+                                {typeof property.location === 'object' ? property.location.city : property.location}
                             </div>
                         </div>
                         {/* RERA Check or similar badge can go here */}
@@ -113,7 +113,7 @@ const PropertyListItem = ({ property, onClick }) => {
                     </div>
 
                     <p style={{ color: 'var(--color-text-muted)', fontSize: '0.95rem', lineHeight: '1.5', display: '-webkit-box', WebkitLineClamp: 2, WebkitBoxOrient: 'vertical', overflow: 'hidden' }}>
-                        Experience luxury living with this stunning {property.beds} BHK property in {property.location}.
+                        Experience luxury living with this stunning {property.beds} BHK property in {typeof property.location === 'object' ? property.location.city : property.location}.
                         Features {property.baths} bathrooms, modern amenities, and a prime location.
                     </p>
                 </div>

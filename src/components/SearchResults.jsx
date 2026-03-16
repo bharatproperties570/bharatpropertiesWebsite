@@ -200,7 +200,7 @@ const SearchResults = ({ properties, searchTerm, onPropertySelect }) => {
                                             <div style={{ flex: 1 }}>
                                                 <h4 style={{ fontSize: '0.95rem', fontWeight: 700, margin: '0 0 0.4rem', color: '#1e293b' }}>{p.title}</h4>
                                                 <div style={{ display: 'flex', alignItems: 'center', gap: '0.3rem', color: '#64748b', fontSize: '0.75rem', marginBottom: '0.5rem' }}>
-                                                    <MapPin size={12} /> {p.location}
+                                                    <MapPin size={12} /> {typeof p.location === 'object' ? p.location.city : p.location}
                                                 </div>
                                                 <div style={{ fontSize: '1.1rem', color: 'var(--color-primary)', fontWeight: 800 }}>{p.price}</div>
                                             </div>
@@ -299,7 +299,7 @@ const SearchResults = ({ properties, searchTerm, onPropertySelect }) => {
                                     <PropertyListItem
                                         key={property.id}
                                         property={property}
-                                        onClick={() => onPropertySelect(property.id === 1 ? 'prop-101' : property.id)}
+                                        onClick={() => onPropertySelect(property.id)}
                                     />
                                 ))}
                             </div>

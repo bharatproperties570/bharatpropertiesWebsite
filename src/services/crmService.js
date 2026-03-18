@@ -50,7 +50,10 @@ const mapDealToProperty = (deal) => {
     return {
         id: deal._id,
         slug: deal.websiteMetadata?.slug || deal._id,
-        title: deal.websiteMetadata?.title || `${deal.propertyDetails?.bhk || ''} BHK ${deal.propertyType || ''} at ${deal.projectName}`,
+        title: deal.websiteMetadata?.title || 
+               (deal.propertyDetails?.bhk ? `${deal.propertyDetails.bhk} BHK ` : '') + 
+               (deal.propertyType || 'Premium Property') + 
+               ` at ${deal.projectName}`,
         price: formatPrice(deal.price || deal.quotePrice),
         location: { 
             city: deal.location || deal.address?.city || 'Unknown',

@@ -17,14 +17,22 @@ const FeaturedDeals = ({ city = '', initialData = [] }) => {
     ];
 
     useEffect(() => {
-        // Only fetch if data is not already present or tab changed
         const loadDeals = async () => {
+            // If we have initialData and it's not the first load, use it
             if (activeTab === 'hot' && initialData.length > 0 && deals === initialData) {
                 setLoading(false);
                 return;
             }
+            
             setLoading(true);
             const data = await fetchFeaturedDeals(activeTab, city);
+            
+            // Smart Fallback: If hot deals are empty, switch to latest
+            if (activeTab === 'hot' && data.length === 0) {
+                setActiveTab('latest');
+                return; // The next useEffect cycle will handle 'latest'
+            }
+            
             setDeals(data);
             setLoading(false);
         };

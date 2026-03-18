@@ -4,7 +4,6 @@ import React, { useEffect } from 'react';
 import { useParams, useRouter } from 'next/navigation';
 import { CITY_DATA } from '../../../data/cityData';
 import { PROPERTY_DATA } from '../../../data/propertyData';
-import { getProjectsByCity } from '../../../data/sampleProjects';
 import Hero from '../../../components/Hero';
 import FeaturedProperties from '../../../components/FeaturedProperties';
 import NewsSection from '../../../components/NewsSection';

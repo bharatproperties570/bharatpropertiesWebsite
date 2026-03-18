@@ -1,3 +1,4 @@
+/* global process */
 import axios from 'axios';
 
 const API_URL = process.env.NEXT_PUBLIC_CRM_API_URL || 'http://localhost:4000/api/public';
@@ -212,10 +213,10 @@ export const fetchFeaturedDeals = async (type = 'latest', city = '') => {
         const response = await crmApi.get(url);
         const deals = response.data.data || [];
         return deals.map(mapDealToProperty);
-    } catch (error) {
+    } catch {
         return [];
     }
-};
+}
 
 export const fetchFeaturedProjects = async (status = '', city = '') => {
     try {

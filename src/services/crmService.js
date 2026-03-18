@@ -1,9 +1,8 @@
 /* global process */
 import axios from 'axios';
 
-const API_URL = process.env.NEXT_PUBLIC_CRM_API_URL || 'http://localhost:4000/api/public';
-// For client-side, we might need a different way to handle the key if it's not exposed via NEXT_PUBLIC_
-// But since the user is the owner, we'll assume it's safe for now or we'll wrap it in a server action later.
+const isProd = process.env.NODE_ENV === 'production';
+const API_URL = process.env.NEXT_PUBLIC_CRM_API_URL || (isProd ? 'https://api.bharatproperties.co/api/public' : 'http://localhost:4000/api/public');
 const API_KEY = process.env.CRM_API_KEY || 'BP-WEB-INTEGRATION-2026-X7Y9';
 
 const crmApi = axios.create({

@@ -25,13 +25,13 @@ const Header = ({ onLogoClick, selectedCity, onSelectCity, onPostProperty, onBoo
         left: 0,
         width: '100%',
         zIndex: 2000,
-        transition: 'all 0.4s cubic-bezier(0.4, 0, 0.2, 1)',
-        backgroundColor: isScrolled ? 'rgba(255, 255, 255, 0.8)' : 'transparent',
-        backdropFilter: isScrolled ? 'blur(12px)' : 'none',
-        WebkitBackdropFilter: isScrolled ? 'blur(12px)' : 'none',
-        borderBottom: isScrolled ? '1px solid rgba(255, 255, 255, 0.2)' : 'none',
-        boxShadow: isScrolled ? 'var(--glass-shadow)' : 'none',
-        padding: isScrolled ? '0.75rem 0' : '1.25rem 0',
+        transition: 'all 0.5s cubic-bezier(0.16, 1, 0.3, 1)',
+        backgroundColor: isScrolled ? 'rgba(255, 255, 255, 0.85)' : 'transparent',
+        backdropFilter: isScrolled ? 'blur(20px) saturate(180%)' : 'none',
+        WebkitBackdropFilter: isScrolled ? 'blur(20px) saturate(180%)' : 'none',
+        borderBottom: isScrolled ? '1px solid rgba(15, 23, 42, 0.08)' : 'none',
+        boxShadow: isScrolled ? 'var(--shadow-premium)' : 'none',
+        padding: isScrolled ? '0.6rem 0' : '1.25rem 0',
         color: isScrolled ? 'var(--color-primary)' : 'var(--color-bg-white)',
     };
 
@@ -45,9 +45,22 @@ const Header = ({ onLogoClick, selectedCity, onSelectCity, onPostProperty, onBoo
     return (
         <header style={headerStyles}>
             <style>{`
-                .dropdown:hover .dropdown-content { display: flex !important; }
-                .submenu-trigger:hover .submenu-content { display: flex !important; }
-                .dropdown-item:hover { background-color: var(--color-bg-light); color: var(--color-primary) !important; }
+                .dropdown:hover .dropdown-content { display: flex !important; transform: translateY(0); opacity: 1; pointer-events: auto; }
+                .submenu-trigger:hover .submenu-content { display: flex !important; transform: translateX(0); opacity: 1; pointer-events: auto; }
+                .dropdown-item { transition: all 0.3s ease; }
+                .dropdown-item:hover { background-color: #f1f5f9; color: var(--color-primary) !important; padding-left: 1.5rem; }
+                .nav-link { position: relative; }
+                .nav-link::after { 
+                    content: ''; 
+                    position: absolute; 
+                    bottom: -4px; 
+                    left: 0; 
+                    width: 0; 
+                    height: 2px; 
+                    background: currentColor; 
+                    transition: width 0.3s ease; 
+                }
+                .nav-link:hover::after { width: 100%; }
             `}</style>
             <div className="container" style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
                 {/* Logo */}
@@ -237,8 +250,20 @@ const Header = ({ onLogoClick, selectedCity, onSelectCity, onPostProperty, onBoo
                     >
                         About
                     </a>
-                    <a href="/blog" style={navLinkStyles}>Blog</a>
-                    <a href="#contact" style={navLinkStyles}>Contact</a>
+                    <a
+                        href="/blog"
+                        className="nav-link"
+                        style={navLinkStyles}
+                    >
+                        Blog
+                    </a>
+                    <a
+                        href="#contact"
+                        className="nav-link"
+                        style={navLinkStyles}
+                    >
+                        Contact
+                    </a>
                     <button
                         onClick={onBookConsultation}
                         className="btn-calendar"
@@ -273,26 +298,28 @@ const Header = ({ onLogoClick, selectedCity, onSelectCity, onPostProperty, onBoo
 
                     <button
                         onClick={onPostProperty}
+                        className="btn-premium"
                         style={{
-                            backgroundColor: 'white',
-                            color: 'var(--color-primary)',
-                            padding: '0.5rem 1.25rem',
-                            borderRadius: 'var(--radius-md)',
+                            background: 'var(--grad-primary)',
+                            color: 'white',
+                            padding: '0.6rem 1.5rem',
+                            borderRadius: '50px',
                             fontWeight: 700,
-                            border: '2px solid var(--color-primary)',
+                            border: 'none',
                             cursor: 'pointer',
                             display: 'flex',
                             alignItems: 'center',
                             gap: '8px',
-                            transition: 'all 0.2s'
+                            boxShadow: 'var(--shadow-premium)',
+                            fontSize: '0.9rem'
                         }}
                         onMouseEnter={(e) => {
-                            e.target.style.backgroundColor = 'var(--color-primary)';
-                            e.target.style.color = 'white';
+                            e.currentTarget.style.transform = 'translateY(-2px) scale(1.02)';
+                            e.currentTarget.style.boxShadow = '0 12px 20px -5px rgba(15, 23, 42, 0.3)';
                         }}
                         onMouseLeave={(e) => {
-                            e.target.style.backgroundColor = 'white';
-                            e.target.style.color = 'var(--color-primary)';
+                            e.currentTarget.style.transform = 'translateY(0) scale(1)';
+                            e.currentTarget.style.boxShadow = 'var(--shadow-premium)';
                         }}
                     >
                         🏘️ Post Property

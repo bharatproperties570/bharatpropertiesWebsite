@@ -112,35 +112,41 @@ const ConsultationForm = ({ onClose }) => {
             <div style={{
                 position: 'fixed',
                 inset: 0,
-                backgroundColor: 'rgba(15, 23, 42, 0.75)',
-                backdropFilter: 'blur(8px)',
+                backgroundColor: 'rgba(15, 23, 42, 0.8)',
+                backdropFilter: 'blur(16px)',
                 display: 'flex',
                 alignItems: 'center',
                 justifyContent: 'center',
-                zIndex: 2000
+                zIndex: 2050,
+                animation: 'fadeIn 0.5s ease-out'
             }}>
-                <div style={{
-                    backgroundColor: 'white',
-                    padding: '3rem',
-                    borderRadius: '24px',
-                    textAlign: 'center',
-                    maxWidth: '400px',
-                    width: '90%'
-                }}>
+                <div 
+                    className="animate-fade-in-up"
+                    style={{
+                        backgroundColor: 'white',
+                        padding: '4rem 3rem',
+                        borderRadius: '32px',
+                        textAlign: 'center',
+                        maxWidth: '450px',
+                        width: '90%',
+                        boxShadow: 'var(--shadow-premium)'
+                    }}
+                >
                     <div style={{
-                        width: '80px',
-                        height: '80px',
+                        width: '100px',
+                        height: '100px',
                         backgroundColor: '#dcfce7',
                         borderRadius: '50%',
                         display: 'flex',
                         alignItems: 'center',
                         justifyContent: 'center',
-                        margin: '0 auto 1.5rem'
+                        margin: '0 auto 2rem',
+                        animation: 'glowPulse 2s infinite'
                     }}>
-                        <Check size={40} color="#22c55e" />
+                        <Check size={48} color="#22c55e" />
                     </div>
-                    <h2 style={{ fontSize: '1.5rem', fontWeight: 800, color: '#1e293b', marginBottom: '0.5rem' }}>Consultation Scheduled!</h2>
-                    <p style={{ color: '#64748b' }}>Your meeting has been booked successfully. Our executive will reach out shortly.</p>
+                    <h2 style={{ fontSize: '2rem', fontWeight: 800, color: '#1e293b', marginBottom: '1rem', letterSpacing: '-0.5px' }}>Consultation Scheduled!</h2>
+                    <p style={{ color: '#64748b', fontSize: '1.1rem', lineHeight: 1.6 }}>Your premium consultation session has been booked successfully. Our executive will reach out shortly to discuss your requirements.</p>
                 </div>
             </div>
         );
@@ -150,72 +156,79 @@ const ConsultationForm = ({ onClose }) => {
         <div style={{
             position: 'fixed',
             inset: 0,
-            backgroundColor: 'rgba(15, 23, 42, 0.6)',
-            backdropFilter: 'blur(8px)',
+            backgroundColor: 'rgba(15, 23, 42, 0.4)',
+            backdropFilter: 'blur(12px)',
             display: 'flex',
             alignItems: 'center',
             justifyContent: 'center',
             zIndex: 2000,
-            padding: '2rem'
+            padding: '2rem',
+            animation: 'fadeIn 0.3s ease-out'
         }} onClick={onClose}>
-            <div style={{
-                backgroundColor: 'white',
-                borderRadius: '24px',
-                width: '100%',
-                maxWidth: '850px',
-                maxHeight: '90vh',
-                overflowY: 'auto',
-                position: 'relative',
-                boxShadow: '0 25px 50px -12px rgba(0, 0, 0, 0.25)'
-            }} onClick={(e) => e.stopPropagation()}>
+            <div 
+                className="animate-fade-in-up"
+                style={{
+                    backgroundColor: 'rgba(255, 255, 255, 0.95)',
+                    borderRadius: '32px',
+                    width: '100%',
+                    maxWidth: '850px',
+                    maxHeight: '92vh',
+                    overflowY: 'auto',
+                    position: 'relative',
+                    boxShadow: 'var(--shadow-premium)',
+                    border: '1px solid rgba(255, 255, 255, 0.5)'
+                }} onClick={(e) => e.stopPropagation()}>
 
                 {/* Header Section */}
                 <div style={{
-                    padding: '2rem 3rem',
-                    borderBottom: '1px solid #f1f5f9',
+                    padding: '2.5rem 3rem',
+                    borderBottom: '1px solid rgba(15, 23, 42, 0.05)',
                     position: 'sticky',
                     top: 0,
-                    backgroundColor: 'white',
-                    zIndex: 10
+                    backgroundColor: 'rgba(255, 255, 255, 0.8)',
+                    backdropFilter: 'blur(10px)',
+                    zIndex: 20
                 }}>
                     <button
                         onClick={onClose}
                         style={{
                             position: 'absolute',
                             top: '1.5rem',
-                            right: '1.5rem',
+                            right: '2rem',
                             border: 'none',
                             background: '#f1f5f9',
-                            width: '36px',
-                            height: '36px',
+                            width: '44px',
+                            height: '44px',
                             borderRadius: '50%',
                             display: 'flex',
                             alignItems: 'center',
                             justifyContent: 'center',
                             cursor: 'pointer',
-                            color: '#64748b'
+                            color: '#64748b',
+                            transition: 'all 0.3s ease'
                         }}
+                        onMouseEnter={(e) => { e.currentTarget.style.backgroundColor = '#fee2e2'; e.currentTarget.style.color = '#ef4444'; }}
+                        onMouseLeave={(e) => { e.currentTarget.style.backgroundColor = '#f1f5f9'; e.currentTarget.style.color = '#64748b'; }}
                     >
-                        <X size={20} />
+                        <X size={22} />
                     </button>
-                    <div style={{ paddingRight: '3rem' }}>
+                    <div style={{ paddingRight: '4rem' }}>
                         <span style={{
-                            fontSize: '0.75rem',
-                            fontWeight: 700,
+                            fontSize: '0.85rem',
+                            fontWeight: 800,
                             color: 'var(--color-primary)',
                             textTransform: 'uppercase',
-                            letterSpacing: '1px'
+                            letterSpacing: '2px',
+                            display: 'block',
+                            marginBottom: '0.5rem'
                         }}>Schedule Your Session</span>
-                        <h1 style={{
-                            fontSize: '1.1rem',
-                            fontWeight: 700,
+                        <h1 className="gradient-text" style={{
+                            fontSize: '1.4rem',
+                            fontWeight: 800,
                             color: '#1e293b',
                             marginTop: '0.5rem',
                             lineHeight: 1.4,
-                            background: '#f1f5f9',
-                            padding: '1rem',
-                            borderRadius: '12px',
-                            borderLeft: '4px solid var(--color-primary)'
+                            letterSpacing: '-0.5px'
                         }}>
                             {dynamicTitle}
                         </h1>
@@ -538,36 +551,39 @@ const ConsultationForm = ({ onClose }) => {
                     <button
                         type="submit"
                         disabled={!formData.name || !formData.mobile || loading}
+                        className="btn-premium"
                         style={{
                             width: '100%',
-                            padding: '1.25rem',
-                            backgroundColor: 'var(--color-primary)',
+                            padding: '1.4rem',
+                            background: 'var(--grad-primary)',
                             color: 'white',
                             border: 'none',
-                            borderRadius: '16px',
-                            fontSize: '1.1rem',
-                            fontWeight: 700,
+                            borderRadius: '18px',
+                            fontSize: '1.15rem',
+                            fontWeight: 800,
                             cursor: (loading || !formData.name || !formData.mobile) ? 'not-allowed' : 'pointer',
                             display: 'flex',
                             alignItems: 'center',
                             justifyContent: 'center',
                             gap: '0.75rem',
-                            transition: 'all 0.3s',
+                            transition: 'all 0.4s cubic-bezier(0.34, 1.56, 0.64, 1)',
                             opacity: (loading || !formData.name || !formData.mobile) ? 0.5 : 1,
-                            boxShadow: '0 10px 15px -3px rgba(79, 70, 229, 0.4)'
+                            boxShadow: 'var(--shadow-premium)',
+                            textTransform: 'uppercase',
+                            letterSpacing: '1px'
                         }}
                         onMouseEnter={(e) => {
                             if (formData.name && formData.mobile && !loading) {
-                                e.currentTarget.style.transform = 'translateY(-2px)';
-                                e.currentTarget.style.backgroundColor = 'var(--color-secondary)';
+                                e.currentTarget.style.transform = 'translateY(-4px) scale(1.01)';
+                                e.currentTarget.style.boxShadow = '0 20px 40px rgba(15, 23, 42, 0.4)';
                             }
                         }}
                         onMouseLeave={(e) => {
-                            e.currentTarget.style.transform = 'translateY(0)';
-                            e.currentTarget.style.backgroundColor = 'var(--color-primary)';
+                            e.currentTarget.style.transform = 'translateY(0) scale(1)';
+                            e.currentTarget.style.boxShadow = 'var(--shadow-premium)';
                         }}
                     >
-                        {loading ? <Loader2 className="animate-spin" size={22} /> : <><Calendar size={22} /> Confirm Booking</>}
+                        {loading ? <Loader2 className="animate-spin" size={24} /> : <><Calendar size={24} /> Confirm Luxury Booking</>}
                     </button>
                 </form>
             </div>

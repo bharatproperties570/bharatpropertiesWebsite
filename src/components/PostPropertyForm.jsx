@@ -1,3 +1,4 @@
+import React, { useState, useEffect } from 'react';
 import { X, CheckCircle, IndianRupee, MapPin, User, Building2, Tag, Ruler, Loader2, AlertCircle } from 'lucide-react';
 import { countryCodes } from '../data/countryCodes';
 import { submitListing } from '../services/crmService';
@@ -149,56 +150,47 @@ const PostPropertyForm = ({ onClose }) => {
 
     if (submitted) {
         return (
-            <div style={{ position: 'fixed', inset: 0, backgroundColor: 'rgba(15, 23, 42, 0.6)', zIndex: 9999, display: 'flex', alignItems: 'center', justifyContent: 'center', backdropFilter: 'blur(8px)', animation: 'fadeIn 0.3s ease-out' }}>
-                <div style={{ backgroundColor: theme.surface, padding: '3rem', borderRadius: '24px', textAlign: 'center', maxWidth: '400px', width: '90%', boxShadow: '0 25px 50px -12px rgba(0,0,0,0.5)', animation: 'scaleUp 0.4s cubic-bezier(0.16, 1, 0.3, 1)' }}>
-                    <div style={{ width: '80px', height: '80px', backgroundColor: '#d1fae5', borderRadius: '50%', display: 'flex', alignItems: 'center', justifyContent: 'center', margin: '0 auto 1.5rem' }}>
-                        <CheckCircle size={40} color={theme.success} />
+            <div style={{ position: 'fixed', inset: 0, backgroundColor: 'rgba(15, 23, 42, 0.8)', zIndex: 9999, display: 'flex', alignItems: 'center', justifyContent: 'center', backdropFilter: 'blur(16px)', animation: 'fadeIn 0.5s ease-out' }}>
+                <div 
+                    className="animate-fade-in-up"
+                    style={{ backgroundColor: theme.surface, padding: '4rem 3rem', borderRadius: '32px', textAlign: 'center', maxWidth: '450px', width: '90%', boxShadow: 'var(--shadow-premium)' }}
+                >
+                    <div style={{ width: '100px', height: '100px', backgroundColor: '#d1fae5', borderRadius: '50%', display: 'flex', alignItems: 'center', justifyContent: 'center', margin: '0 auto 2rem', animation: 'glowPulse 2s infinite' }}>
+                        <CheckCircle size={48} color={theme.success} />
                     </div>
-                    <h2 style={{ fontSize: '1.75rem', fontWeight: 800, color: theme.textMain, marginBottom: '0.75rem' }}>Property Posted!</h2>
-                    <p style={{ color: theme.textMuted, fontSize: '1rem', lineHeight: '1.5', margin: 0 }}>Success! Aapki listing Bharat Properties platform par review ke liye bhej di gayi hai. Hum aapko jald contact karenge.</p>
+                    <h2 style={{ fontSize: '2rem', fontWeight: 800, color: theme.textMain, marginBottom: '1rem', letterSpacing: '-0.5px' }}>Property Posted!</h2>
+                    <p style={{ color: theme.textMuted, fontSize: '1.1rem', lineHeight: '1.6', margin: 0 }}>Success! Aapki luxury listing Bharat Properties platform par review ke liye bhej di gayi hai. Hum aapko jald contact karenge.</p>
                 </div>
-                <style>{`
-                    @keyframes fadeIn { from { opacity: 0; } to { opacity: 1; } }
-                    @keyframes scaleUp { from { opacity: 0; transform: scale(0.9); } to { opacity: 1; transform: scale(1); } }
-                `}</style>
             </div>
         );
     }
 
     return (
-        <div style={{ position: 'fixed', inset: 0, backgroundColor: 'rgba(15, 23, 42, 0.5)', zIndex: 9999, display: 'flex', alignItems: 'center', justifyContent: 'center', backdropFilter: 'blur(10px)', padding: '1rem' }}>
-            <style>{`
-                @keyframes slideUp {
-                    from { opacity: 0; transform: translateY(20px); }
-                    to { opacity: 1; transform: translateY(0); }
-                }
-                .scroll-container::-webkit-scrollbar { width: 8px; }
-                .scroll-container::-webkit-scrollbar-track { background: transparent; }
-                .scroll-container::-webkit-scrollbar-thumb { background-color: #cbd5e1; border-radius: 20px; border: 3px solid #fcfcfd; }
-                .input-group { position: relative; margin-bottom: 1.25rem; }
-            `}</style>
-
-            <div style={{
-                backgroundColor: theme.surface,
-                width: '100%',
-                maxWidth: '850px',
-                height: '92vh',
-                maxHeight: '900px',
-                borderRadius: '24px',
-                display: 'flex',
-                flexDirection: 'column',
-                boxShadow: '0 40px 100px -20px rgba(0, 0, 0, 0.4)',
-                animation: 'slideUp 0.4s cubic-bezier(0.16, 1, 0.3, 1)',
-                overflow: 'hidden'
-            }}>
-                <div style={{ padding: '1.5rem 2rem', background: `linear-gradient(to right, ${theme.surface}, #f8fafc)`, borderBottom: `1px solid ${theme.border}`, display: 'flex', justifyContent: 'space-between', alignItems: 'center', flexShrink: 0 }}>
-                    <div style={{ display: 'flex', alignItems: 'center', gap: '1.25rem' }}>
-                        <div style={{ width: '56px', height: '56px', background: `linear-gradient(135deg, ${theme.primary}, #3b82f6)`, borderRadius: '16px', display: 'flex', alignItems: 'center', justifyContent: 'center', color: '#fff', boxShadow: '0 10px 20px -5px rgba(37, 99, 235, 0.4)' }}>
-                            <Building2 size={28} />
+        <div style={{ position: 'fixed', inset: 0, backgroundColor: 'rgba(15, 23, 42, 0.45)', zIndex: 9999, display: 'flex', alignItems: 'center', justifyContent: 'center', backdropFilter: 'blur(12px)', padding: '1rem', animation: 'fadeIn 0.3s ease-out' }}>
+            <div 
+                className="animate-fade-in-up"
+                style={{
+                    backgroundColor: 'rgba(255, 255, 255, 0.98)',
+                    width: '100%',
+                    maxWidth: '850px',
+                    height: '94vh',
+                    maxHeight: '950px',
+                    borderRadius: '32px',
+                    display: 'flex',
+                    flexDirection: 'column',
+                    boxShadow: 'var(--shadow-premium)',
+                    border: '1px solid rgba(255, 255, 255, 0.5)',
+                    overflow: 'hidden'
+                }}
+            >
+                <div style={{ padding: '2rem 2.5rem', background: 'rgba(255, 255, 255, 0.5)', backdropFilter: 'blur(10px)', borderBottom: `1px solid rgba(15, 23, 42, 0.05)`, display: 'flex', justifyContent: 'space-between', alignItems: 'center', flexShrink: 0, zIndex: 10 }}>
+                    <div style={{ display: 'flex', alignItems: 'center', gap: '1.5rem' }}>
+                        <div style={{ width: '64px', height: '64px', background: 'var(--grad-primary)', borderRadius: '20px', display: 'flex', alignItems: 'center', justifyContent: 'center', color: '#fff', boxShadow: 'var(--shadow-premium)' }}>
+                            <Building2 size={32} />
                         </div>
                         <div>
-                            <h2 style={{ margin: 0, fontSize: '1.5rem', fontWeight: 800, color: theme.textMain, letterSpacing: '-0.02em' }}>Post Your Property</h2>
-                            <p style={{ margin: '0.25rem 0 0 0', fontSize: '0.9rem', color: theme.textMuted, fontWeight: 500 }}>Sell or Rent your property faster with Bharat Properties</p>
+                            <h2 className="gradient-text" style={{ margin: 0, fontSize: '1.75rem', fontWeight: 800, color: theme.textMain, letterSpacing: '-0.8px', lineHeight: 1.2 }}>Post Your Property</h2>
+                            <p style={{ margin: '0.3rem 0 0 0', fontSize: '0.95rem', color: theme.textMuted, fontWeight: 500 }}>Sell or Rent your premium assets with <span style={{ color: 'var(--color-primary)', fontWeight: 700 }}>Bharat Properties</span></p>
                         </div>
                     </div>
                     <button
@@ -206,9 +198,9 @@ const PostPropertyForm = ({ onClose }) => {
                         onClick={onClose}
                         onMouseEnter={() => setHoveredButton('close')}
                         onMouseLeave={() => setHoveredButton(null)}
-                        style={{ width: '44px', height: '44px', borderRadius: '50%', border: 'none', backgroundColor: hoveredButton === 'close' ? '#fee2e2' : theme.background, color: hoveredButton === 'close' ? '#ef4444' : theme.textMuted, display: 'flex', alignItems: 'center', justifyContent: 'center', cursor: 'pointer', transition: 'all 0.2s ease', outline: 'none' }}
+                        style={{ width: '48px', height: '48px', borderRadius: '50%', border: 'none', backgroundColor: hoveredButton === 'close' ? '#fee2e2' : '#f1f5f9', color: hoveredButton === 'close' ? '#ef4444' : theme.textMuted, display: 'flex', alignItems: 'center', justifyContent: 'center', cursor: 'pointer', transition: 'all 0.3s ease', outline: 'none' }}
                     >
-                        <X size={22} />
+                        <X size={24} />
                     </button>
                 </div>
 
@@ -448,21 +440,22 @@ const PostPropertyForm = ({ onClose }) => {
                     </form>
                 </div>
 
-                <div style={{ padding: '1.25rem 2rem', borderTop: `1px solid ${theme.border}`, backgroundColor: theme.surface, display: 'flex', flexWrap: 'wrap', gap: '1rem', flexShrink: 0 }}>
+                <div style={{ padding: '2rem 3rem', borderTop: `1px solid rgba(15, 23, 42, 0.05)`, backgroundColor: 'rgba(255, 255, 255, 0.6)', backdropFilter: 'blur(10px)', display: 'flex', flexWrap: 'wrap', gap: '1.5rem', flexShrink: 0, zIndex: 10 }}>
                     {error && (
                         <div style={{ 
-                            padding: '1rem', 
+                            width: '100%',
+                            padding: '1.25rem', 
                             backgroundColor: '#fef2f2', 
                             border: '1px solid #fee2e2', 
-                            borderRadius: '12px', 
+                            borderRadius: '16px', 
                             color: '#dc2626', 
-                            fontSize: '0.9rem', 
+                            fontSize: '0.95rem', 
                             display: 'flex', 
                             alignItems: 'center', 
-                            gap: '0.75rem', 
-                            marginBottom: '1rem' 
+                            gap: '1rem', 
+                            marginBottom: '0.5rem' 
                         }}>
-                            <AlertCircle size={18} />
+                            <AlertCircle size={22} />
                             <span>{error}</span>
                         </div>
                     )}
@@ -474,19 +467,19 @@ const PostPropertyForm = ({ onClose }) => {
                         onMouseLeave={() => setHoveredButton(null)}
                         style={{
                             flex: 1,
-                            padding: '1rem',
-                            borderRadius: '12px',
-                            border: `1px solid ${theme.border}`,
-                            backgroundColor: hoveredButton === 'discard' ? theme.border : theme.surface,
+                            padding: '1.2rem',
+                            borderRadius: '16px',
+                            border: `1px solid #e2e8f0`,
+                            backgroundColor: hoveredButton === 'discard' ? '#f1f5f9' : 'white',
                             color: theme.textMain,
-                            fontWeight: 600,
-                            fontSize: '1rem',
+                            fontWeight: 700,
+                            fontSize: '1.1rem',
                             cursor: 'pointer',
-                            transition: 'all 0.2s',
+                            transition: 'all 0.3s ease',
                             outline: 'none'
                         }}
                     >
-                        Discard
+                        Cancel
                     </button>
                     <button
                         type="submit"
@@ -495,25 +488,27 @@ const PostPropertyForm = ({ onClose }) => {
                         onMouseLeave={() => setHoveredButton(null)}
                         style={{
                             flex: 2,
-                            padding: '1rem',
-                            borderRadius: '12px',
+                            padding: '1.2rem',
+                            borderRadius: '16px',
                             border: 'none',
-                            background: loading ? '#94a3b8' : (hoveredButton === 'submit' ? `linear-gradient(135deg, ${theme.primaryHover}, #1d4ed8)` : `linear-gradient(135deg, ${theme.primary}, #3b82f6)`),
+                            background: loading ? '#94a3b8' : 'var(--grad-primary)',
                             color: 'white',
-                            fontWeight: 700,
-                            fontSize: '1rem',
+                            fontWeight: 800,
+                            fontSize: '1.1rem',
                             cursor: loading ? 'not-allowed' : 'pointer',
-                            boxShadow: hoveredButton === 'submit' ? '0 10px 15px -3px rgba(37, 99, 235, 0.4)' : '0 4px 6px -1px rgba(37, 99, 235, 0.2)',
-                            transform: hoveredButton === 'submit' ? 'translateY(-1px)' : 'translateY(0)',
-                            transition: 'all 0.2s',
+                            boxShadow: 'var(--shadow-premium)',
+                            transform: hoveredButton === 'submit' ? 'translateY(-3px)' : 'translateY(0)',
+                            transition: 'all 0.4s cubic-bezier(0.34, 1.56, 0.64, 1)',
                             outline: 'none',
                             display: 'flex',
                             alignItems: 'center',
                             justifyContent: 'center',
-                            gap: '0.5rem'
+                            gap: '0.75rem',
+                            textTransform: 'uppercase',
+                            letterSpacing: '1px'
                         }}
                     >
-                        {loading ? <Loader2 className="animate-spin" size={20} /> : 'Publish Property Listing'}
+                        {loading ? <Loader2 className="animate-spin" size={24} /> : 'Publish Property Listing'}
                     </button>
                 </div>
             </div>

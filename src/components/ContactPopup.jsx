@@ -61,23 +61,24 @@ const ContactPopup = ({ isOpen, onClose }) => {
             alignItems: 'center',
             justifyContent: 'center',
             padding: '1rem',
-            backgroundColor: isVisible ? 'rgba(15, 23, 42, 0.4)' : 'rgba(15, 23, 42, 0)',
-            backdropFilter: isVisible ? 'blur(8px)' : 'blur(0px)',
-            transition: 'all 0.5s ease',
+            backgroundColor: isVisible ? 'rgba(15, 23, 42, 0.45)' : 'rgba(15, 23, 42, 0)',
+            backdropFilter: isVisible ? 'blur(12px)' : 'blur(0px)',
+            transition: 'all 0.6s cubic-bezier(0.16, 1, 0.3, 1)',
             pointerEvents: isOpen ? 'all' : 'none'
         }} onClick={(e) => e.target === e.currentTarget && onClose()}>
 
             <div style={{
-                backgroundColor: 'white',
+                backgroundColor: 'rgba(255, 255, 255, 0.98)',
                 width: '100%',
                 maxWidth: '500px',
-                borderRadius: '30px',
+                borderRadius: '32px',
                 overflow: 'hidden',
                 position: 'relative',
-                transform: isVisible ? 'scale(1) translateY(0)' : 'scale(0.9) translateY(40px)',
+                transform: isVisible ? 'scale(1) translateY(0)' : 'scale(0.95) translateY(30px)',
                 opacity: isVisible ? 1 : 0,
                 transition: 'all 0.5s cubic-bezier(0.34, 1.56, 0.64, 1)',
-                boxShadow: '0 25px 70px -15px rgba(0,0,0,0.3)'
+                boxShadow: 'var(--shadow-premium)',
+                border: '1px solid rgba(255, 255, 255, 0.5)'
             }}>
 
                 {/* Close Button */}
@@ -124,13 +125,25 @@ const ContactPopup = ({ isOpen, onClose }) => {
                     <>
                         {/* Header Gradient */}
                         <div style={{
-                            height: '120px',
-                            background: 'var(--grad-primary)',
-                            padding: '2rem',
+                            height: '140px',
+                            background: 'var(--grad-indigo)',
+                            padding: '2.5rem',
                             display: 'flex',
-                            alignItems: 'flex-end'
+                            alignItems: 'flex-end',
+                            position: 'relative',
+                            overflow: 'hidden'
                         }}>
-                            <h2 style={{ color: 'white', fontSize: '1.75rem', fontWeight: 800, margin: 0 }}>Contact Us</h2>
+                            <div style={{
+                                position: 'absolute',
+                                top: '-20%',
+                                right: '-10%',
+                                width: '150px',
+                                height: '150px',
+                                background: 'rgba(255,255,255,0.1)',
+                                borderRadius: '50%',
+                                filter: 'blur(30px)'
+                            }}></div>
+                            <h2 style={{ color: 'white', fontSize: '2rem', fontWeight: 800, margin: 0, letterSpacing: '-0.5px' }}>Contact Us</h2>
                         </div>
 
                         <form onSubmit={handleSubmit} style={{ padding: '2rem 2.5rem 2.5rem' }}>
@@ -242,23 +255,35 @@ const ContactPopup = ({ isOpen, onClose }) => {
                                     disabled={loading}
                                     style={{
                                         width: '100%',
-                                        padding: '1.25rem',
-                                        backgroundColor: loading ? '#94a3b8' : 'var(--color-primary)',
+                                        padding: '1.4rem',
+                                        background: loading ? '#94a3b8' : 'var(--grad-primary)',
                                         color: 'white',
                                         border: 'none',
-                                        borderRadius: '18px',
-                                        fontSize: '1.1rem',
+                                        borderRadius: '20px',
+                                        fontSize: '1.15rem',
                                         fontWeight: 800,
                                         cursor: loading ? 'not-allowed' : 'pointer',
                                         display: 'flex',
                                         alignItems: 'center',
                                         justifyContent: 'center',
-                                        gap: '10px',
-                                        boxShadow: '0 15px 30px -10px rgba(15, 23, 42, 0.4)',
-                                        transition: 'all 0.3s'
+                                        gap: '12px',
+                                        boxShadow: 'var(--shadow-premium)',
+                                        transition: 'all 0.4s cubic-bezier(0.34, 1.56, 0.64, 1)',
+                                        textTransform: 'uppercase',
+                                        letterSpacing: '1px'
+                                    }}
+                                    onMouseEnter={(e) => {
+                                        if (!loading) {
+                                            e.currentTarget.style.transform = 'translateY(-4px) scale(1.02)';
+                                            e.currentTarget.style.boxShadow = '0 20px 40px rgba(15, 23, 42, 0.3)';
+                                        }
+                                    }}
+                                    onMouseLeave={(e) => {
+                                        e.currentTarget.style.transform = 'translateY(0) scale(1)';
+                                        e.currentTarget.style.boxShadow = 'var(--shadow-premium)';
                                     }}
                                 >
-                                    {loading ? <Loader2 className="animate-spin" size={18} /> : <><Send size={18} /> Send Message</>}
+                                    {loading ? <Loader2 className="animate-spin" size={20} /> : <><Send size={20} /> Send Message</>}
                                 </button>
 
                             </div>

@@ -1,0 +1,88 @@
+'use client';
+import React, { useState, useEffect, useRef } from 'react';
+import { fetchFeaturedProjects } from '../services/crmService';
+import { MapPin, Building2, ChevronRight } from 'lucide-react';
+import './FeaturedProjects.css';
+
+const FeaturedProjects = ({ city = '' }) => {
+    const [activeTab, setActiveTab] = useState('All');
+    const [projects, setProjects] = useState([]);
+    const [loading, setLoading] = useState(true);
+    const scrollRef = useRef(null);
+
+    const tabs = [
+        { id: 'All', label: '🌆 All Projects' },
+        { id: 'Under Construction', label: '🏗️ Under Construction' },
+        { id: 'Ready to move', label: '🔑 Ready to Move' },
+        { id: 'Launched', label: '🚀 Launched' },
+        { id: 'Pre-launched', label: '✨ Pre-launched' }
+    ];
+
+    useEffect(() => {
+        const loadProjects = async () => {
+            setLoading(true);
+            const data = await fetchFeaturedProjects(activeTab, city);
+            setProjects(data);
+            setLoading(false);
+        };
+        loadProjects();
+    }, [activeTab, city]);
+
+    return (
+        <section className="featured-projects-section">
+            <div className="section-container">
+                <div className="section-header">
+                    <h2 className="section-title">Our Premium Projects</h2>
+                    <p className="section-subtitle">Discover world-class developments in your preferred location</p>
+                    
+                    <div className="filter-tabs projects-tabs">
+                        {tabs.map(tab => (
+                            <button
+                                key={tab.id}
+                                className={`tab-button ${activeTab === tab.id ? 'active' : ''}`}
+                                onClick={() => setActiveTab(tab.id)}
+                            >
+                                {tab.label}
+                            </button>
+                        ))}
+                    </div>
+                </div>
+
+                <div className="projects-scroll-container" ref={scrollRef}>
+                    <div className="projects-track">
+                        {loading ? (
+                            <div className="loading-state">Finding your dream project...</div>
+                        ) : projects.length > 0 ? (
+                            projects.map((project, index) => (
+                                <div key={project.id || index} className="project-card-wrapper">
+                                    <div className="premium-project-card">
+                                        <div className="project-image-container">
+                                            <img src={project.image} alt={project.name} className="project-image" />
+                                            <div className="project-status-badge">{project.status}</div>
+                                            <div className="project-price-overlay">{project.price}</div>
+                                        </div>
+                                        <div className="project-info">
+                                            <h3 className="project-name">{project.name}</h3>
+                                            <p className="developer-name"><Building2 size={14} /> {project.developer}</p>
+                                            <div className="project-location">
+                                                <MapPin size={16} />
+                                                <span>{project.location}</span>
+                                            </div>
+                                            <button className="view-details-btn">
+                                                View Details <ChevronRight size={18} />
+                                            </button>
+                                        </div>
+                                    </div>
+                                </div>
+                            ))
+                        ) : (
+                            <div className="no-projects">No projects found in this category for {city || 'all cities'}.</div>
+                        )}
+                    </div>
+                </div>
+            </div>
+        </section>
+    );
+};
+
+export default FeaturedProjects;

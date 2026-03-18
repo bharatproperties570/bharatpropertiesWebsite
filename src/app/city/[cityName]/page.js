@@ -12,6 +12,8 @@ import CityShowcase from '../../../components/CityShowcase';
 import { useGlobal } from '../../../context/GlobalContext';
 import { MapPin } from 'lucide-react';
 import { fetchListings, fetchProjects } from '../../../services/crmService';
+import FeaturedDeals from '../../../components/FeaturedDeals';
+import FeaturedProjects from '../../../components/FeaturedProjects';
 import SkeletonLoader from '../../../components/SkeletonLoader';
 
 export default function CityPage() {
@@ -85,6 +87,9 @@ export default function CityPage() {
             />
 
             <CityShowcase city={cityData} />
+            
+            <FeaturedDeals city={cityName} />
+            <FeaturedProjects city={cityName} />
 
             {loading ? (
                 <div style={{ padding: '4rem 1rem' }}>

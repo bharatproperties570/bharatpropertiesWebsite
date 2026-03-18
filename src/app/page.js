@@ -7,12 +7,17 @@ import OfficeInfo from '../components/OfficeInfo';
 import MarketTrends from '../components/MarketTrends';
 import NewsSection from '../components/NewsSection';
 import { AboutSection, ContactSection } from '../components/Sections';
+import FeaturedDeals from '../components/FeaturedDeals';
+import FeaturedProjects from '../components/FeaturedProjects';
 
 export default function HomePage() {
     return (
         <>
             <BrandHero />
             <SearchBarOverlay />
+            
+            <FeaturedDeals />
+            <FeaturedProjects />
 
             <div id="cities">
                 <CityGrid />

@@ -1,6 +1,6 @@
 import axios from 'axios';
 
-const API_URL = process.env.NEXT_PUBLIC_CRM_API_URL || 'http://localhost:4001/api/public';
+const API_URL = process.env.NEXT_PUBLIC_CRM_API_URL || 'http://localhost:4000/api/public';
 // For client-side, we might need a different way to handle the key if it's not exposed via NEXT_PUBLIC_
 // But since the user is the owner, we'll assume it's safe for now or we'll wrap it in a server action later.
 const API_KEY = process.env.CRM_API_KEY || 'BP-WEB-INTEGRATION-2026-X7Y9';
@@ -75,7 +75,8 @@ const mapDealToProperty = (deal) => {
             title: deal.websiteMetadata?.metaTitle,
             description: deal.websiteMetadata?.metaDescription,
             tags: deal.websiteMetadata?.tags || []
-        }
+        },
+        siteVisitCount: deal.siteVisitCount
     };
 };
 
@@ -101,7 +102,7 @@ const mapProjectToWebProject = (project) => {
         images: images.length > 0 ? images : ['https://images.unsplash.com/photo-1486406146926-c627a92ad1ab?ixlib=rb-4.0.3&auto=format&fit=crop&w=1470&q=80'],
         featuredImage: project.websiteMetadata?.featuredImage || images[0],
         status: project.status?.lookup_value || project.status || 'Under Construction',
-        location: project.address?.city || project.locationSearch || 'Unknown',
+        location: project.address?.city?.lookup_value || project.address?.city || project.locationSearch || 'Unknown',
         landArea: flattenMeasurement(project.landArea, project.landAreaUnit || 'Acres'),
         totalBlocks: project.totalBlocks || 0,
         totalFloors: project.totalFloors || 0,
@@ -120,7 +121,13 @@ const mapProjectToWebProject = (project) => {
         amenities: categorizedAmenities,
         blocks: project.blocks || [],
         deals: (project.associatedDeals || []).map(mapDealToProperty),
-        address: project.address,
+        address: {
+            ...project.address,
+            city: project.address?.city?.lookup_value || project.address?.city || '',
+            locality: project.address?.locality?.lookup_value || project.address?.locality || '',
+            state: project.address?.state?.lookup_value || project.address?.state || '',
+            country: project.address?.country?.lookup_value || project.address?.country || ''
+        },
         seo: {
             title: project.websiteMetadata?.metaTitle,
             description: project.websiteMetadata?.metaDescription,
@@ -197,8 +204,46 @@ export const submitLead = async (formData) => {
     }
 };
 
+export const fetchFeaturedDeals = async (type = 'latest', city = '') => {
+    try {
+        let url = `/listings?type=${type}&limit=8`;
+        if (city) url += `&city=${encodeURIComponent(city)}`;
+        
+        const response = await crmApi.get(url);
+        const deals = response.data.data || [];
+        return deals.map(mapDealToProperty);
+    } catch (error) {
+        return [];
+    }
+};
+
+export const fetchFeaturedProjects = async (status = '', city = '') => {
+    try {
+        let url = `/projects?limit=8`;
+        if (status && status !== 'All') url += `&status=${encodeURIComponent(status)}`;
+        if (city) url += `&city=${encodeURIComponent(city)}`;
+        
+        const response = await crmApi.get(url);
+        const projects = response.data.data || [];
+        return projects.map(p => ({
+            id: p._id,
+            name: p.name,
+            developer: p.developerName,
+            location: p.address?.city?.lookup_value || p.address?.city || p.locationSearch,
+            status: p.status?.lookup_value || p.status || 'Active',
+            image: p.projectImages?.[0]?.path || '/images/project-placeholder.jpg',
+            price: p.pricing?.basePrice?.amount ? `${p.pricing.basePrice.amount} ${p.pricing.basePrice.unit}` : 'Contact for Price'
+        }));
+    } catch (error) {
+        console.error(`Error fetching projects from CRM:`, error);
+        return [];
+    }
+};
+
 export default {
     fetchListings,
+    fetchFeaturedDeals,
+    fetchFeaturedProjects,
     fetchProjects,
     fetchListingBySlug,
     fetchProjectBySlug,

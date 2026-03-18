@@ -3,28 +3,22 @@ import { MapPin, Bed, Bath, Square, Plus, Heart } from 'lucide-react';
 
 const PropertyCard = ({ property, onClick }) => {
     return (
-        <div style={{
-            backgroundColor: 'white',
-            borderRadius: 'var(--radius-lg)',
-            overflow: 'hidden',
-            boxShadow: 'var(--shadow-lg)',
-            transition: 'all 0.4s cubic-bezier(0.4, 0, 0.2, 1)',
-            cursor: 'pointer',
-            height: '100%',
-            display: 'flex',
-            flexDirection: 'column',
-            border: '1px solid rgba(0,0,0,0.05)',
-            position: 'relative'
-        }}
+        <div 
+            className="hover-lift"
+            style={{
+                backgroundColor: 'white',
+                borderRadius: 'var(--radius-lg)',
+                overflow: 'hidden',
+                boxShadow: 'var(--shadow-lg)',
+                transition: 'all 0.5s cubic-bezier(0.16, 1, 0.3, 1)',
+                cursor: 'pointer',
+                height: '100%',
+                display: 'flex',
+                flexDirection: 'column',
+                border: '1px solid rgba(15, 23, 42, 0.05)',
+                position: 'relative'
+            }}
             onClick={onClick}
-            onMouseEnter={(e) => {
-                e.currentTarget.style.transform = 'translateY(-12px)';
-                e.currentTarget.style.boxShadow = 'var(--shadow-xl)';
-            }}
-            onMouseLeave={(e) => {
-                e.currentTarget.style.transform = 'translateY(0)';
-                e.currentTarget.style.boxShadow = 'var(--shadow-lg)';
-            }}
         >
             <div style={{ position: 'relative', height: '260px', overflow: 'hidden', aspectRatio: '16/9' }}>
                 <img
@@ -41,15 +35,17 @@ const PropertyCard = ({ property, onClick }) => {
                     position: 'absolute',
                     top: '1rem',
                     left: '1rem',
-                    backgroundColor: 'rgba(15, 23, 42, 0.7)',
-                    backdropFilter: 'blur(8px)',
+                    backgroundColor: 'rgba(15, 23, 42, 0.8)',
+                    backdropFilter: 'blur(12px)',
                     color: 'white',
-                    padding: '0.4rem 1rem',
+                    padding: '0.4rem 1.2rem',
                     borderRadius: 'var(--radius-full)',
-                    fontSize: '0.75rem',
-                    fontWeight: 700,
+                    fontSize: '0.7rem',
+                    fontWeight: 800,
                     textTransform: 'uppercase',
-                    letterSpacing: '0.5px'
+                    letterSpacing: '1px',
+                    boxShadow: '0 4px 12px rgba(0,0,0,0.2)',
+                    zIndex: 2
                 }}>
                     {property.status || 'Exclusive'}
                 </div>
@@ -118,13 +114,15 @@ const PropertyCard = ({ property, onClick }) => {
                     position: 'absolute',
                     bottom: '1rem',
                     right: '1rem',
-                    backgroundColor: 'white',
+                    background: 'white',
                     color: 'var(--color-primary)',
-                    padding: '0.5rem 1.25rem',
+                    padding: '0.6rem 1.5rem',
                     borderRadius: 'var(--radius-md)',
                     fontWeight: 800,
-                    fontSize: '1.1rem',
-                    boxShadow: 'var(--shadow-md)'
+                    fontSize: '1.2rem',
+                    boxShadow: 'var(--shadow-premium)',
+                    zIndex: 2,
+                    border: '1px solid rgba(15, 23, 42, 0.05)'
                 }}>
                     {property.price}
                 </div>
@@ -134,17 +132,38 @@ const PropertyCard = ({ property, onClick }) => {
                     position: 'absolute',
                     bottom: '1rem',
                     left: '1rem',
-                    backgroundColor: 'var(--color-emerald)',
-                    color: 'white',
-                    padding: '0.3rem 0.75rem',
-                    borderRadius: 'var(--radius-full)',
-                    fontSize: '0.7rem',
-                    fontWeight: 600,
                     display: 'flex',
-                    alignItems: 'center',
-                    gap: '4px'
+                    gap: '8px'
                 }}>
-                    🌱 A+ Eco
+                    <div style={{
+                        backgroundColor: 'var(--color-emerald)',
+                        color: 'white',
+                        padding: '0.3rem 0.75rem',
+                        borderRadius: 'var(--radius-full)',
+                        fontSize: '0.7rem',
+                        fontWeight: 600,
+                        display: 'flex',
+                        alignItems: 'center',
+                        gap: '4px'
+                    }}>
+                        🌱 A+ Eco
+                    </div>
+                    {property.siteVisitCount !== undefined && (
+                        <div style={{
+                            backgroundColor: 'rgba(255, 255, 255, 0.9)',
+                            color: 'var(--color-primary)',
+                            padding: '0.3rem 0.75rem',
+                            borderRadius: 'var(--radius-full)',
+                            fontSize: '0.7rem',
+                            fontWeight: 700,
+                            display: 'flex',
+                            alignItems: 'center',
+                            gap: '4px',
+                            boxShadow: 'var(--shadow-sm)'
+                        }}>
+                            👀 {property.siteVisitCount} Site Visits
+                        </div>
+                    )}
                 </div>
             </div>
 

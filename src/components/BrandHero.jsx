@@ -1,17 +1,17 @@
 'use client';
 
 import React from 'react';
+import Image from 'next/image';
 import { ArrowDown } from 'lucide-react';
 
 const HERO_VIDEOS = [
     "https://cdn.pixabay.com/video/2024/01/24/197942-906226451_large.mp4", // Luxury Villa Drone
     "https://cdn.pixabay.com/video/2024/06/01/214888_large.mp4",           // Modern Skyscrapers
-    "https://cdn.pixabay.com/video/2021/06/22/78557-566388813_large.mp4",   // Luxury Pool/Villa
-    "https://cdn.pixabay.com/video/2025/05/27/282084_large.mp4"            // Green Residential
 ];
 
 const BrandHero = ({ onExplore }) => {
     const [videoIndex, setVideoIndex] = React.useState(0);
+    const [isLoaded, setIsLoaded] = React.useState(false);
 
     const defaultExplore = () => {
         const el = document.getElementById('cities');
@@ -35,14 +35,14 @@ const BrandHero = ({ onExplore }) => {
         }}>
             {/* Video Background */}
             <video
-                key={HERO_VIDEOS[videoIndex]} // Use key to force reload when index changes
+                key={HERO_VIDEOS[videoIndex]}
                 autoPlay
                 muted
                 loop={false}
                 onEnded={handleVideoEnd}
+                onCanPlay={() => setIsLoaded(true)}
                 playsInline
                 aria-hidden="true"
-                poster="https://images.unsplash.com/photo-1512917774080-9991f1c4c750?auto=format&fit=crop&w=1200&q=80"
                 style={{
                     position: 'absolute',
                     top: '50%',
@@ -53,11 +53,26 @@ const BrandHero = ({ onExplore }) => {
                     height: 'auto',
                     transform: 'translate(-50%, -50%)',
                     objectFit: 'cover',
-                    zIndex: 0
+                    zIndex: 0,
+                    opacity: isLoaded ? 1 : 0,
+                    transition: 'opacity 1s ease-in-out'
                 }}
             >
                 <source src={HERO_VIDEOS[videoIndex]} type="video/mp4" />
             </video>
+
+            {/* Poster using next/image for optimization */}
+            {!isLoaded && (
+                <div style={{ position: 'absolute', inset: 0, zIndex: -1 }}>
+                    <Image 
+                        src="https://images.unsplash.com/photo-1512917774080-9991f1c4c750?auto=format&fit=crop&w=1200&q=80"
+                        alt="Real Estate Background"
+                        fill
+                        priority
+                        style={{ objectFit: 'cover' }}
+                    />
+                </div>
+            )}
 
             {/* Overlay */}
             <div style={{

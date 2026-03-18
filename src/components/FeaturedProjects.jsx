@@ -1,13 +1,14 @@
 'use client';
 import React, { useState, useEffect, useRef } from 'react';
+import Image from 'next/image';
 import { fetchFeaturedProjects } from '../services/crmService';
 import { MapPin, Building2, ChevronRight } from 'lucide-react';
 import './FeaturedProjects.css';
 
-const FeaturedProjects = ({ city = '' }) => {
+const FeaturedProjects = ({ city = '', initialData = [] }) => {
     const [activeTab, setActiveTab] = useState('All');
-    const [projects, setProjects] = useState([]);
-    const [loading, setLoading] = useState(true);
+    const [projects, setProjects] = useState(initialData);
+    const [loading, setLoading] = useState(initialData.length === 0);
     const scrollRef = useRef(null);
 
     const tabs = [
@@ -20,13 +21,17 @@ const FeaturedProjects = ({ city = '' }) => {
 
     useEffect(() => {
         const loadProjects = async () => {
+            if (activeTab === 'All' && initialData.length > 0 && projects === initialData) {
+                setLoading(false);
+                return;
+            }
             setLoading(true);
             const data = await fetchFeaturedProjects(activeTab, city);
             setProjects(data);
             setLoading(false);
         };
         loadProjects();
-    }, [activeTab, city]);
+    }, [activeTab, city, initialData]);
 
     return (
         <section className="featured-projects-section">
@@ -57,7 +62,14 @@ const FeaturedProjects = ({ city = '' }) => {
                                 <div key={project.id || index} className="project-card-wrapper">
                                     <div className="premium-project-card">
                                         <div className="project-image-container">
-                                            <img src={project.image} alt={project.name} className="project-image" />
+                                            <Image 
+                                                src={project.image} 
+                                                alt={project.name} 
+                                                fill
+                                                sizes="(max-width: 768px) 100vw, (max-width: 1200px) 50vw, 33vw"
+                                                className="project-image"
+                                                style={{ objectFit: 'cover' }}
+                                            />
                                             <div className="project-status-badge">{project.status}</div>
                                             <div className="project-price-overlay">{project.price}</div>
                                         </div>

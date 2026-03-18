@@ -4,10 +4,10 @@ import { fetchFeaturedDeals } from '../services/crmService';
 import PropertyCard from './PropertyCard';
 import './FeaturedDeals.css';
 
-const FeaturedDeals = ({ city = '' }) => {
+const FeaturedDeals = ({ city = '', initialData = [] }) => {
     const [activeTab, setActiveTab] = useState('hot');
-    const [deals, setDeals] = useState([]);
-    const [loading, setLoading] = useState(true);
+    const [deals, setDeals] = useState(initialData);
+    const [loading, setLoading] = useState(initialData.length === 0);
     const scrollRef = useRef(null);
 
     const tabs = [
@@ -17,14 +17,19 @@ const FeaturedDeals = ({ city = '' }) => {
     ];
 
     useEffect(() => {
+        // Only fetch if data is not already present or tab changed
         const loadDeals = async () => {
+            if (activeTab === 'hot' && initialData.length > 0 && deals === initialData) {
+                setLoading(false);
+                return;
+            }
             setLoading(true);
             const data = await fetchFeaturedDeals(activeTab, city);
             setDeals(data);
             setLoading(false);
         };
         loadDeals();
-    }, [activeTab, city]);
+    }, [activeTab, city, initialData]);
 
     return (
         <section className="featured-deals-section">

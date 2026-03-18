@@ -1,4 +1,5 @@
 import React from 'react';
+import Image from 'next/image';
 import { MapPin, Phone, Mail, Clock, ExternalLink, Navigation } from 'lucide-react';
 
 const OfficeInfo = () => {
@@ -85,7 +86,13 @@ const OfficeInfo = () => {
                                     alignItems: 'center',
                                     justifyContent: 'center'
                                 }}>
-                                    <img src="/assets/logo-main.png" alt="Bharat Properties" style={{ width: '100%', height: '100%', objectFit: 'contain' }} />
+                                    <Image 
+                                        src="/assets/logo-main.png" 
+                                        alt="Bharat Properties" 
+                                        width={100} 
+                                        height={100}
+                                        style={{ width: '100%', height: '100%', objectFit: 'contain' }} 
+                                    />
                                 </div>
                                 <h3 style={{ fontSize: '3rem', fontWeight: 900, marginBottom: '1rem', fontFamily: 'var(--font-heading)', letterSpacing: '-0.02em' }}>Visit Us</h3>
                                 <p style={{ fontSize: '1.25rem', opacity: 0.8, maxWidth: '280px', margin: '0 auto 2rem', lineHeight: 1.4 }}>Where luxury real estate meets premium consultation.</p>

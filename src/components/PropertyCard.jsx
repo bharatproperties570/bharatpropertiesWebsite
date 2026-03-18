@@ -1,4 +1,5 @@
 import React from 'react';
+import Image from 'next/image';
 import { MapPin, Bed, Bath, Square, Plus, Heart } from 'lucide-react';
 
 const PropertyCard = ({ property, onClick }) => {
@@ -21,13 +22,13 @@ const PropertyCard = ({ property, onClick }) => {
             onClick={onClick}
         >
             <div style={{ position: 'relative', height: '260px', overflow: 'hidden', aspectRatio: '16/9' }}>
-                <img
+                <Image
                     src={property.image}
                     alt={`${property.title} in ${property.location} - Bharat Properties`}
-                    loading="lazy"
-                    style={{ width: '100%', height: '100%', objectFit: 'cover', transition: 'transform 0.6s cubic-bezier(0.4, 0, 0.2, 1)' }}
-                    onMouseEnter={(e) => e.target.style.transform = 'scale(1.1)'}
-                    onMouseLeave={(e) => e.target.style.transform = 'scale(1)'}
+                    fill
+                    sizes="(max-width: 768px) 100vw, (max-width: 1200px) 50vw, 33vw"
+                    style={{ objectFit: 'cover', transition: 'transform 0.6s cubic-bezier(0.4, 0, 0.2, 1)' }}
+                    className="property-image-hover"
                 />
 
                 {/* Status Badge - Glassmorphism */}

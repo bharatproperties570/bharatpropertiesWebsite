@@ -12,7 +12,7 @@ export default function ConnectedHeader() {
         setSelectedCity(city);
         // Also navigate if not already there?
         // App.jsx: setSelectedCity(city); setCurrentView('CITY');
-        router.push(`/city/${city}`);
+        router.push(`/${city}`);
     };
 
     const handleLogoClick = () => {

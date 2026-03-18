@@ -16,7 +16,7 @@ const CityGrid = ({ onSelectCity }) => {
             onSelectCity(cityName);
         } else {
             setSelectedCity(cityName);
-            router.push(`/city/${encodeURIComponent(cityName)}`);
+            router.push(`/${encodeURIComponent(cityName)}`);
         }
     };
 

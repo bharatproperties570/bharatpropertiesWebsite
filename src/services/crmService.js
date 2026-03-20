@@ -37,7 +37,7 @@ const fixDriveUrl = (url) => {
     if (!url) return url;
     if (url.includes('drive.google.com')) {
         // Handle both webViewLink and webContentLink
-        const fileIdMatch = url.match(/\/file\/d\/([^\/]+)/) || url.match(/[?&]id=([^&]+)/);
+        const fileIdMatch = url.match(/\/file\/d\/([^/]+)/) || url.match(/[?&]id=([^&]+)/);
         if (fileIdMatch && fileIdMatch[1]) {
             return `https://drive.google.com/uc?export=view&id=${fileIdMatch[1]}`;
         }
@@ -115,7 +115,7 @@ const mapProjectToWebProject = (project) => {
             title: img.title || ''
         }))
         .filter(img => img.url);
-    const images = projectImages.map(img => img.url);
+    // const images = projectImages.map(img => img.url); // Unused, removed for lint compliance
     
     // Categorize amenities for the UI
     const amenityMap = project.amenities || {};

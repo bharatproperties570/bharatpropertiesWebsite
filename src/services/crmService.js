@@ -115,7 +115,7 @@ const mapProjectToWebProject = (project) => {
             title: img.title || ''
         }))
         .filter(img => img.url);
-    // const images = projectImages.map(img => img.url); // Unused, removed for lint compliance
+
     
     // Categorize amenities for the UI
     const amenityMap = project.amenities || {};

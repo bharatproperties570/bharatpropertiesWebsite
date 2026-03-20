@@ -22,8 +22,8 @@ export default async function HomePage() {
     ]);
 
     return (
-        <>
-            <HeroSection /> {/* v4.4-FINAL-SYNC */}
+        <div id="bp-root-v4-5-definitive-sync">
+            <HeroSection /> {/* v4.5-FINAL-SYNC */}
             <SearchBarOverlay />
             
             <FeaturedDeals initialData={hotDeals} />
@@ -39,6 +39,6 @@ export default async function HomePage() {
             <AboutSection />
             <MarketTrends />
             <ContactSection />
-        </>
+        </div>
     );
 }

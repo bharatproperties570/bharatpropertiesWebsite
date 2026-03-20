@@ -110,10 +110,11 @@ const BrandHero = ({ onExplore }) => {
                         filter: 'blur(40px)'
                     }}></div>
                 </h1>
-                <p className="animate-fade-in-up" style={{
+                <p id="hero-slogan-v2" className="animate-fade-in-up" style={{
                     fontSize: 'clamp(1.1rem, 2.5vw, 1.4rem)',
                     marginBottom: '4rem',
                     color: '#f1f5f9',
+                    fontFamily: 'var(--font-heading)',
                     fontWeight: 400,
                     maxWidth: '800px',
                     marginLeft: 'auto',

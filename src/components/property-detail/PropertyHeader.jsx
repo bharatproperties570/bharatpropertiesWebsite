@@ -1,88 +1,219 @@
-import React from 'react';
-import { MapPin, Building2, Share2, Heart, ShieldCheck, BadgeCheck, Plus, Calendar } from 'lucide-react';
+'use client';
+
+import React, { useState, useEffect } from 'react';
+import { MapPin, Building2, Share2, Heart, ShieldCheck, BadgeCheck, Plus, Calendar, ArrowRight, Maximize2 } from 'lucide-react';
 
 const PropertyHeader = ({ property, onAddToCompare, onBookConsultation }) => {
+    const [isScrolled, setIsScrolled] = useState(false);
+    const [isSaved, setIsSaved] = useState(false);
+
+    useEffect(() => {
+        const handleScroll = () => {
+            setIsScrolled(window.scrollY > 200);
+        };
+        window.addEventListener('scroll', handleScroll);
+        return () => window.removeEventListener('scroll', handleScroll);
+    }, []);
+
+    const handleShare = () => {
+        if (navigator.share) {
+            navigator.share({
+                title: property.unitName,
+                text: `Check out this property: ${property.unitName}`,
+                url: window.location.href
+            }).catch(() => {});
+        } else {
+            navigator.clipboard.writeText(window.location.href);
+            alert('Link copied to clipboard!');
+        }
+    };
+
     return (
-        <div style={{ backgroundColor: '#fff', borderBottom: '1px solid #f1f5f9', position: 'sticky', top: '80px', zIndex: 100, backdropFilter: 'blur(8px)' }}>
-            <div className="container" style={{ padding: '1.5rem 0' }}>
-                <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-start', flexWrap: 'wrap', gap: '2rem' }}>
-                    <div>
-                        <div style={{ display: 'flex', alignItems: 'center', gap: '10px', marginBottom: '8px' }}>
-                            <span style={{ padding: '4px 12px', backgroundColor: '#eef2ff', color: '#4f46e5', borderRadius: '20px', fontSize: '0.75rem', fontWeight: 800, textTransform: 'uppercase' }}>
-                                {property.ownership}
-                            </span>
-                            <span style={{ padding: '4px 12px', backgroundColor: '#dcfce7', color: '#166534', borderRadius: '20px', fontSize: '0.75rem', fontWeight: 800, textTransform: 'uppercase' }}>
-                                {property.stage}
-                            </span>
+        <>
+            {/* Cinematic Hero Section (Full Bleed) */}
+            {!isScrolled && (
+                <div style={{
+                    position: 'relative',
+                    height: '85vh',
+                    minHeight: '600px',
+                    width: '100%',
+                    backgroundColor: '#0f172a',
+                    marginBottom: '-80px',
+                    display: 'flex',
+                    alignItems: 'center',
+                    justifyContent: 'center',
+                    overflow: 'hidden'
+                }}>
+                    {/* Background Image */}
+                    <div style={{
+                        position: 'absolute',
+                        inset: 0,
+                        backgroundImage: `url(${property.images?.[0] || 'https://images.unsplash.com/photo-1512917774080-9991f1c4c750?auto=format&fit=crop&q=80&w=2000'})`,
+                        backgroundSize: 'cover',
+                        backgroundPosition: 'center',
+                        transform: 'scale(1.02)'
+                    }}>
+                        <div style={{
+                            position: 'absolute',
+                            inset: 0,
+                            background: 'linear-gradient(to bottom, rgba(15, 23, 42, 0.4) 0%, rgba(15, 23, 42, 0.9) 100%)'
+                        }}></div>
+                    </div>
+
+                    <div className="container animate-reveal" style={{ position: 'relative', zIndex: 10, textAlign: 'center' }}>
+                        <div style={{ 
+                            display: 'inline-flex', 
+                            alignItems: 'center', 
+                            gap: '12px', 
+                            padding: '10px 24px', 
+                            backgroundColor: 'rgba(255,255,255,0.1)', 
+                            backdropFilter: 'blur(10px)',
+                            border: '1px solid rgba(255,255,255,0.2)',
+                            borderRadius: '100px',
+                            color: 'white',
+                            fontSize: '0.9rem',
+                            fontWeight: 600,
+                            marginBottom: '2.5rem',
+                            textTransform: 'uppercase',
+                            letterSpacing: '2px'
+                        }}>
+                            <BadgeCheck size={16} color="var(--color-gold)" />
+                            {property.ownership || 'Premium Deal'}
                         </div>
-                        <h1 style={{ fontSize: '2.5rem', fontWeight: 900, color: '#0F172A', margin: 0, letterSpacing: '-0.03em' }}>
+
+                        <h1 style={{ 
+                            fontSize: 'clamp(3rem, 7vw, 5rem)', 
+                            fontWeight: 900, 
+                            color: 'white', 
+                            margin: '0 0 1.5rem',
+                            lineHeight: 1.1,
+                            letterSpacing: '-2px',
+                            textShadow: '0 20px 40px rgba(0,0,0,0.3)'
+                        }}>
                             {property.unitName}
                         </h1>
-                        <div style={{ display: 'flex', alignItems: 'center', gap: '15px', marginTop: '10px', color: '#64748b', fontWeight: 500 }}>
-                            <div style={{ display: 'flex', alignItems: 'center', gap: '6px' }}>
-                                <MapPin size={16} className="text-primary" />
-                                {property.location.sector}, {property.location.city}
+
+                        <div style={{ 
+                            display: 'flex', 
+                            alignItems: 'center', 
+                            justifyContent: 'center', 
+                            gap: '24px', 
+                            color: 'rgba(255,255,255,0.8)', 
+                            marginBottom: '4rem',
+                            fontSize: '1.25rem',
+                            fontWeight: 500
+                        }}>
+                            <div style={{ display: 'flex', alignItems: 'center', gap: '8px' }}>
+                                <MapPin size={22} color="var(--color-gold)" />
+                                {property.location?.sector}, {property.location?.city}
                             </div>
-                            <div style={{ display: 'flex', alignItems: 'center', gap: '6px' }}>
-                                <Building2 size={16} />
+                            <div style={{ width: '1px', height: '24px', backgroundColor: 'rgba(255,255,255,0.2)' }}></div>
+                            <div style={{ display: 'flex', alignItems: 'center', gap: '8px' }}>
+                                <Building2 size={22} color="var(--color-gold)" />
                                 {property.block}
                             </div>
                         </div>
+
+                        <div className="glass-card" style={{ 
+                            display: 'grid', 
+                            gridTemplateColumns: 'repeat(auto-fit, minmax(220px, 1fr))', 
+                            gap: '1px', 
+                            backgroundColor: 'rgba(255,255,255,0.1)', 
+                            padding: '1px',
+                            maxWidth: '1200px',
+                            margin: '0 auto',
+                            overflow: 'hidden'
+                        }}>
+                            <div style={{ backgroundColor: 'rgba(15, 23, 42, 0.4)', padding: '2.5rem', textAlign: 'center' }}>
+                                <div style={{ color: 'rgba(255,255,255,0.5)', fontSize: '0.75rem', fontWeight: 800, textTransform: 'uppercase', marginBottom: '10px', letterSpacing: '2px' }}>Value</div>
+                                <div style={{ color: 'var(--color-gold)', fontSize: '2.2rem', fontWeight: 900 }}>{property.price}</div>
+                            </div>
+                            <div style={{ backgroundColor: 'rgba(15, 23, 42, 0.4)', padding: '2.5rem', textAlign: 'center' }}>
+                                <div style={{ color: 'rgba(255,255,255,0.5)', fontSize: '0.75rem', fontWeight: 800, textTransform: 'uppercase', marginBottom: '10px', letterSpacing: '2px' }}>Configuration</div>
+                                <div style={{ color: 'white', fontSize: '1.5rem', fontWeight: 700 }}>{property.propertyType}</div>
+                            </div>
+                            <div style={{ backgroundColor: 'rgba(15, 23, 42, 0.4)', padding: '2.5rem', textAlign: 'center' }}>
+                                <div style={{ color: 'rgba(255,255,255,0.5)', fontSize: '0.75rem', fontWeight: 800, textTransform: 'uppercase', marginBottom: '10px', letterSpacing: '2px' }}>Area</div>
+                                <div style={{ color: 'white', fontSize: '1.5rem', fontWeight: 700 }}>{property.size?.value} <span style={{ fontSize: '0.9rem', opacity: 0.6 }}>{property.size?.unit}</span></div>
+                            </div>
+                            <div style={{ backgroundColor: 'rgba(15, 23, 42, 0.4)', padding: '2.5rem', textAlign: 'center' }}>
+                                <div style={{ color: 'rgba(255,255,255,0.5)', fontSize: '0.75rem', fontWeight: 800, textTransform: 'uppercase', marginBottom: '10px', letterSpacing: '2px' }}>Stage</div>
+                                <div style={{ color: 'white', fontSize: '1.5rem', fontWeight: 700 }}>{property.stage}</div>
+                            </div>
+                        </div>
                     </div>
 
-                    <div style={{ textAlign: 'right' }}>
-                        <div style={{ fontSize: '2.2rem', fontWeight: 900, color: 'var(--color-primary)', letterSpacing: '-0.02em', marginBottom: '1rem' }}>
-                            {property.price}
-                        </div>
-                        <div style={{ display: 'flex', gap: '10px', justifyContent: 'flex-end' }}>
-                            <button
-                                onClick={onBookConsultation}
-                                style={{ padding: '0 1.25rem', height: '48px', borderRadius: '14px', backgroundColor: '#eef2ff', color: 'var(--color-primary)', display: 'flex', alignItems: 'center', justifyContent: 'center', gap: '8px', cursor: 'pointer', fontWeight: 800, fontSize: '0.9rem', border: '1px solid #c7d2fe' }}
-                                onMouseEnter={(e) => e.target.style.backgroundColor = '#fff'}
-                                onMouseLeave={(e) => e.target.style.backgroundColor = '#eef2ff'}
-                            >
-                                <Calendar size={18} /> Book Consultation
-                            </button>
-                            <button
-                                onClick={() => onAddToCompare(property)}
-                                style={{ padding: '0 1.25rem', height: '48px', borderRadius: '14px', border: '2px solid var(--color-primary)', backgroundColor: '#fff', color: 'var(--color-primary)', display: 'flex', alignItems: 'center', justifyContent: 'center', gap: '10px', cursor: 'pointer', fontWeight: 700, fontSize: '0.9rem' }}
-                            >
-                                <Plus size={18} /> Compare
-                            </button>
-                            <button style={{ width: '48px', height: '48px', borderRadius: '14px', border: '1px solid #e2e8f0', backgroundColor: '#fff', display: 'flex', alignItems: 'center', justifyContent: 'center', cursor: 'pointer' }}>
-                                <Heart size={20} />
-                            </button>
-                            <button style={{ padding: '0 1.5rem', height: '48px', borderRadius: '14px', backgroundColor: '#f8fafc', color: '#1e293b', border: '1px solid #e2e8f0', fontWeight: 700, display: 'flex', alignItems: 'center', gap: '8px', cursor: 'pointer' }}>
-                                <Share2 size={18} /> Share
-                            </button>
-                            {property.brochure && (
-                                <a
-                                    href={property.brochure}
-                                    download
-                                    style={{
-                                        padding: '0 1.5rem',
-                                        height: '48px',
-                                        borderRadius: '14px',
-                                        backgroundColor: '#0F172A',
-                                        color: '#fff',
-                                        border: 'none',
-                                        fontWeight: 700,
-                                        display: 'flex',
-                                        alignItems: 'center',
-                                        gap: '10px',
-                                        cursor: 'pointer',
-                                        textDecoration: 'none',
-                                        boxShadow: '0 10px 15px -3px rgba(15, 23, 42, 0.2)'
-                                    }}
-                                >
-                                    📥 Brochure
-                                </a>
-                            )}
-                        </div>
+                    <div style={{
+                        position: 'absolute',
+                        bottom: '40px',
+                        left: '50%',
+                        transform: 'translateX(-50%)',
+                        color: 'white',
+                        display: 'flex',
+                        flexDirection: 'column',
+                        alignItems: 'center',
+                        gap: '12px',
+                        opacity: 0.5
+                    }}>
+                        <div style={{ fontSize: '0.7rem', fontWeight: 800, textTransform: 'uppercase', letterSpacing: '2px' }}>Explore Details</div>
+                        <div style={{ width: '1px', height: '60px', background: 'linear-gradient(to bottom, white, transparent)' }}></div>
+                    </div>
+                </div>
+            )}
+
+            {/* Sticky Navigation Header */}
+            <div style={{
+                backgroundColor: 'rgba(255, 255, 255, 0.95)',
+                backdropFilter: 'blur(20px)',
+                borderBottom: '1px solid rgba(0,0,0,0.05)',
+                position: 'sticky',
+                top: '0',
+                zIndex: 1000,
+                transform: isScrolled ? 'translateY(0)' : 'translateY(-100%)',
+                opacity: isScrolled ? 1 : 0,
+                transition: 'all 0.4s cubic-bezier(0.4, 0, 0.2, 1)',
+                padding: '0.75rem 0',
+                boxShadow: '0 4px 20px rgba(0,0,0,0.08)'
+            }}>
+                <div className="container" style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
+                    <div style={{ display: 'flex', alignItems: 'center', gap: '20px' }}>
+                        <h2 style={{ fontSize: '1.25rem', fontWeight: 800, color: '#0F172A', margin: 0 }}>{property.unitName}</h2>
+                        <div style={{ fontSize: '1.25rem', fontWeight: 900, color: 'var(--color-primary)' }}>{property.price}</div>
+                    </div>
+                    
+                    <div style={{ display: 'flex', alignItems: 'center', gap: '12px' }}>
+                        <button 
+                            onClick={() => setIsSaved(!isSaved)}
+                            style={{ padding: '10px', borderRadius: '12px', border: '1px solid #e2e8f0', background: 'white', color: isSaved ? '#ef4444' : '#64748b', cursor: 'pointer', transition: 'all 0.2s' }}
+                        >
+                            <Heart size={20} fill={isSaved ? '#ef4444' : 'none'} />
+                        </button>
+                        <button 
+                            onClick={handleShare}
+                            style={{ padding: '10px', borderRadius: '12px', border: '1px solid #e2e8f0', background: 'white', color: '#1e293b', cursor: 'pointer' }}
+                        >
+                            <Share2 size={20} />
+                        </button>
+                        <button 
+                            onClick={onBookConsultation}
+                            style={{ 
+                                padding: '10px 24px', 
+                                background: 'var(--grad-gold)', 
+                                color: 'var(--color-primary)', 
+                                border: 'none', 
+                                borderRadius: '12px', 
+                                fontWeight: 800, 
+                                fontSize: '0.9rem',
+                                cursor: 'pointer',
+                                boxShadow: '0 10px 20px rgba(217, 119, 6, 0.2)'
+                            }}
+                        >
+                            Enquire Now
+                        </button>
                     </div>
                 </div>
             </div>
-        </div>
+        </>
     );
 };
 

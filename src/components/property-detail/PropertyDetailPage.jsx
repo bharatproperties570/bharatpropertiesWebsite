@@ -51,30 +51,69 @@ const PropertyDetailPage = ({ propertyId, onAddToCompare, onBookConsultation }) 
     }
 
     return (
-        <div style={{ backgroundColor: '#fff', minHeight: '100vh', paddingTop: '20px' }}>
+        <div style={{ backgroundColor: '#fff', minHeight: '100vh' }}>
             <SEO
-                title={property.seo?.title || `${property.title} | ${typeof property.location === 'object' ? (property.location.city || property.location.display) : property.location} | Bharat Properties`}
-                description={property.seo?.description || property.description?.substring(0, 160) || `View details for ${property.title}. Luxury residential property at ${property.price}.`}
-                keywords={property.seo?.tags?.join(', ') || `${property.title}, Luxury Property, ${property.type} for sale`}
+                title={property.seo?.title || `${property.unitName} | ${property.location?.sector}, ${property.location?.city} | Bharat Properties`}
+                description={property.seo?.description || property.description?.substring(0, 160) || `View details for ${property.unitName}. Luxury residential property at ${property.price}.`}
+                keywords={property.seo?.tags?.join(', ') || `${property.unitName}, Luxury Property, ${property.propertyType} for sale`}
             />
-            <div className="container" style={{ paddingTop: '2rem' }}>
-                <PropertyHeader
-                    property={property}
-                    onAddToCompare={onAddToCompare}
-                    onBookConsultation={onBookConsultation}
-                />
-                <div style={{ display: 'grid', gridTemplateColumns: 'minmax(0, 2fr) minmax(0, 1fr)', gap: '2rem', marginTop: '2rem' }}>
-                    <div style={{ display: 'flex', flexDirection: 'column', gap: '2rem' }}>
-                        {property.media && <PropertyMedia media={property.media} />}
+            {/* Full Bleed Header */}
+            <PropertyHeader
+                property={property}
+                onAddToCompare={onAddToCompare}
+                onBookConsultation={onBookConsultation}
+            />
+
+            <main className="container" style={{ position: 'relative', marginTop: '4rem', paddingBottom: '8rem' }}>
+                <div style={{ display: 'grid', gridTemplateColumns: 'minmax(0, 2fr) minmax(0, 1fr)', gap: '4rem' }}>
+                    <div style={{ display: 'flex', flexDirection: 'column', gap: '4rem' }}>
+                        {/* Highlights & Technical Specs first */}
                         <PropertyOverview property={property} />
+                        
+                        {/* Media Showcase */}
+                        {property.images && property.images.length > 0 && (
+                            <section>
+                                <div style={{ display: 'flex', alignItems: 'center', gap: '12px', color: 'var(--color-primary)', fontWeight: 800, fontSize: '0.85rem', textTransform: 'uppercase', letterSpacing: '0.1em', marginBottom: '1.5rem' }}>
+                                    Visual Tour
+                                </div>
+                                <PropertyMedia media={property.images} />
+                            </section>
+                        )}
+                        
                         {property.builtupDetails && <PropertyBuiltup builtup={property.builtupDetails} furnishing={property.construction} />}
                     </div>
-                    <div style={{ position: 'sticky', top: '100px', height: 'fit-content' }}>
-                        {property.location && <PropertyLocation location={property.location} />}
-                    </div>
+
+                    <aside style={{ position: 'sticky', top: '100px', height: 'fit-content', display: 'flex', flexDirection: 'column', gap: '2rem' }}>
+                        {property.location && (
+                            <div className="glass-card" style={{ padding: '2rem', border: '1px solid #f1f5f9' }}>
+                                <PropertyLocation location={property.location} />
+                            </div>
+                        )}
+                        
+                        {/* Quick Action Card */}
+                        <div style={{ 
+                            padding: '2.5rem', 
+                            background: 'linear-gradient(135deg, #0F172A 0%, #1E293B 100%)', 
+                            borderRadius: '32px', 
+                            color: 'white',
+                            boxShadow: '0 20px 40px rgba(0,0,0,0.1)'
+                        }}>
+                            <h3 style={{ fontSize: '1.5rem', fontWeight: 800, marginBottom: '1rem' }}>Interest in this property?</h3>
+                            <p style={{ opacity: 0.7, marginBottom: '2rem', fontSize: '0.95rem', lineHeight: 1.5 }}>Our property experts are ready to assist you with a VIP tour and documentation.</p>
+                            <button 
+                                onClick={onBookConsultation}
+                                style={{ width: '100%', padding: '1.25rem', background: 'var(--grad-gold)', border: 'none', borderRadius: '16px', color: 'var(--color-primary)', fontWeight: 800, cursor: 'pointer', transition: 'all 0.3s' }}
+                                onMouseEnter={(e) => e.target.style.transform = 'translateY(-2px)'}
+                                onMouseLeave={(e) => e.target.style.transform = 'translateY(0)'}
+                            >
+                                Schedule VIP Visit
+                            </button>
+                        </div>
+                    </aside>
                 </div>
-                <NewsSection city={typeof property.location === 'object' ? property.location.city : property.location} />
-            </div>
+            </main>
+
+            <NewsSection city={property.location?.city} />
         </div>
     );
 };

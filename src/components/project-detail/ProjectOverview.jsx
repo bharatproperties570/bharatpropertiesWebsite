@@ -37,13 +37,35 @@ const ProjectOverview = ({ project }) => {
                             </p>
 
                             {/* Key Stats Grid */}
-                            <div style={{ display: 'grid', gridTemplateColumns: 'repeat(2, 1fr)', gap: '1rem' }}>
+                            <div style={{ display: 'grid', gridTemplateColumns: 'repeat(2, 1fr)', gap: '1.5rem' }}>
                                 {highlights.map((item, index) => (
-                                    <div key={index} style={{ padding: '1.5rem', backgroundColor: item.color + '08', borderRadius: '24px', border: `1px solid ${item.color}15`, display: 'flex', flexDirection: 'column', gap: '8px' }}>
-                                        <div style={{ color: item.color }}>{item.icon}</div>
+                                    <div key={index} className="glass-card" style={{ 
+                                        padding: '2rem', 
+                                        backgroundColor: 'white', 
+                                        border: '1px solid #e2e8f0', 
+                                        display: 'flex', 
+                                        flexDirection: 'column', 
+                                        gap: '12px',
+                                        transition: 'var(--transition-bounce)'
+                                    }}
+                                    onMouseEnter={(e) => e.currentTarget.style.transform = 'translateY(-5px)'}
+                                    onMouseLeave={(e) => e.currentTarget.style.transform = 'translateY(0)'}
+                                    >
+                                        <div style={{ 
+                                            width: '48px', 
+                                            height: '48px', 
+                                            borderRadius: '12px', 
+                                            backgroundColor: item.color + '10', 
+                                            color: item.color,
+                                            display: 'flex',
+                                            alignItems: 'center',
+                                            justifyContent: 'center'
+                                        }}>
+                                            {item.icon}
+                                        </div>
                                         <div>
-                                            <div style={{ fontSize: '1.2rem', fontWeight: 800, color: '#1e293b' }}>{item.value}</div>
-                                            <div style={{ fontSize: '0.85rem', color: '#64748b', fontWeight: 500 }}>{item.label}</div>
+                                            <div style={{ fontSize: '1.3rem', fontWeight: 900, color: '#0F172A', letterSpacing: '-0.02em' }}>{item.value}</div>
+                                            <div style={{ fontSize: '0.9rem', color: '#64748b', fontWeight: 600, textTransform: 'uppercase', letterSpacing: '1px' }}>{item.label}</div>
                                         </div>
                                     </div>
                                 ))}

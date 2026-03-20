@@ -96,6 +96,14 @@ const mapDealToProperty = (deal) => {
         },
         construction: deal.propertyDetails?.furnishing || 'Unfurnished',
         coords: { lat: parseFloat(deal.latitude) || 28.4595, lng: parseFloat(deal.longitude) || 77.0266 },
+        technical: {
+            floorNumber: deal.propertyDetails?.floorNumber || 'N/A',
+            totalFloors: deal.propertyDetails?.totalFloors || 'N/A',
+            facing: deal.propertyDetails?.facing || 'N/A',
+            age: deal.propertyDetails?.ageOfProperty || 'New',
+            registration: deal.priceDetails?.registrationCharges || 'Extra',
+            maintenance: deal.priceDetails?.maintenanceCharges || 'N/A'
+        },
         seo: {
             title: deal.websiteMetadata?.metaTitle,
             description: deal.websiteMetadata?.metaDescription,
@@ -133,6 +141,7 @@ const mapProjectToWebProject = (project) => {
         name: project.name,
         developer: { name: project.developerName || 'Bharat Properties' },
         images: projectImages,
+        image: project.websiteMetadata?.featuredImage || projectImages.find(img => img.category === 'Main')?.url || (projectImages[0] ? projectImages[0].url : null),
         featuredImage: project.websiteMetadata?.featuredImage || projectImages.find(img => img.category === 'Main')?.url || (projectImages[0] ? projectImages[0].url : null),
         status: project.status?.lookup_value || project.status || 'Under Construction',
         location: project.address?.city?.lookup_value || project.address?.city || project.locationSearch || 'Unknown',
@@ -140,6 +149,8 @@ const mapProjectToWebProject = (project) => {
         totalBlocks: project.totalBlocks || 0,
         totalFloors: project.totalFloors || 0,
         totalUnits: project.totalUnits || 0,
+        launchDate: project.launchDate,
+        expectedCompletion: project.expectedCompletionDate,
         category: Array.isArray(project.category) ? project.category.map(c => c.lookup_value || c).join(', ') : (project.category?.lookup_value || project.category || 'Real Estate'),
         subCategory: Array.isArray(project.subCategory) ? project.subCategory.map(s => s.lookup_value || s) : [],
         parkingType: Array.isArray(project.parkingType) ? project.parkingType.map(p => p.lookup_value || p) : (project.parkingType?.lookup_value ? [project.parkingType.lookup_value] : []),
@@ -268,7 +279,7 @@ export const fetchFeaturedProjects = async (status = '', city = '') => {
             developer: p.developerName,
             location: p.address?.city?.lookup_value || (typeof p.address?.city === 'string' ? p.address.city : null) || p.locationSearch || 'Unknown',
             status: p.status?.lookup_value || p.status || 'Active',
-            image: fixDriveUrl(p.websiteMetadata?.featuredImage || p.projectImages?.find(img => img.category === 'Main')?.url || p.projectImages?.find(img => img.category === 'Main')?.path || p.projectImages?.[0]?.url || p.projectImages?.[0]?.path) || null,
+            image: fixDriveUrl(p.websiteMetadata?.featuredImage || p.projectImages?.find(img => img.category === 'Main' || img.category === 'main')?.url || p.projectImages?.find(img => img.category === 'Main' || img.category === 'main')?.path || p.projectImages?.[0]?.url || p.projectImages?.[0]?.path) || 'https://images.unsplash.com/photo-1486406146926-c627a92ad1ab?auto=format&fit=crop&q=80&w=1000',
             price: p.pricing?.basePrice?.amount ? `${p.pricing.basePrice.amount} ${p.pricing.basePrice.unit}` : 'Contact for Price'
         }));
         cache.featuredProjects = { data: result, expiry: now + CACHE_TTL_MS };

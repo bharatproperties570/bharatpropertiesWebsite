@@ -1,5 +1,5 @@
 import React from 'react';
-import HeroSection from '../components/HeroSection';
+import HeroSection from '../components/BP_Hero_Final_v4';
 import SearchBarOverlay from '../components/SearchBarOverlay';
 import CityGrid from '../components/CityGrid';
 import ReviewsSection from '../components/ReviewsSection';
@@ -23,7 +23,7 @@ export default async function HomePage() {
 
     return (
         <>
-            <HeroSection />
+            <HeroSection /> {/* v4.4-FINAL-SYNC */}
             <SearchBarOverlay />
             
             <FeaturedDeals initialData={hotDeals} />

@@ -1,4 +1,5 @@
 
+// v2.2-BHARAT-PROPERTIES-SYNC
 import { Outfit } from 'next/font/google'
 import { GlobalProvider } from '../context/GlobalContext'
 import ClientUI from '../components/ClientUI' // Helper for floating buttons/modals

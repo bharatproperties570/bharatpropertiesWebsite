@@ -9,7 +9,7 @@ const HERO_VIDEOS = [
     "https://cdn.pixabay.com/video/2024/06/01/214888_large.mp4",           // Modern Skyscrapers
 ];
 
-const BrandHero = ({ onExplore }) => {
+const HeroSection = ({ onExplore }) => {
     const [videoIndex, setVideoIndex] = React.useState(0);
     const [isLoaded, setIsLoaded] = React.useState(false);
 
@@ -166,5 +166,5 @@ const BrandHero = ({ onExplore }) => {
     );
 };
 
-export default BrandHero;
+export default HeroSection;
 // Force Deploy: Fri Mar 20 18:36:52 IST 2026

@@ -30,7 +30,7 @@ const OfficeInfo = () => {
                         fontSize: '0.9rem',
                         display: 'inline-block',
                         marginBottom: '1rem'
-                    }}>Our Headquarters</span>
+                    }}>Our Headquarters {/* v2.1-BP */}</span>
                     
                     <h2 style={{ 
                         fontSize: '3.5rem', 

@@ -25,7 +25,7 @@ export const AboutSection = () => {
                             Excellence in Real Estate
                         </h2>
                         <p style={{ marginBottom: '1.5rem', color: 'var(--color-text-muted)', fontSize: '1.1rem' }}>
-                            With over 20 years of experience in the luxury market, Luxe Estate has established itself as the premier agency for discerning clients. We don't just sell homes; we curate lifestyles.
+                            With over 20 years of experience in the luxury market, Bharat Properties has established itself as the premier agency for discerning clients. We don't just sell homes; we curate lifestyles.
                         </p>
                         <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '2rem', marginTop: '2rem' }}>
                             <div>

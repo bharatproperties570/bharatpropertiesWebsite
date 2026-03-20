@@ -1,5 +1,5 @@
 import React from 'react';
-import BrandHero from '../components/BrandHero';
+import HeroSection from '../components/HeroSection';
 import SearchBarOverlay from '../components/SearchBarOverlay';
 import CityGrid from '../components/CityGrid';
 import ReviewsSection from '../components/ReviewsSection';
@@ -22,7 +22,7 @@ export default async function HomePage() {
 
     return (
         <>
-            <BrandHero />
+            <HeroSection />
             <SearchBarOverlay />
             
             <FeaturedDeals initialData={hotDeals} />

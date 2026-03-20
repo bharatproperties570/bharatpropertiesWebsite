@@ -21,7 +21,7 @@ export default function CityPage() {
         if (cityName) setSelectedCity(cityName);
     }, [cityName, setSelectedCity]);
 
-    const cityData = CITY_DATA.find(c => c.name === cityName);
+    const cityData = CITY_DATA.find(c => c.name.toLowerCase() === cityName.toLowerCase());
     if (!cityData) {
         notFound();
     }
@@ -39,10 +39,10 @@ export default function CityPage() {
                 image={cityData?.image}
             />
 
-            <CityShowcase city={cityData} />
-            
             <FeaturedDeals city={cityName} />
             <FeaturedProjects city={cityName} />
+            
+            <CityShowcase city={cityData} />
 
             <NewsSection city={cityName} />
         </>

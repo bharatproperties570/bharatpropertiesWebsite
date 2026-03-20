@@ -4,6 +4,7 @@ import { MapPin, Phone, Mail, Clock, ExternalLink, Navigation } from 'lucide-rea
 
 const OfficeInfo = () => {
     const kkrGMapLink = "https://www.google.com/maps/dir//Bharat+Properties,+Sector+3+Market,+Sector+30,+Sector+3,+Kurukshetra,+Haryana+136118,+India/@29.9490011,76.8836256,15z/data=!3m1!4b1!4m8!4m7!1m0!1m5!1m1!1s0x390e46d0c969312b:0x8ed8c65fa39c306d!2m2!1d76.8899997!2d29.9602037";
+    const mohaliGMapLink = "https://maps.app.goo.gl/SrXsJrh5L23qLEtM6";
 
     return (
         <section style={{ 
@@ -179,8 +180,7 @@ const OfficeInfo = () => {
                                 display: 'grid',
                                 gridTemplateColumns: 'auto 1fr',
                                 gap: '1.5rem',
-                                alignItems: 'center',
-                                opacity: 0.9
+                                alignItems: 'center'
                             }}>
                                 <div style={{ 
                                     background: 'var(--grad-indigo)', 
@@ -202,17 +202,12 @@ const OfficeInfo = () => {
                                         Mohali, Punjab
                                     </p>
                                     <div style={{ display: 'flex', alignItems: 'center', gap: '1.5rem', marginTop: '0.75rem' }}>
-                                        <a href="tel:+919991000570" style={{ color: 'var(--color-text-muted)', textDecoration: 'none', fontSize: '1rem', fontWeight: 800, display: 'flex', alignItems: 'center', gap: '0.6rem', opacity: 0.7 }}>
+                                        <a href="tel:+919991000570" style={{ color: 'var(--color-accent)', textDecoration: 'none', fontSize: '1rem', fontWeight: 800, display: 'flex', alignItems: 'center', gap: '0.6rem' }}>
                                             <Phone size={18} fill="currentColor" /> +91 99910 00570
                                         </a>
-                                        <span style={{ 
-                                            background: 'var(--grad-gold)', 
-                                            WebkitBackgroundClip: 'text', 
-                                            WebkitTextFillColor: 'transparent', 
-                                            fontSize: '0.9rem', 
-                                            fontWeight: 900,
-                                            letterSpacing: '0.05em'
-                                        }}>OPENING SOON</span>
+                                        <a href={mohaliGMapLink} target="_blank" rel="noopener noreferrer" style={{ color: 'var(--color-primary)', textDecoration: 'none', fontSize: '1rem', fontWeight: 800, display: 'flex', alignItems: 'center', gap: '0.6rem' }}>
+                                            <Navigation size={18} fill="currentColor" /> Map
+                                        </a>
                                     </div>
                                 </div>
                             </div>

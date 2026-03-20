@@ -11,6 +11,8 @@ import FeaturedDeals from '../components/FeaturedDeals';
 import FeaturedProjects from '../components/FeaturedProjects';
 import { fetchFeaturedDeals, fetchFeaturedProjects } from '../services/crmService';
 
+export const revalidate = 60;
+
 export default async function HomePage() {
     // Parallel fetching on server
     const [hotDeals, allProjects] = await Promise.all([

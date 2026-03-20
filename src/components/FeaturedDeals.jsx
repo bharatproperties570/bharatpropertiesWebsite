@@ -60,20 +60,19 @@ const FeaturedDeals = ({ city = '', initialData = [] }) => {
                 </div>
 
                 <div className="deals-scroll-container" ref={scrollRef}>
-                    <div className="deals-track">
-                        {loading ? (
-                            <div className="loading-state">Loading amazing deals...</div>
-                        ) : deals.length > 0 ? (
-                            deals.map((deal, index) => (
+                    {deals.length > 0 ? (
+                        <div className="deals-track" style={{ opacity: loading ? 0.6 : 1, transition: 'opacity 0.2s' }}>
+                            {deals.map((deal, index) => (
                                 <div key={deal.id || index} className="deal-card-wrapper">
                                     <PropertyCard property={deal} />
                                 </div>
-                            ))
-                        ) : (
-                            <div className="no-deals">No deals found for this category.</div>
-                        )}
-                        {/* Duplicate for infinite feel if needed, but for now simple scroll */}
-                    </div>
+                            ))}
+                        </div>
+                    ) : loading ? (
+                        <div className="loading-state">Loading amazing deals...</div>
+                    ) : (
+                        <div className="no-deals">No deals found for this category.</div>
+                    )}
                 </div>
             </div>
         </section>

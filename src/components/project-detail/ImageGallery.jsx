@@ -47,7 +47,7 @@ const ImageGallery = ({ images, projectName }) => {
                         overflow: 'hidden'
                     }}>
                         <img
-                            src={images[currentIndex]}
+                            src={images[currentIndex].url || images[currentIndex]}
                             alt={`${projectName} - Image ${currentIndex + 1}`}
                             style={{
                                 width: '100%',
@@ -55,6 +55,25 @@ const ImageGallery = ({ images, projectName }) => {
                                 objectFit: 'contain'
                             }}
                         />
+
+                        {/* Category Label */}
+                        <div style={{
+                            position: 'absolute',
+                            top: '1rem',
+                            left: '1.5rem',
+                            padding: '0.4rem 1rem',
+                            backgroundColor: 'white',
+                            color: 'black',
+                            borderRadius: '4px',
+                            fontSize: '0.85rem',
+                            fontWeight: 700,
+                            letterSpacing: '0.05em',
+                            textTransform: 'uppercase',
+                            zIndex: 10,
+                            boxShadow: '0 4px 6px rgba(0,0,0,0.1)'
+                        }}>
+                            {images[currentIndex].category || 'Featured'}
+                        </div>
 
                         {/* Fullscreen Button */}
                         <button
@@ -150,6 +169,8 @@ const ImageGallery = ({ images, projectName }) => {
                         </div>
                     </div>
 
+                    {/* Desktop Category Tabs - Optional, but let's stick to the labels on images first */}
+
                     {/* Thumbnail Strip */}
                     {images.length > 1 && (
                         <div style={{
@@ -178,7 +199,7 @@ const ImageGallery = ({ images, projectName }) => {
                                         onMouseLeave={(e) => e.currentTarget.style.opacity = idx === currentIndex ? 1 : 0.6}
                                     >
                                         <img
-                                            src={img}
+                                            src={img.url || img}
                                             alt={`Thumbnail ${idx + 1}`}
                                             style={{
                                                 width: '100%',
@@ -234,15 +255,31 @@ const ImageGallery = ({ images, projectName }) => {
                     </button>
 
                     {/* Fullscreen Image */}
-                    <img
-                        src={images[currentIndex]}
-                        alt={`${projectName} - Fullscreen`}
-                        style={{
-                            maxWidth: '90%',
-                            maxHeight: '90%',
-                            objectFit: 'contain'
-                        }}
-                    />
+                    <div style={{ position: 'relative', maxWidth: '90%', maxHeight: '90%' }}>
+                        <img
+                            src={images[currentIndex].url || images[currentIndex]}
+                            alt={`${projectName} - Fullscreen`}
+                            style={{
+                                width: '100%',
+                                height: '100%',
+                                objectFit: 'contain'
+                            }}
+                        />
+                        <div style={{
+                            position: 'absolute',
+                            top: '1rem',
+                            left: '1rem',
+                            padding: '0.5rem 1.25rem',
+                            backgroundColor: 'white',
+                            color: '#000',
+                            borderRadius: '4px',
+                            fontSize: '0.9rem',
+                            fontWeight: 800,
+                            textTransform: 'uppercase'
+                        }}>
+                            {images[currentIndex].category || 'Featured'}
+                        </div>
+                    </div>
 
                     {/* Fullscreen Navigation */}
                     {images.length > 1 && (

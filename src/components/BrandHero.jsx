@@ -125,7 +125,7 @@ const BrandHero = ({ onExplore }) => {
                     animationDelay: '200ms'
                 }}>
                     <span style={{ color: 'var(--color-gold)', fontWeight: 700 }}>Exclusive</span> Destination for Luxury Real Estate in North India. <br />
-                    Premium Collections in <span style={{ borderBottom: '2px solid var(--color-gold)' }}>Chandigarh, Mohali & Panchkula.</span>
+                    Premium Collections in <span style={{ borderBottom: '2px solid var(--color-gold)' }}>Chandigarh, Mohali, Panchkula & Kurukshetra.</span>
                 </p>
 
                 <button

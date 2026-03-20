@@ -1,5 +1,5 @@
 /* global process */
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import {
     Calendar,
     User,
@@ -20,11 +20,11 @@ import {
     AlertCircle
 } from 'lucide-react';
 import { countryCodes } from '../data/countryCodes';
-import { submitLead } from '../services/crmService';
+import { submitLead, fetchProjects, fetchAvailableUnits, fetchPublicSettings } from '../services/crmService';
 
 const ConsultationForm = ({ onClose }) => {
     const [formData, setFormData] = useState({
-        activityType: 'Meeting',
+        activityType: 'Call',
         reason: 'Requirement',
         locationType: 'Kurukshetra Office',
         locationAddress: 'Shop No 166, Sector 3, Huda Market, Kurukshetra',
@@ -45,6 +45,83 @@ const ConsultationForm = ({ onClose }) => {
     const [loading, setLoading] = useState(false);
     const [error, setError] = useState(null);
     const [showMapPlaceholder, setShowMapPlaceholder] = useState(false);
+
+    // Dynamic Data State
+    const [projects, setProjects] = useState([]);
+    const [filteredBlocks, setFilteredBlocks] = useState([]);
+    const [availableUnits, setAvailableUnits] = useState([]);
+    const [fetchingUnits, setFetchingUnits] = useState(false);
+    const [activityMasterFields, setActivityMasterFields] = useState({});
+
+    // Initial Data Loading
+    useEffect(() => {
+        const loadInitialData = async () => {
+            try {
+                const [projectData, settings] = await Promise.all([
+                    fetchProjects(),
+                    fetchPublicSettings()
+                ]);
+                setProjects(projectData);
+                if (settings?.activityMasterFields) {
+                    setActivityMasterFields(settings.activityMasterFields);
+                }
+            } catch (err) {
+                console.error('Failed to load initial form data:', err);
+            }
+        };
+        loadInitialData();
+    }, []);
+
+    // Fetch Units when Project/Block changes
+    useEffect(() => {
+        const loadUnits = async () => {
+            if (!formData.projectName) {
+                setAvailableUnits([]);
+                return;
+            }
+            setFetchingUnits(true);
+            try {
+                const units = await fetchAvailableUnits(formData.projectName, formData.block);
+                setAvailableUnits(units);
+            } catch (err) {
+                console.error('Failed to load units:', err);
+                setAvailableUnits([]);
+            } finally {
+                setFetchingUnits(false);
+            }
+        };
+        loadUnits();
+    }, [formData.projectName, formData.block]);
+
+    const handleProjectSelect = (projectName) => {
+        const selectedProject = projects.find(p => p.name === projectName);
+        const blocks = (selectedProject?.blocks || []).map(b => typeof b === 'object' ? b.name : b);
+        setFilteredBlocks(blocks);
+        
+        setFormData(prev => ({
+            ...prev,
+            projectName,
+            block: blocks.length > 0 ? blocks[0] : 'General',
+            unitNumber: ''
+        }));
+    };
+
+    const handleUnitSelect = (unitNo) => {
+        const unit = availableUnits.find(u => u.unitNo === unitNo);
+        if (unit) {
+            const sizeStr = unit.size ? `${unit.size.value || ''} ${unit.size.unit || ''}`.trim() : '';
+            const priceStr = unit.price ? `₹${unit.price.value || ''}` : '';
+            const detailsStr = `Unit Details: ${sizeStr}${priceStr ? ` @ ${priceStr}` : ''}`;
+            
+            setFormData(prev => ({
+                ...prev,
+                unitNumber: unitNo,
+                remarks: `${prev.remarks}\n${detailsStr}`.trim()
+            }));
+        } else {
+            setFormData(prev => ({ ...prev, unitNumber: unitNo }));
+        }
+    };
 
     // Dynamic Title Logic (Derived state)
     const inventoryText = formData.projectName
@@ -84,6 +161,11 @@ const ConsultationForm = ({ onClose }) => {
             } else if (value === 'Virtual') {
                 newFormData.locationAddress = 'Meeting link will be shared via email/WhatsApp';
             }
+        }
+
+        // Reset reason when activity type changes
+        if (name === 'activityType') {
+            newFormData.reason = '';
         }
 
         setFormData(newFormData);
@@ -266,29 +348,41 @@ const ConsultationForm = ({ onClose }) => {
                                 onChange={handleChange}
                                 style={inputStyles}
                             >
-                                <option>Meeting</option>
-                                <option>Site Visit</option>
-                                <option>Phone Consultation</option>
+                                <option value="Call">Call</option>
+                                <option value="Meeting">Meeting</option>
+                                <option value="Site Visit">Site Visit</option>
                             </select>
                         </div>
                         <div>
-                            <label style={labelStyles}>Reason for Consultation</label>
+                            <label style={labelStyles}>
+                                {formData.activityType === 'Meeting' ? 'Agenda / Meeting Purpose' : 
+                                 formData.activityType === 'Site Visit' ? 'Visit Type' : 
+                                 'Call Purpose'}
+                            </label>
                             <select
                                 name="reason"
                                 value={formData.reason}
                                 onChange={handleChange}
                                 style={inputStyles}
+                                required
                             >
-                                <option>Requirement</option>
-                                <option>Discuss for deal</option>
-                                <option>Documentation</option>
-                                <option>etc</option>
+                                <option value="">Select Purpose</option>
+                                {formData.activityType === 'Meeting' && activityMasterFields.meetingPurposes?.map(p => (
+                                    <option key={p} value={p}>{p}</option>
+                                ))}
+                                {formData.activityType === 'Site Visit' && activityMasterFields.siteVisitTypes?.map(p => (
+                                    <option key={p} value={p}>{p}</option>
+                                ))}
+                                {formData.activityType === 'Call' && activityMasterFields.callPurposes?.map(p => (
+                                    <option key={p} value={p}>{p}</option>
+                                ))}
+                                <option value="General Inquiry">General Inquiry</option>
                             </select>
                         </div>
                     </div>
 
                     {/* Location Section */}
-                    {formData.activityType !== 'Phone Consultation' && (
+                    {formData.activityType === 'Meeting' && (
                         <div style={{ marginBottom: '2rem' }}>
                             <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '1.5rem', marginBottom: '1rem' }}>
                                 <div>
@@ -383,6 +477,37 @@ const ConsultationForm = ({ onClose }) => {
                             />
                         </div>
                     )}
+                    {formData.activityType === 'Site Visit' && (
+                        <div style={{ marginBottom: '2rem' }}>
+                            <label style={labelStyles}>Site Visit Location / Pickup Point</label>
+                            <div style={{ display: 'flex', gap: '1rem' }}>
+                                <input
+                                    name="locationAddress"
+                                    value={formData.locationAddress}
+                                    onChange={handleChange}
+                                    style={inputStyles}
+                                    placeholder="Enter detailed pickup address or site location"
+                                    required
+                                />
+                                <button
+                                    type="button"
+                                    onClick={() => setShowMapPlaceholder(!showMapPlaceholder)}
+                                    style={{
+                                        ...inputStyles,
+                                        width: 'auto',
+                                        display: 'flex',
+                                        alignItems: 'center',
+                                        gap: '0.5rem',
+                                        backgroundColor: '#eff6ff',
+                                        color: '#2563eb',
+                                        border: '1px solid #bfdbfe'
+                                    }}
+                                >
+                                    <MapPin size={18} /> {showMapPlaceholder ? 'Hide' : 'Pick on Map'}
+                                </button>
+                            </div>
+                        </div>
+                    )}
 
                     {/* Inventory Section - 3 Columns (Optional) */}
                     <div style={{
@@ -397,33 +522,59 @@ const ConsultationForm = ({ onClose }) => {
                         <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr 1fr', gap: '1rem' }}>
                             <div>
                                 <label style={labelStyles}>Project Name</label>
-                                <input
+                                <select
                                     name="projectName"
                                     value={formData.projectName}
-                                    onChange={handleChange}
+                                    onChange={(e) => handleProjectSelect(e.target.value)}
                                     style={{ ...inputStyles, backgroundColor: 'white' }}
-                                    placeholder="e.g. Bharat Heights"
-                                />
+                                >
+                                    <option value="">Select Project</option>
+                                    {projects.map(p => (
+                                        <option key={p.id || p._id} value={p.name}>{p.name}</option>
+                                    ))}
+                                </select>
                             </div>
                             <div>
                                 <label style={labelStyles}>Block</label>
-                                <input
+                                <select
                                     name="block"
                                     value={formData.block}
                                     onChange={handleChange}
                                     style={{ ...inputStyles, backgroundColor: 'white' }}
-                                    placeholder="e.g. Third Block"
-                                />
+                                >
+                                    <option value="">Select Block</option>
+                                    {filteredBlocks.map(b => (
+                                        <option key={b} value={b}>{b}</option>
+                                    ))}
+                                    <option value="General">General</option>
+                                </select>
                             </div>
                             <div>
                                 <label style={labelStyles}>Unit / Property No.</label>
-                                <input
-                                    name="unitNumber"
-                                    value={formData.unitNumber}
-                                    onChange={handleChange}
-                                    style={{ ...inputStyles, backgroundColor: 'white' }}
-                                    placeholder="e.g. 1972 P"
-                                />
+                                {availableUnits.length > 0 ? (
+                                    <select
+                                        name="unitNumber"
+                                        value={formData.unitNumber}
+                                        onChange={(e) => handleUnitSelect(e.target.value)}
+                                        style={{ ...inputStyles, backgroundColor: 'white' }}
+                                    >
+                                        <option value="">Select Unit</option>
+                                        {availableUnits.map(u => (
+                                            <option key={u.id || u.unitNo} value={u.unitNo}>
+                                                {u.unitNo} {u.size ? `(${u.size.value || ''} ${u.size.unit || ''})` : ''}
+                                            </option>
+                                        ))}
+                                    </select>
+                                ) : (
+                                    <input
+                                        name="unitNumber"
+                                        value={formData.unitNumber}
+                                        onChange={handleChange}
+                                        style={{ ...inputStyles, backgroundColor: 'white' }}
+                                        placeholder={fetchingUnits ? "Loading..." : "e.g. 1972 P"}
+                                        disabled={fetchingUnits}
+                                    />
+                                )}
                             </div>
                         </div>
                     </div>

@@ -1,6 +1,6 @@
 import React from 'react';
 import Image from 'next/image';
-import { MapPin, Bed, Bath, Square, Plus, Heart } from 'lucide-react';
+import { MapPin, Bed, Bath, Square, Plus, Heart, Building2 } from 'lucide-react';
 
 const PropertyCard = ({ property, onClick }) => {
     return (
@@ -22,14 +22,31 @@ const PropertyCard = ({ property, onClick }) => {
             onClick={onClick}
         >
             <div style={{ position: 'relative', height: '260px', overflow: 'hidden', aspectRatio: '16/9' }}>
-                <Image
-                    src={property.image}
-                    alt={`${property.title} in ${property.location} - Bharat Properties`}
-                    fill
-                    sizes="(max-width: 768px) 100vw, (max-width: 1200px) 50vw, 33vw"
-                    style={{ objectFit: 'cover', transition: 'transform 0.6s cubic-bezier(0.4, 0, 0.2, 1)' }}
-                    className="property-image-hover"
-                />
+                {property.image ? (
+                    <Image
+                        src={property.image}
+                        alt={`${property.title} in ${property.location} - Bharat Properties`}
+                        fill
+                        sizes="(max-width: 768px) 100vw, (max-width: 1200px) 50vw, 33vw"
+                        style={{ objectFit: 'cover', transition: 'transform 0.6s cubic-bezier(0.4, 0, 0.2, 1)' }}
+                        className="property-image-hover"
+                    />
+                ) : (
+                    <div className="property-image-placeholder" style={{
+                        width: '100%',
+                        height: '100%',
+                        background: 'linear-gradient(135deg, #f8fafc 0%, #e2e8f0 100%)',
+                        display: 'flex',
+                        flexDirection: 'column',
+                        alignItems: 'center',
+                        justifyContent: 'center',
+                        gap: '12px',
+                        color: '#94a3b8'
+                    }}>
+                        <Building2 size={48} strokeWidth={1.5} />
+                        <span style={{ fontSize: '0.7rem', fontWeight: 800, letterSpacing: '0.1em', color: '#64748b' }}>IMAGE COMING SOON</span>
+                    </div>
+                )}
 
                 {/* Status Badge - Glassmorphism */}
                 <div style={{
@@ -177,7 +194,7 @@ const PropertyCard = ({ property, onClick }) => {
 
                 <div style={{ display: 'flex', alignItems: 'center', gap: '0.5rem', marginBottom: '1.5rem', color: 'var(--color-text-muted)', fontSize: '0.95rem' }}>
                     <MapPin size={16} />
-                    <span>{typeof property.location === 'object' ? property.location.city : property.location}</span>
+                    <span>{property.location ? (typeof property.location === 'object' ? property.location.city || 'Unknown' : property.location) : 'Unknown'}</span>
                 </div>
 
                 {/* Future Feature: Appreciation Indicator */}

@@ -68,19 +68,69 @@
     position: relative;
     width: 100vw;
     margin-left: calc(-50vw + 50%);
-    padding: 1rem 0 3rem 0;
+    padding: 1rem 0;
+}
+
+.deals-scroll-container-inner {
+    width: 100%;
+    overflow-x: auto;
+    scrollbar-width: none; /* Hide scrollbar */
+    -ms-overflow-style: none;
+    scroll-behavior: smooth;
+    padding: 2rem 0 4rem 0;
+}
+
+.deals-scroll-container-inner::-webkit-scrollbar {
+    display: none;
 }
 
 .deals-track {
     display: flex;
     gap: 2rem;
-    padding: 0 2rem;
-    animation: scrollRightToLeft 40s linear infinite;
+    padding: 0 10vw; /* Side padding to see next/prev cards */
     width: max-content;
 }
 
-.deals-scroll-container:hover .deals-track {
-    animation-play-state: paused;
+/* Navigation Buttons */
+.deals-nav-button {
+    position: absolute;
+    top: 50%;
+    transform: translateY(-50%);
+    width: 50px;
+    height: 50px;
+    border-radius: 50%;
+    background: white;
+    border: 1px solid #e2e8f0;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    cursor: pointer;
+    z-index: 10;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+    transition: all 0.3s ease;
+    color: #1e293b;
+}
+
+.deals-nav-button:hover {
+    background: #3b82f6;
+    color: white;
+    border-color: #3b82f6;
+    transform: translateY(-50%) scale(1.1);
+}
+
+.deals-nav-button.prev {
+    left: 2rem;
+}
+
+.deals-nav-button.next {
+    right: 2rem;
+}
+
+.deals-nav-button:disabled {
+    opacity: 0.5;
+    cursor: not-allowed;
+    background: #f1f5f9;
+    color: #94a3b8;
 }
 
 .deal-card-wrapper {
@@ -93,14 +143,6 @@
     transform: translateY(-10px);
 }
 
-@keyframes scrollRightToLeft {
-    0% {
-        transform: translateX(0);
-    }
-    100% {
-        transform: translateX(-100%);
-    }
-}
 
 /* Fallback for no-js or empty states */
 .loading-state, .no-deals {

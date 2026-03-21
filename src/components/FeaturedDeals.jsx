@@ -2,6 +2,7 @@
 import React, { useState, useEffect, useRef } from 'react';
 import { fetchFeaturedDeals } from '../services/crmService';
 import PropertyCard from './PropertyCard';
+import { ChevronLeft, ChevronRight } from 'lucide-react';
 import './FeaturedDeals.css';
 
 const FeaturedDeals = ({ city = '', initialData = [] }) => {
@@ -18,7 +19,6 @@ const FeaturedDeals = ({ city = '', initialData = [] }) => {
 
     useEffect(() => {
         const loadDeals = async () => {
-            // If we have initialData and it's not the first load, use it
             if (activeTab === 'hot' && initialData.length > 0 && deals === initialData) {
                 setLoading(false);
                 return;
@@ -27,10 +27,9 @@ const FeaturedDeals = ({ city = '', initialData = [] }) => {
             setLoading(true);
             const data = await fetchFeaturedDeals(activeTab, city);
             
-            // Smart Fallback: If hot deals are empty, switch to latest
             if (activeTab === 'hot' && data.length === 0) {
                 setActiveTab('latest');
-                return; // The next useEffect cycle will handle 'latest'
+                return;
             }
             
             setDeals(data);
@@ -38,6 +37,17 @@ const FeaturedDeals = ({ city = '', initialData = [] }) => {
         };
         loadDeals();
     }, [activeTab, city, initialData]);
+
+    const scroll = (direction) => {
+        if (scrollRef.current) {
+            const { current: container } = scrollRef;
+            const scrollAmount = 400 + 32; // card width + gap
+            container.scrollBy({
+                left: direction === 'left' ? -scrollAmount : scrollAmount,
+                behavior: 'smooth'
+            });
+        }
+    };
 
     return (
         <section className="featured-deals-section">
@@ -59,20 +69,41 @@ const FeaturedDeals = ({ city = '', initialData = [] }) => {
                     </div>
                 </div>
 
-                <div className="deals-scroll-container" ref={scrollRef}>
-                    {deals.length > 0 ? (
-                        <div className="deals-track" style={{ opacity: loading ? 0.6 : 1, transition: 'opacity 0.2s' }}>
-                            {deals.map((deal, index) => (
-                                <div key={deal.id || index} className="deal-card-wrapper">
-                                    <PropertyCard property={deal} />
-                                </div>
-                            ))}
-                        </div>
-                    ) : loading ? (
-                        <div className="loading-state">Loading amazing deals...</div>
-                    ) : (
-                        <div className="no-deals">No deals found for this category.</div>
+                <div className="deals-scroll-container" style={{ position: 'relative' }}>
+                    {deals.length > 3 && (
+                        <>
+                            <button 
+                                className="deals-nav-button prev" 
+                                onClick={() => scroll('left')}
+                                aria-label="Previous deal"
+                            >
+                                <ChevronLeft size={24} />
+                            </button>
+                            <button 
+                                className="deals-nav-button next" 
+                                onClick={() => scroll('right')}
+                                aria-label="Next deal"
+                            >
+                                <ChevronRight size={24} />
+                            </button>
+                        </>
                     )}
+                    
+                    <div className="deals-scroll-container-inner" ref={scrollRef}>
+                        {deals.length > 0 ? (
+                            <div className="deals-track" style={{ opacity: loading ? 0.6 : 1, transition: 'opacity 0.2s' }}>
+                                {deals.map((deal, index) => (
+                                    <div key={deal.id || index} className="deal-card-wrapper">
+                                        <PropertyCard property={deal} />
+                                    </div>
+                                ))}
+                            </div>
+                        ) : loading ? (
+                            <div className="loading-state">Loading amazing deals...</div>
+                        ) : (
+                            <div className="no-deals">No deals found for this category.</div>
+                        )}
+                    </div>
                 </div>
             </div>
         </section>

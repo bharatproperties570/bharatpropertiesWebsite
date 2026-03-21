@@ -53,22 +53,7 @@ const ReviewsSection = ({ onLeaveFeedback }) => {
             <div className="container reveal">
                 {/* Section Header */}
                 <div style={{ textAlign: 'center', marginBottom: '3rem' }}>
-                    <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'center', gap: '0.5rem', marginBottom: '1rem' }}>
-                        <span style={{ 
-                            backgroundColor: '#4285F4', 
-                            color: 'white', 
-                            padding: '4px 12px', 
-                            borderRadius: '20px', 
-                            fontSize: '0.85rem',
-                            fontWeight: '600',
-                            display: 'flex',
-                            alignItems: 'center',
-                            gap: '6px'
-                        }}>
-                            <img src="https://www.google.com/favicon.ico" alt="Google" style={{ width: '14px', height: '14px' }} />
-                            Google Reviews
-                        </span>
-                    </div>
+                    {/* Removed specific Google Badge above heading */}
                     <h2 style={{
                         fontSize: '2.56rem',
                         marginBottom: '0.5rem',
@@ -90,26 +75,7 @@ const ReviewsSection = ({ onLeaveFeedback }) => {
                                 <span style={{ fontWeight: '800', fontSize: '1.5rem', color: 'var(--color-primary)' }}>{stats.rating}</span>
                                 <span style={{ color: 'var(--color-text-muted)', fontSize: '1.1rem' }}>({stats.total} Reviews)</span>
                             </div>
-                            <a 
-                                href="https://search.google.com/local/reviews?placeid=ChIJKzFpydBGDjkRbTCco1_G2I4" 
-                                target="_blank" 
-                                rel="noopener noreferrer"
-                                style={{
-                                    fontSize: '0.9rem',
-                                    color: '#4285F4',
-                                    fontWeight: '600',
-                                    textDecoration: 'none',
-                                    display: 'flex',
-                                    alignItems: 'center',
-                                    gap: '4px',
-                                    marginTop: '4px',
-                                    transition: 'opacity 0.2s'
-                                }}
-                                onMouseEnter={(e) => e.currentTarget.style.opacity = '0.8'}
-                                onMouseLeave={(e) => e.currentTarget.style.opacity = '1'}
-                            >
-                                View All Reviews on Google <ChevronRight size={14} />
-                            </a>
+                            {/* Removed "View All Reviews on Google" link */}
                         </div>
                     )}
                     
@@ -123,7 +89,7 @@ const ReviewsSection = ({ onLeaveFeedback }) => {
                     {isLoading ? (
                         <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', justifyContent: 'center', height: '300px', gap: '1rem' }}>
                             <Loader2 className="animate-spin" size={40} color="var(--color-primary)" />
-                            <p style={{ color: 'var(--color-text-muted)' }}>Syncing latest reviews from Google...</p>
+                            <p style={{ color: 'var(--color-text-muted)' }}>Syncing latest reviews...</p>
                         </div>
                     ) : (
                         <>

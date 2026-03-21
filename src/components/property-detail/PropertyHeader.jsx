@@ -3,7 +3,7 @@
 import React, { useState, useEffect } from 'react';
 import { MapPin, Building2, Share2, Heart, ShieldCheck, BadgeCheck, Plus, Calendar, ArrowRight, Maximize2 } from 'lucide-react';
 
-const PropertyHeader = ({ property, onAddToCompare, onBookConsultation }) => {
+const PropertyHeader = ({ property, onBookConsultation }) => {
     const [isScrolled, setIsScrolled] = useState(false);
     const [isSaved, setIsSaved] = useState(false);
 

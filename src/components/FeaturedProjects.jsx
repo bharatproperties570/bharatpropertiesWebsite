@@ -31,7 +31,7 @@ const FeaturedProjects = ({ city = '', initialData = [] }) => {
             setLoading(false);
         };
         loadProjects();
-    }, [activeTab, city, initialData]);
+    }, [activeTab, city, initialData, projects]);
 
     return (
         <section className="featured-projects-section">

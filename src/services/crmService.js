@@ -300,6 +300,18 @@ export const fetchPublicSettings = async () => {
     }
 };
 
+export const fetchAvailableUnits = async (project, block) => {
+    try {
+        const response = await crmApi.get('/available-units', {
+            params: { project, block }
+        });
+        return response.data.data;
+    } catch (error) {
+        console.error('Error fetching available units:', error);
+        return [];
+    }
+};
+
 export const fetchGoogleReviews = async () => {
     try {
         const response = await crmApi.get('/google-reviews');

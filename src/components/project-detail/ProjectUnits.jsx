@@ -3,7 +3,7 @@
 import React from 'react';
 import { Home, Maximize, Download, IndianRupee, ArrowRight, Layout, Sparkles } from 'lucide-react';
 
-const ProjectUnits = ({ unitSizes, floorPlans }) => {
+const ProjectUnits = ({ unitSizes }) => {
 
     // Group units by type
     const groupedUnits = unitSizes.reduce((acc, unit) => {

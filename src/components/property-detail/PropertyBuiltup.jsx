@@ -36,7 +36,7 @@ const PropertyBuiltup = ({ builtup, furnishing }) => {
                                 </tr>
                             </thead>
                             <tbody>
-                                {builtup.floors.map((floor) => (
+                                {builtup.floors?.map((floor) => (
                                     floor.clusters?.map((cluster, cIdx) => (
                                         <tr key={`${floor.name}-${cIdx}`} style={{ borderBottom: '1px solid #f1f5f9', transition: 'all 0.2s' }}>
                                             <td style={{ padding: '1.25rem 2rem', fontWeight: 800, color: '#0F172A', verticalAlign: 'top' }}>{cIdx === 0 ? floor.name : ''}</td>
@@ -86,7 +86,7 @@ const PropertyBuiltup = ({ builtup, furnishing }) => {
                     </div>
                     <div>
                         <div style={{ marginBottom: '1.5rem', fontSize: '0.95rem', fontWeight: 700, color: '#166534', background: '#dcfce7', padding: '8px 16px', borderRadius: '10px', width: 'fit-content' }}>
-                           Status: {furnishing.furnishing || 'Unfurnished'}
+                           Status: {String(furnishing.furnishing || 'Unfurnished')}
                         </div>
                         <div style={{ display: 'flex', flexWrap: 'wrap', gap: '10px' }}>
                             {furnishing.furnishingDetails && furnishing.furnishingDetails.length > 0 ? (

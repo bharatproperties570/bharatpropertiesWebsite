@@ -53,19 +53,42 @@ const PropertyCard = ({ property, onClick }) => {
                     position: 'absolute',
                     top: '1rem',
                     left: '1rem',
-                    backgroundColor: 'rgba(15, 23, 42, 0.8)',
-                    backdropFilter: 'blur(12px)',
-                    color: 'white',
-                    padding: '0.4rem 1.2rem',
-                    borderRadius: 'var(--radius-full)',
-                    fontSize: '0.7rem',
-                    fontWeight: 800,
-                    textTransform: 'uppercase',
-                    letterSpacing: '1px',
-                    boxShadow: '0 4px 12px rgba(0,0,0,0.2)',
+                    display: 'flex',
+                    flexDirection: 'column',
+                    gap: '0.5rem',
                     zIndex: 2
                 }}>
-                    {property.status || 'Exclusive'}
+                    <div style={{
+                        backgroundColor: 'rgba(15, 23, 42, 0.8)',
+                        backdropFilter: 'blur(12px)',
+                        color: 'white',
+                        padding: '0.4rem 1.2rem',
+                        borderRadius: 'var(--radius-full)',
+                        fontSize: '0.7rem',
+                        fontWeight: 800,
+                        textTransform: 'uppercase',
+                        letterSpacing: '1px',
+                        boxShadow: '0 4px 12px rgba(0,0,0,0.2)'
+                    }}>
+                        {property.status || 'Exclusive'}
+                    </div>
+                    {property.subCategory && property.subCategory !== 'Property' && (
+                        <div style={{
+                            backgroundColor: 'rgba(59, 130, 246, 0.9)',
+                            backdropFilter: 'blur(12px)',
+                            color: 'white',
+                            padding: '0.4rem 1.2rem',
+                            borderRadius: 'var(--radius-full)',
+                            fontSize: '0.65rem',
+                            fontWeight: 800,
+                            textTransform: 'uppercase',
+                            letterSpacing: '1px',
+                            boxShadow: '0 4px 12px rgba(0,0,0,0.1)',
+                            width: 'fit-content'
+                        }}>
+                            {property.subCategory}
+                        </div>
+                    )}
                 </div>
 
                 <button
@@ -223,7 +246,21 @@ const PropertyCard = ({ property, onClick }) => {
                     </div>
                     <div style={{ display: 'flex', alignItems: 'center', gap: '0.5rem' }}>
                         <Square size={18} style={{ color: 'var(--color-text-muted)' }} />
-                        <span>{property.sqft} <span style={{ opacity: 0.6, fontSize: '0.8rem' }}>Sqft</span></span>
+                        <span>
+                            {property.sqft} 
+                            <span style={{ opacity: 0.6, fontSize: '0.8rem' }}> {property.builtupDetails?.unit || 'Sqft'}</span>
+                            {property.sizeLabel && (
+                                <span style={{ 
+                                    display: 'block', 
+                                    fontSize: '0.75rem', 
+                                    color: 'var(--color-primary)', 
+                                    fontWeight: 700,
+                                    marginTop: '2px'
+                                }}>
+                                    ({property.sizeLabel})
+                                </span>
+                            )}
+                        </span>
                     </div>
                 </div>
             </div>

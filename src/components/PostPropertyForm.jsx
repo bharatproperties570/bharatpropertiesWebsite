@@ -107,6 +107,32 @@ const PostPropertyForm = ({ onClose }) => {
     };
 
     // Data Fetching
+    const handleProjectSelect = React.useCallback((projectName, projectList = projects) => {
+        const project = projectList.find(p => p.name === projectName);
+        const blocks = project?.blocks || [];
+
+        setFilteredBlocks(blocks);
+
+        setFormData(prev => ({
+            ...prev,
+            projectName,
+            block: blocks.length > 0 ? blocks[0].name : 'General',
+            unitNo: '',
+        }));
+    }, [projects]);
+
+    const handleUnitSelect = React.useCallback((unit) => {
+        if (!unit) return;
+
+        setFormData(prev => ({
+            ...prev,
+            unitNo: unit.unitNo,
+            totalArea: unit.size?.value || prev.totalArea,
+            areaUnit: unit.size?.unit || prev.areaUnit,
+            expectedPrice: unit.price?.value || prev.expectedPrice
+        }));
+    }, []);
+
     useEffect(() => {
         const loadInitialData = async () => {
             try {
@@ -130,7 +156,7 @@ const PostPropertyForm = ({ onClose }) => {
             }
         };
         loadInitialData();
-    }, []);
+    }, [handleProjectSelect]);
 
     // Fetch Units when Project or Block changes
     useEffect(() => {
@@ -155,33 +181,7 @@ const PostPropertyForm = ({ onClose }) => {
             }
         };
         loadUnits();
-    }, [formData.projectName, formData.block]);
-
-    const handleProjectSelect = (projectName, projectList = projects) => {
-        const project = projectList.find(p => p.name === projectName);
-        const blocks = project?.blocks || [];
-
-        setFilteredBlocks(blocks);
-
-        setFormData(prev => ({
-            ...prev,
-            projectName,
-            block: blocks.length > 0 ? blocks[0].name : 'General',
-            unitNo: '',
-        }));
-    };
-
-    const handleUnitSelect = (unit) => {
-        if (!unit) return;
-
-        setFormData(prev => ({
-            ...prev,
-            unitNo: unit.unitNo,
-            totalArea: unit.size?.value || prev.totalArea,
-            areaUnit: unit.size?.unit || prev.areaUnit,
-            expectedPrice: unit.price?.value || prev.expectedPrice
-        }));
-    };
+    }, [formData.projectName, formData.block, handleUnitSelect]);
 
     const handleSubmit = async (e) => {
         e.preventDefault();

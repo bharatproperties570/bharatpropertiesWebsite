@@ -1,3 +1,4 @@
+'use client';
 import React, { useState, useEffect } from 'react';
 import ReviewCard from './ReviewCard';
 import { ChevronLeft, ChevronRight, Star, Loader2 } from 'lucide-react';

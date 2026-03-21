@@ -53,9 +53,9 @@ const PropertyDetailPage = ({ propertyId, onAddToCompare, onBookConsultation }) 
     return (
         <div style={{ backgroundColor: '#fff', minHeight: '100vh' }}>
             <SEO
-                title={property.seo?.title || `${property.title || property.unitName} | ${property.location?.locality || property.location?.sector || ''}, ${property.location?.city} | Bharat Properties`}
-                description={property.seo?.description || property.description?.substring(0, 160) || `View details for ${property.title || property.unitName}. Luxury residential property at ${property.price}.`}
-                keywords={property.seo?.tags?.join(', ') || `${property.title || property.unitName}, Luxury Property, ${property.type || property.propertyType} for sale`}
+                title={String(property.seo?.title || `${property.title || property.unitName || 'Premium Property'} | ${property.location?.city || ''} | Bharat Properties`)}
+                description={String(property.seo?.description || property.description?.substring(0, 160) || `Exclusive property at ${property.price}. Contact Bharat Properties.`)}
+                keywords={String(property.seo?.tags?.join(', ') || 'Real Estate, Bharat Properties')}
             />
             {/* Full Bleed Header */}
             <PropertyHeader

@@ -80,14 +80,36 @@ const ReviewsSection = ({ onLeaveFeedback }) => {
                     </h2>
                     
                     {stats.total > 0 && (
-                        <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'center', gap: '8px', marginBottom: '1.5rem' }}>
-                            <div style={{ display: 'flex', color: '#FABB05' }}>
-                                {[...Array(5)].map((_, i) => (
-                                    <Star key={i} size={18} fill={i < Math.floor(stats.rating) ? "#FABB05" : "none"} strokeWidth={1.5} />
-                                ))}
+                        <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', gap: '8px', marginBottom: '2rem' }}>
+                            <div style={{ display: 'flex', alignItems: 'center', gap: '12px' }}>
+                                <div style={{ display: 'flex', color: '#FABB05' }}>
+                                    {[...Array(5)].map((_, i) => (
+                                        <Star key={i} size={20} fill={i < Math.floor(stats.rating) ? "#FABB05" : "none"} strokeWidth={1.5} />
+                                    ))}
+                                </div>
+                                <span style={{ fontWeight: '800', fontSize: '1.5rem', color: 'var(--color-primary)' }}>{stats.rating}</span>
+                                <span style={{ color: 'var(--color-text-muted)', fontSize: '1.1rem' }}>({stats.total} Reviews)</span>
                             </div>
-                            <span style={{ fontWeight: '700', fontSize: '1.2rem', color: 'var(--color-primary)' }}>{stats.rating}</span>
-                            <span style={{ color: 'var(--color-text-muted)', fontSize: '1rem' }}>({stats.total} Reviews)</span>
+                            <a 
+                                href="https://search.google.com/local/reviews?placeid=ChIJKzFpydBGDjkRbTCco1_G2I4" 
+                                target="_blank" 
+                                rel="noopener noreferrer"
+                                style={{
+                                    fontSize: '0.9rem',
+                                    color: '#4285F4',
+                                    fontWeight: '600',
+                                    textDecoration: 'none',
+                                    display: 'flex',
+                                    alignItems: 'center',
+                                    gap: '4px',
+                                    marginTop: '4px',
+                                    transition: 'opacity 0.2s'
+                                }}
+                                onMouseEnter={(e) => e.currentTarget.style.opacity = '0.8'}
+                                onMouseLeave={(e) => e.currentTarget.style.opacity = '1'}
+                            >
+                                View All Reviews on Google <ChevronRight size={14} />
+                            </a>
                         </div>
                     )}
                     

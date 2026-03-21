@@ -87,7 +87,7 @@ const mapDealToProperty = (deal) => {
         image: deal.websiteMetadata?.featuredImage || images[0] || null,
         status: deal.status || 'Available',
         type: deal.propertyType || 'Residential',
-        subCategory: deal.subCategory || 'Property',
+        subCategory: /^[0-9a-fA-F]{24}$/.test(deal.subCategory) ? '' : (deal.subCategory || 'Property'),
         sizeLabel: deal.unitSpecification?.sizeLabel || '',
         description: deal.websiteMetadata?.description || deal.remarks || deal.description,
         media: images,

@@ -76,21 +76,30 @@ const mapDealToProperty = (deal) => {
                (deal.propertyDetails?.bhk ? `${deal.propertyDetails.bhk} BHK ` : '') + 
                (deal.propertyType || 'Premium Property') + 
                ` at ${deal.projectName}`,
+        unitName: deal.websiteMetadata?.title || deal.projectName || 'Premium Property',
         price: formatPrice(deal.price || deal.quotePrice),
         location: { 
             city: deal.location || deal.address?.city || 'Unknown',
-            display: `${deal.projectName}${deal.block ? `, Block ${deal.block}` : ''}`
+            display: `${deal.projectName}${deal.block ? `, Block ${deal.block}` : ''}`,
+            address: deal.address?.address || deal.location || '',
+            street: deal.address?.street || '',
+            locality: deal.address?.locality || '',
+            state: deal.address?.state || 'Haryana',
+            country: deal.address?.country || 'India',
+            zip: deal.address?.zip || ''
         },
         beds: flattenMeasurement(deal.propertyDetails?.bhk, ''),
         baths: flattenMeasurement(deal.propertyDetails?.bathrooms, ''),
         sqft: flattenMeasurement(deal.size, deal.sizeUnit || 'Sq.Ft'),
         image: deal.websiteMetadata?.featuredImage || images[0] || null,
+        images: images,
+        media: images,
         status: deal.status || 'Available',
         type: deal.propertyType || 'Residential',
+        propertyType: deal.propertyType || 'Residential',
         subCategory: /^[0-9a-fA-F]{24}$/.test(deal.subCategory) ? '' : (deal.subCategory || 'Property'),
         sizeLabel: deal.unitSpecification?.sizeLabel || '',
         description: deal.websiteMetadata?.description || deal.remarks || deal.description,
-        media: images,
         builtupDetails: {
             area: flattenMeasurement(deal.size),
             unit: deal.sizeUnit || 'Sq.Ft'
@@ -105,6 +114,11 @@ const mapDealToProperty = (deal) => {
             registration: deal.priceDetails?.registrationCharges || 'Extra',
             maintenance: deal.priceDetails?.maintenanceCharges || 'N/A'
         },
+        // Old field mappings for compatibility
+        unitNo: deal.unitNo || deal.inventoryId?.unitNo || 'N/A',
+        block: deal.block || 'N/A',
+        ownership: deal.propertyDetails?.ownership || 'Freehold',
+        stage: deal.status || 'Available',
         seo: {
             title: deal.websiteMetadata?.metaTitle,
             description: deal.websiteMetadata?.metaDescription,

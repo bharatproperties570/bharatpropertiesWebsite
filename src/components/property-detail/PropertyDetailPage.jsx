@@ -53,9 +53,9 @@ const PropertyDetailPage = ({ propertyId, onAddToCompare, onBookConsultation }) 
     return (
         <div style={{ backgroundColor: '#fff', minHeight: '100vh' }}>
             <SEO
-                title={property.seo?.title || `${property.unitName} | ${property.location?.sector}, ${property.location?.city} | Bharat Properties`}
-                description={property.seo?.description || property.description?.substring(0, 160) || `View details for ${property.unitName}. Luxury residential property at ${property.price}.`}
-                keywords={property.seo?.tags?.join(', ') || `${property.unitName}, Luxury Property, ${property.propertyType} for sale`}
+                title={property.seo?.title || `${property.title || property.unitName} | ${property.location?.locality || property.location?.sector || ''}, ${property.location?.city} | Bharat Properties`}
+                description={property.seo?.description || property.description?.substring(0, 160) || `View details for ${property.title || property.unitName}. Luxury residential property at ${property.price}.`}
+                keywords={property.seo?.tags?.join(', ') || `${property.title || property.unitName}, Luxury Property, ${property.type || property.propertyType} for sale`}
             />
             {/* Full Bleed Header */}
             <PropertyHeader
@@ -71,12 +71,12 @@ const PropertyDetailPage = ({ propertyId, onAddToCompare, onBookConsultation }) 
                         <PropertyOverview property={property} />
                         
                         {/* Media Showcase */}
-                        {property.images && property.images.length > 0 && (
+                        {property.media && property.media.length > 0 && (
                             <section>
                                 <div style={{ display: 'flex', alignItems: 'center', gap: '12px', color: 'var(--color-primary)', fontWeight: 800, fontSize: '0.85rem', textTransform: 'uppercase', letterSpacing: '0.1em', marginBottom: '1.5rem' }}>
                                     Visual Tour
                                 </div>
-                                <PropertyMedia media={property.images} />
+                                <PropertyMedia media={property.media} />
                             </section>
                         )}
                         

@@ -6,19 +6,19 @@ import {
 
 const PropertyOverview = ({ property }) => {
     const details = [
-        { icon: <Hash size={18} />, label: 'Unit Number', value: property.unitNum },
-        { icon: <Layers size={18} />, label: 'Property Type', value: property.propertyType },
-        { icon: <Maximize2 size={18} />, label: 'Plot Size', value: property.size ? `${property.size.value} ${property.size.unit}` : '-' },
-        { icon: <Compass size={18} />, label: 'Direction/Facing', value: property.facing || property.direction || '-' },
-        { icon: <ArrowUpCircle size={18} />, label: 'Floor Level', value: property.floorNumber ? `${property.floorNumber} of ${property.totalFloors}` : '-' },
-        { icon: <Clock size={18} />, label: 'Property Age', value: property.ageOfProperty ? `${property.ageOfProperty} Years` : 'New' },
+        { icon: <Hash size={18} />, label: 'Unit Number', value: property.unitNo },
+        { icon: <Layers size={18} />, label: 'Property Type', value: property.type || property.propertyType },
+        { icon: <Maximize2 size={18} />, label: 'Plot Size', value: property.sqft || property.sizeLabel || '-' },
+        { icon: <Compass size={18} />, label: 'Direction/Facing', value: property.technical?.facing || property.facing || '-' },
+        { icon: <ArrowUpCircle size={18} />, label: 'Floor Level', value: property.technical?.floorNumber ? `${property.technical.floorNumber} of ${property.technical.totalFloors}` : '-' },
+        { icon: <Clock size={18} />, label: 'Property Age', value: property.technical?.age ? `${property.technical.age} Years` : 'New' },
     ];
 
     const technicals = [
-        { label: 'Registration Charges', value: property.registrationCharges || 'As per actuals' },
-        { label: 'Maintenance', value: property.maintenanceCharges || 'Included' },
+        { label: 'Registration Charges', value: property.technical?.registration || 'As per actuals' },
+        { label: 'Maintenance', value: property.technical?.maintenance || 'Included' },
         { label: 'Ownership', value: property.ownership || 'Freehold' },
-        { label: 'Status', value: property.stage || 'Ready to Move' }
+        { label: 'Status', value: property.status || 'Ready' }
     ];
 
     return (

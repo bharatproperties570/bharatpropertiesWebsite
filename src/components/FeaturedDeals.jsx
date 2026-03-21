@@ -2,6 +2,7 @@
 import React, { useState, useEffect, useRef } from 'react';
 import { fetchFeaturedDeals } from '../services/crmService';
 import PropertyCard from './PropertyCard';
+import { useRouter } from 'next/navigation';
 import { ChevronLeft, ChevronRight } from 'lucide-react';
 import './FeaturedDeals.css';
 
@@ -10,6 +11,7 @@ const FeaturedDeals = ({ city = '', initialData = [] }) => {
     const [deals, setDeals] = useState(initialData);
     const [loading, setLoading] = useState(initialData.length === 0);
     const scrollRef = useRef(null);
+    const router = useRouter();
 
     const tabs = [
         { id: 'hot', label: '🔥 HOT Deal' },
@@ -94,7 +96,10 @@ const FeaturedDeals = ({ city = '', initialData = [] }) => {
                             <div className="deals-track" style={{ opacity: loading ? 0.6 : 1, transition: 'opacity 0.2s' }}>
                                 {deals.map((deal, index) => (
                                     <div key={deal.id || index} className="deal-card-wrapper">
-                                        <PropertyCard property={deal} />
+                                        <PropertyCard 
+                                            property={deal} 
+                                            onClick={() => router.push(`/property/${deal.slug || deal.id}`)}
+                                        />
                                     </div>
                                 ))}
                             </div>

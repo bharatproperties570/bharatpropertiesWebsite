@@ -14,8 +14,8 @@ const PropertyLocation = ({ location }) => {
                     <div>
                         <div style={{ fontSize: '0.75rem', opacity: 0.6, fontWeight: 700, textTransform: 'uppercase', marginBottom: '4px' }}>Address</div>
                         <div style={{ fontWeight: 600, fontSize: '1.05rem', lineHeight: '1.4' }}>
-                            {location.address}, {location.street}<br />
-                            {location.urbanEstate}, {location.locality}
+                            {location.address} {location.street}<br />
+                            {location.locality}
                         </div>
                     </div>
 

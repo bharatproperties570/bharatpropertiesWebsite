@@ -18,8 +18,8 @@ const PropertyHeader = ({ property, onBookConsultation }) => {
     const handleShare = () => {
         if (navigator.share) {
             navigator.share({
-                title: property.unitName,
-                text: `Check out this property: ${property.unitName}`,
+                title: property.title || property.unitName,
+                text: `Check out this property: ${property.title || property.unitName}`,
                 url: window.location.href
             }).catch(() => {});
         } else {
@@ -48,7 +48,7 @@ const PropertyHeader = ({ property, onBookConsultation }) => {
                     <div style={{
                         position: 'absolute',
                         inset: 0,
-                        backgroundImage: `url(${property.images?.[0] || 'https://images.unsplash.com/photo-1512917774080-9991f1c4c750?auto=format&fit=crop&q=80&w=2000'})`,
+                        backgroundImage: `url(${property.media?.[0] || property.images?.[0] || 'https://images.unsplash.com/photo-1512917774080-9991f1c4c750?auto=format&fit=crop&q=80&w=2000'})`,
                         backgroundSize: 'cover',
                         backgroundPosition: 'center',
                         transform: 'scale(1.02)'
@@ -90,7 +90,7 @@ const PropertyHeader = ({ property, onBookConsultation }) => {
                             letterSpacing: '-2px',
                             textShadow: '0 20px 40px rgba(0,0,0,0.3)'
                         }}>
-                            {property.unitName}
+                            {property.title || property.unitName}
                         </h1>
 
                         <div style={{ 
@@ -105,7 +105,7 @@ const PropertyHeader = ({ property, onBookConsultation }) => {
                         }}>
                             <div style={{ display: 'flex', alignItems: 'center', gap: '8px' }}>
                                 <MapPin size={22} color="var(--color-gold)" />
-                                {property.location?.sector}, {property.location?.city}
+                                {property.location?.locality || property.location?.sector}, {property.location?.city}
                             </div>
                             <div style={{ width: '1px', height: '24px', backgroundColor: 'rgba(255,255,255,0.2)' }}></div>
                             <div style={{ display: 'flex', alignItems: 'center', gap: '8px' }}>
@@ -130,11 +130,11 @@ const PropertyHeader = ({ property, onBookConsultation }) => {
                             </div>
                             <div style={{ backgroundColor: 'rgba(15, 23, 42, 0.4)', padding: '2.5rem', textAlign: 'center' }}>
                                 <div style={{ color: 'rgba(255,255,255,0.5)', fontSize: '0.75rem', fontWeight: 800, textTransform: 'uppercase', marginBottom: '10px', letterSpacing: '2px' }}>Configuration</div>
-                                <div style={{ color: 'white', fontSize: '1.5rem', fontWeight: 700 }}>{property.propertyType}</div>
+                                <div style={{ color: 'white', fontSize: '1.5rem', fontWeight: 700 }}>{property.type || property.propertyType}</div>
                             </div>
                             <div style={{ backgroundColor: 'rgba(15, 23, 42, 0.4)', padding: '2.5rem', textAlign: 'center' }}>
                                 <div style={{ color: 'rgba(255,255,255,0.5)', fontSize: '0.75rem', fontWeight: 800, textTransform: 'uppercase', marginBottom: '10px', letterSpacing: '2px' }}>Area</div>
-                                <div style={{ color: 'white', fontSize: '1.5rem', fontWeight: 700 }}>{property.size?.value} <span style={{ fontSize: '0.9rem', opacity: 0.6 }}>{property.size?.unit}</span></div>
+                                <div style={{ color: 'white', fontSize: '1.5rem', fontWeight: 700 }}>{property.sqft}</div>
                             </div>
                             <div style={{ backgroundColor: 'rgba(15, 23, 42, 0.4)', padding: '2.5rem', textAlign: 'center' }}>
                                 <div style={{ color: 'rgba(255,255,255,0.5)', fontSize: '0.75rem', fontWeight: 800, textTransform: 'uppercase', marginBottom: '10px', letterSpacing: '2px' }}>Stage</div>
@@ -177,7 +177,7 @@ const PropertyHeader = ({ property, onBookConsultation }) => {
             }}>
                 <div className="container" style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
                     <div style={{ display: 'flex', alignItems: 'center', gap: '20px' }}>
-                        <h2 style={{ fontSize: '1.25rem', fontWeight: 800, color: '#0F172A', margin: 0 }}>{property.unitName}</h2>
+                        <h2 style={{ fontSize: '1.25rem', fontWeight: 800, color: '#0F172A', margin: 0 }}>{property.title || property.unitName}</h2>
                         <div style={{ fontSize: '1.25rem', fontWeight: 900, color: 'var(--color-primary)' }}>{property.price}</div>
                     </div>
                     

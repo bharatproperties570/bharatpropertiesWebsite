@@ -300,15 +300,13 @@ export const fetchPublicSettings = async () => {
     }
 };
 
-export const fetchAvailableUnits = async (project, block) => {
+export const fetchGoogleReviews = async () => {
     try {
-        const response = await crmApi.get('/available-units', {
-            params: { project, block }
-        });
+        const response = await crmApi.get('/google-reviews');
         return response.data.data;
     } catch (error) {
-        console.error('Error fetching available units:', error);
-        return [];
+        console.error('Error fetching Google reviews:', error);
+        return { reviews: [], rating: 5, totalReviews: 0 };
     }
 };
 
@@ -322,5 +320,6 @@ export default {
     submitListing,
     submitLead,
     fetchPublicSettings,
-    fetchAvailableUnits
+    fetchAvailableUnits,
+    fetchGoogleReviews
 };

@@ -1,19 +1,10 @@
 'use client';
 
-import React, { useState, useEffect } from 'react';
-import { Building2, MapPin, Calendar, CheckCircle, Download, Share2, Heart, ShieldCheck, ArrowRight, Plus, ExternalLink } from 'lucide-react';
+import React, { useState } from 'react';
+import { Building2, MapPin, Calendar, CheckCircle, Download, Share2, Heart, ShieldCheck, ArrowRight, Plus } from 'lucide-react';
 
-const ProjectHeader = ({ project, onBookConsultation }) => {
-    const [isScrolled, setIsScrolled] = useState(false);
+const ProjectHeader = ({ project, onAddToCompare }) => {
     const [isSaved, setIsSaved] = useState(false);
-
-    useEffect(() => {
-        const handleScroll = () => {
-            setIsScrolled(window.scrollY > 200);
-        };
-        window.addEventListener('scroll', handleScroll);
-        return () => window.removeEventListener('scroll', handleScroll);
-    }, []);
 
     const handleShare = () => {
         if (navigator.share) {
@@ -21,7 +12,7 @@ const ProjectHeader = ({ project, onBookConsultation }) => {
                 title: project.name,
                 text: project.description,
                 url: window.location.href
-            }).catch(() => {});
+            });
         } else {
             navigator.clipboard.writeText(window.location.href);
             alert('Link copied to clipboard!');
@@ -37,185 +28,168 @@ const ProjectHeader = ({ project, onBookConsultation }) => {
     const status = statusColors[project.status] || { bg: '#f1f5f9', text: '#475569', dot: '#94a3b8' };
 
     return (
-        <>
-            {/* Cinematic Hero Section (Full Bleed) */}
-            {!isScrolled && (
-                <div style={{
-                    position: 'relative',
-                    height: '85vh',
-                    minHeight: '600px',
-                    width: '100%',
-                    backgroundColor: '#0f172a',
-                    marginBottom: '-80px', // Pull content up
-                    display: 'flex',
-                    alignItems: 'center',
-                    justifyContent: 'center',
-                    overflow: 'hidden'
-                }}>
-                    {/* Background Image with Parallax-ready style */}
-                    <div style={{
-                        position: 'absolute',
-                        inset: 0,
-                        backgroundImage: `url(${project.featuredImage || (project.images?.[0]?.url)})`,
-                        backgroundSize: 'cover',
-                        backgroundPosition: 'center',
-                        transform: 'scale(1.05)',
-                        transition: 'transform 10s linear'
-                    }}>
-                        <div style={{
-                            position: 'absolute',
-                            inset: 0,
-                            background: 'linear-gradient(to bottom, rgba(15, 23, 42, 0.4) 0%, rgba(15, 23, 42, 0.8) 100%)'
-                        }}></div>
-                    </div>
+        <div style={{
+            backgroundColor: 'rgba(255, 255, 255, 0.8)',
+            backdropFilter: 'blur(12px)',
+            borderBottom: '1px solid #f1f5f9',
+            position: 'sticky',
+            top: '80px',
+            zIndex: 100
+        }}>
+            <div className="container" style={{ padding: '1.25rem 0' }}>
+                <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', flexWrap: 'wrap', gap: '2rem' }}>
 
-                    <div className="container animate-reveal" style={{ position: 'relative', zIndex: 10, textAlign: 'center' }}>
-                        <div style={{ 
-                            display: 'inline-flex', 
-                            alignItems: 'center', 
-                            gap: '12px', 
-                            padding: '10px 24px', 
-                            backgroundColor: 'rgba(255,255,255,0.1)', 
-                            backdropFilter: 'blur(10px)',
-                            border: '1px solid rgba(255,255,255,0.2)',
-                            borderRadius: '100px',
-                            color: 'white',
-                            fontSize: '0.9rem',
-                            fontWeight: 600,
-                            marginBottom: '2rem',
-                            textTransform: 'uppercase',
-                            letterSpacing: '2px'
-                        }}>
-                            <Building2 size={16} color="var(--color-gold)" />
-                            {project.category || 'Premium Collection'}
-                        </div>
-
-                        <h1 style={{ 
-                            fontSize: 'clamp(3rem, 8vw, 6rem)', 
-                            fontWeight: 900, 
-                            color: 'white', 
-                            margin: '0 0 1.5rem',
-                            lineHeight: 1,
-                            letterSpacing: '-2px',
-                            textShadow: '0 20px 40px rgba(0,0,0,0.3)'
-                        }}>
-                            {project.name}
-                        </h1>
-
-                        <p style={{ 
-                            fontSize: 'clamp(1.1rem, 2vw, 1.4rem)', 
-                            color: 'rgba(255,255,255,0.7)', 
-                            maxWidth: '800px', 
-                            margin: '0 auto 4rem',
-                            lineHeight: 1.6
-                        }}>
-                            {project.address?.locality ? `${project.address.locality}, ` : ''}{project.address?.city}
-                        </p>
-
-                        <div className="glass-card" style={{ 
-                            display: 'grid', 
-                            gridTemplateColumns: 'repeat(auto-fit, minmax(200px, 1fr))', 
-                            gap: '1px', 
-                            backgroundColor: 'rgba(255,255,255,0.1)', 
-                            padding: '1px',
-                            maxWidth: '1000px',
-                            margin: '0 auto'
-                        }}>
-                            <div style={{ backgroundColor: 'rgba(15, 23, 42, 0.4)', padding: '2rem', textAlign: 'center' }}>
-                                <div style={{ color: 'var(--color-gold)', fontSize: '0.8rem', fontWeight: 800, textTransform: 'uppercase', marginBottom: '8px', letterSpacing: '1px' }}>Status</div>
-                                <div style={{ color: 'white', fontSize: '1.1rem', fontWeight: 700 }}>{project.status}</div>
-                            </div>
-                            <div style={{ backgroundColor: 'rgba(15, 23, 42, 0.4)', padding: '2rem', textAlign: 'center' }}>
-                                <div style={{ color: 'var(--color-gold)', fontSize: '0.8rem', fontWeight: 800, textTransform: 'uppercase', marginBottom: '8px', letterSpacing: '1px' }}>Possession</div>
-                                <div style={{ color: 'white', fontSize: '1.1rem', fontWeight: 700 }}>{project.possession || 'Commenced'}</div>
-                            </div>
-                            <div style={{ backgroundColor: 'rgba(15, 23, 42, 0.4)', padding: '2rem', textAlign: 'center' }}>
-                                <div style={{ color: 'var(--color-gold)', fontSize: '0.8rem', fontWeight: 800, textTransform: 'uppercase', marginBottom: '8px', letterSpacing: '1px' }}>Inventory</div>
-                                <div style={{ color: 'white', fontSize: '1.1rem', fontWeight: 700 }}>{project.totalUnits > 0 ? `${project.totalUnits} Units` : 'Select Lots'}</div>
-                            </div>
-                            <div style={{ backgroundColor: 'rgba(15, 23, 42, 0.4)', padding: '2rem', textAlign: 'center' }}>
-                                <div style={{ color: 'var(--color-gold)', fontSize: '0.8rem', fontWeight: 800, textTransform: 'uppercase', marginBottom: '8px', letterSpacing: '1px' }}>RERA</div>
-                                <div style={{ color: 'white', fontSize: '1.1rem', fontWeight: 700 }}>{project.rera || 'Applied'}</div>
-                            </div>
-                        </div>
-                    </div>
-
-                    <div style={{
-                        position: 'absolute',
-                        bottom: '40px',
-                        left: '50%',
-                        transform: 'translateX(-50%)',
-                        color: 'white',
-                        display: 'flex',
-                        flexDirection: 'column',
-                        alignItems: 'center',
-                        gap: '12px',
-                        opacity: 0.5
-                    }}>
-                        <div style={{ fontSize: '0.7rem', fontWeight: 800, textTransform: 'uppercase', letterSpacing: '2px' }}>Scroll to Explore</div>
-                        <div style={{ width: '1px', height: '60px', background: 'linear-gradient(to bottom, white, transparent)' }}></div>
-                    </div>
-                </div>
-            )}
-
-            {/* Sticky Navigation Header */}
-            <div style={{
-                backgroundColor: 'rgba(255, 255, 255, 0.9)',
-                backdropFilter: 'blur(20px)',
-                borderBottom: '1px solid rgba(0,0,0,0.05)',
-                position: 'sticky',
-                top: '0',
-                zIndex: 1000,
-                transform: isScrolled ? 'translateY(0)' : 'translateY(-100%)',
-                opacity: isScrolled ? 1 : 0,
-                transition: 'all 0.4s cubic-bezier(0.4, 0, 0.2, 1)',
-                padding: '0.75rem 0',
-                boxShadow: '0 4px 20px rgba(0,0,0,0.05)'
-            }}>
-                <div className="container" style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
-                    <div style={{ display: 'flex', alignItems: 'center', gap: '20px' }}>
-                        <h2 style={{ fontSize: '1.25rem', fontWeight: 800, color: '#0F172A', margin: 0 }}>{project.name}</h2>
-                        <div style={{ display: 'flex', gap: '12px' }}>
-                            <div style={{ display: 'flex', alignItems: 'center', gap: '6px', backgroundColor: status.bg, color: status.text, padding: '4px 12px', borderRadius: '100px', fontSize: '0.7rem', fontWeight: 800 }}>
+                    {/* Left: Project Branding */}
+                    <div style={{ flex: 1, minWidth: '320px' }}>
+                        <div style={{ display: 'flex', alignItems: 'center', gap: '12px', marginBottom: '8px' }}>
+                            <h1 style={{ fontSize: '2.2rem', fontWeight: 900, color: '#0F172A', margin: 0, letterSpacing: '-0.02em' }}>
+                                {project.name}
+                            </h1>
+                            <div style={{
+                                display: 'flex',
+                                alignItems: 'center',
+                                gap: '6px',
+                                padding: '4px 12px',
+                                borderRadius: '20px',
+                                backgroundColor: status.bg,
+                                color: status.text,
+                                fontSize: '0.75rem',
+                                fontWeight: 800,
+                                textTransform: 'uppercase',
+                                letterSpacing: '0.05em'
+                            }}>
                                 <span style={{ width: '6px', height: '6px', borderRadius: '50%', backgroundColor: status.dot }}></span>
                                 {project.status}
                             </div>
                         </div>
+
+                        <div style={{ display: 'flex', alignItems: 'center', gap: '1.5rem', flexWrap: 'wrap' }}>
+                            <div style={{ display: 'flex', alignItems: 'center', gap: '6px', color: '#64748b', fontSize: '0.95rem', fontWeight: 500 }}>
+                                <MapPin size={16} className="text-primary" />
+                                {project.address?.locality ? `${project.address.locality}, ` : ''}{project.address?.city}
+                            </div>
+                            <div style={{ display: 'flex', alignItems: 'center', gap: '6px', color: '#64748b', fontSize: '0.95rem', fontWeight: 500 }}>
+                                <Building2 size={16} />
+                                By <span style={{ color: '#1e293b', fontWeight: 700 }}>{project.developer?.name}</span>
+                            </div>
+                            {project.approvals?.reraCertificate && (
+                                <div style={{ display: 'flex', alignItems: 'center', gap: '6px', color: '#166534', fontSize: '0.85rem', fontWeight: 700, backgroundColor: '#f0fdf4', padding: '2px 8px', borderRadius: '6px' }}>
+                                    <ShieldCheck size={14} />
+                                    RERA: {project.reraNumber}
+                                </div>
+                            )}
+                        </div>
                     </div>
-                    
-                    <div style={{ display: 'flex', alignItems: 'center', gap: '12px' }}>
-                        <button 
+
+                    {/* Right: Actions */}
+                    <div style={{ display: 'flex', gap: '10px', alignItems: 'center' }}>
+                        <button
+                            onClick={onAddToCompare}
+                            style={{
+                                padding: '0 1.25rem',
+                                height: '48px',
+                                borderRadius: '14px',
+                                border: '2px solid var(--color-primary)',
+                                backgroundColor: 'white',
+                                color: 'var(--color-primary)',
+                                cursor: 'pointer',
+                                display: 'flex',
+                                alignItems: 'center',
+                                gap: '8px',
+                                fontWeight: 800,
+                                fontSize: '0.9rem',
+                                transition: 'all 0.2s'
+                            }}
+                            onMouseEnter={(e) => {
+                                e.currentTarget.style.backgroundColor = 'var(--color-primary)';
+                                e.currentTarget.style.color = 'white';
+                            }}
+                            onMouseLeave={(e) => {
+                                e.currentTarget.style.backgroundColor = 'white';
+                                e.currentTarget.style.color = 'var(--color-primary)';
+                            }}
+                        >
+                            <Plus size={18} /> Compare
+                        </button>
+                        <button
                             onClick={() => setIsSaved(!isSaved)}
-                            style={{ padding: '10px', borderRadius: '12px', border: '1px solid #e2e8f0', background: 'white', color: isSaved ? '#ef4444' : '#64748b', cursor: 'pointer' }}
+                            style={{
+                                width: '48px',
+                                height: '48px',
+                                borderRadius: '14px',
+                                border: '1px solid #e2e8f0',
+                                backgroundColor: 'white',
+                                color: isSaved ? '#ef4444' : '#64748b',
+                                cursor: 'pointer',
+                                display: 'flex',
+                                alignItems: 'center',
+                                justifyContent: 'center',
+                                transition: 'all 0.2s',
+                                boxShadow: '0 2px 4px rgba(0,0,0,0.02)'
+                            }}
                         >
                             <Heart size={20} fill={isSaved ? '#ef4444' : 'none'} />
                         </button>
-                        <button 
+
+                        <button
                             onClick={handleShare}
-                            style={{ padding: '10px', borderRadius: '12px', border: '1px solid #e2e8f0', background: 'white', color: '#1e293b', cursor: 'pointer' }}
-                        >
-                            <Share2 size={20} />
-                        </button>
-                        <button 
-                            onClick={onBookConsultation}
-                            style={{ 
-                                padding: '10px 24px', 
-                                background: 'var(--grad-gold)', 
-                                color: 'var(--color-primary)', 
-                                border: 'none', 
-                                borderRadius: '12px', 
-                                fontWeight: 800, 
-                                fontSize: '0.9rem',
+                            style={{
+                                padding: '0 1.25rem',
+                                height: '48px',
+                                borderRadius: '14px',
+                                border: '1px solid #e2e8f0',
+                                backgroundColor: 'white',
+                                color: '#1e293b',
                                 cursor: 'pointer',
-                                boxShadow: '0 10px 20px rgba(217, 119, 6, 0.2)'
+                                display: 'flex',
+                                alignItems: 'center',
+                                gap: '8px',
+                                fontWeight: 700,
+                                fontSize: '0.9rem',
+                                transition: 'all 0.2s'
                             }}
+                            onMouseEnter={(e) => e.target.style.backgroundColor = '#f8fafc'}
+                            onMouseLeave={(e) => e.target.style.backgroundColor = 'white'}
                         >
-                            Book Site Visit
+                            <Share2 size={18} /> Share
                         </button>
+
+                        {project.brochure && (
+                            <a
+                                href={project.brochure}
+                                download
+                                style={{
+                                    padding: '0 1.5rem',
+                                    height: '48px',
+                                    borderRadius: '14px',
+                                    backgroundColor: '#0F172A',
+                                    color: 'white',
+                                    cursor: 'pointer',
+                                    display: 'flex',
+                                    alignItems: 'center',
+                                    gap: '10px',
+                                    fontWeight: 700,
+                                    fontSize: '0.9rem',
+                                    textDecoration: 'none',
+                                    transition: 'all 0.3s cubic-bezier(0.4, 0, 0.2, 1)',
+                                    boxShadow: '0 10px 15px -3px rgba(15, 23, 42, 0.2)'
+                                }}
+                                onMouseEnter={(e) => {
+                                    e.currentTarget.style.transform = 'translateY(-2px)';
+                                    e.currentTarget.style.backgroundColor = 'var(--color-primary)';
+                                }}
+                                onMouseLeave={(e) => {
+                                    e.currentTarget.style.transform = 'translateY(0)';
+                                    e.currentTarget.style.backgroundColor = '#0F172A';
+                                }}
+                            >
+                                <Download size={18} /> Brochure
+                            </a>
+                        )}
                     </div>
                 </div>
             </div>
-        </>
+        </div>
     );
 };
 

@@ -9,7 +9,9 @@ const PropertyOverview = ({ property }) => {
         { icon: <Hash size={18} />, label: 'Unit Number', value: property.unitNo },
         { icon: <Layers size={18} />, label: 'Property Type', value: property.type || property.propertyType },
         { icon: <Maximize2 size={18} />, label: 'Plot Size', value: property.sqft || property.sizeLabel || '-' },
-        { icon: <Compass size={18} />, label: 'Direction/Facing', value: property.technical?.facing || property.facing || '-' },
+        { icon: <Compass size={18} />, label: 'Facing', value: property.technical?.facing || property.facing || '-' },
+        { icon: <MoveUpRight size={18} />, label: 'Direction', value: property.technical?.direction || '-' },
+        { icon: <FastForward size={18} />, label: 'Road Width', value: property.technical?.roadWidth || '-' },
         { icon: <ArrowUpCircle size={18} />, label: 'Floor Level', value: property.technical?.floorNumber ? `${property.technical.floorNumber} of ${property.technical.totalFloors}` : '-' },
         { icon: <Clock size={18} />, label: 'Property Age', value: property.technical?.age ? `${property.technical.age} Years` : 'New' },
     ];

@@ -4,6 +4,7 @@ import PropertyOverview from './PropertyOverview';
 import PropertyBuiltup from './PropertyBuiltup';
 import PropertyLocation from './PropertyLocation';
 import PropertyMedia from './PropertyMedia';
+import SiteVisitForm from '../project-detail/SiteVisitForm';
 import NewsSection from '../NewsSection';
 import SEO from '../SEO';
 // No static imports anymore
@@ -101,7 +102,7 @@ const PropertyDetailPage = ({ propertyId, onAddToCompare, onBookConsultation }) 
                             <h3 style={{ fontSize: '1.5rem', fontWeight: 800, marginBottom: '1rem' }}>Interest in this property?</h3>
                             <p style={{ opacity: 0.7, marginBottom: '2rem', fontSize: '0.95rem', lineHeight: 1.5 }}>Our property experts are ready to assist you with a VIP tour and documentation.</p>
                             <button 
-                                onClick={onBookConsultation}
+                                onClick={() => document.getElementById('visit-form')?.scrollIntoView({ behavior: 'smooth' })}
                                 style={{ width: '100%', padding: '1.25rem', background: 'var(--grad-gold)', border: 'none', borderRadius: '16px', color: 'var(--color-primary)', fontWeight: 800, cursor: 'pointer', transition: 'all 0.3s' }}
                                 onMouseEnter={(e) => e.target.style.transform = 'translateY(-2px)'}
                                 onMouseLeave={(e) => e.target.style.transform = 'translateY(0)'}
@@ -110,6 +111,16 @@ const PropertyDetailPage = ({ propertyId, onAddToCompare, onBookConsultation }) 
                             </button>
                         </div>
                     </aside>
+                </div>
+
+                {/* Conversion Section (Form) */}
+                <div id="visit-form" style={{ marginTop: '4rem', padding: '4rem 0', backgroundColor: '#F8FAFC', borderRadius: '32px' }}>
+                    <SiteVisitForm 
+                        projectName={property.projectName} 
+                        block={property.block} 
+                        unitNo={property.unitNo || property.unitNumber} 
+                        propertyTitle={property.title || property.unitName} 
+                    />
                 </div>
             </main>
 

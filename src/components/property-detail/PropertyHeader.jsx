@@ -82,15 +82,15 @@ const PropertyHeader = ({ property, onBookConsultation }) => {
                         </div>
 
                         <h1 style={{ 
-                            fontSize: 'clamp(3rem, 7vw, 5rem)', 
+                            fontSize: 'clamp(2.5rem, 5vw, 4.5rem)', 
                             fontWeight: 900, 
                             color: 'white', 
-                            margin: '0 0 1.5rem',
-                            lineHeight: 1.1,
-                            letterSpacing: '-2px',
+                            margin: '0 0 1rem',
+                            lineHeight: 1.2,
+                            letterSpacing: '-1px',
                             textShadow: '0 20px 40px rgba(0,0,0,0.3)'
                         }}>
-                            {property.title || property.unitName}
+                            {property.availableString}
                         </h1>
 
                         <div style={{ 
@@ -98,19 +98,14 @@ const PropertyHeader = ({ property, onBookConsultation }) => {
                             alignItems: 'center', 
                             justifyContent: 'center', 
                             gap: '24px', 
-                            color: 'rgba(255,255,255,0.8)', 
+                            color: 'rgba(255,255,255,0.9)', 
                             marginBottom: '4rem',
                             fontSize: '1.25rem',
-                            fontWeight: 500
+                            fontWeight: 600
                         }}>
-                            <div style={{ display: 'flex', alignItems: 'center', gap: '8px' }}>
-                                <MapPin size={22} color="var(--color-gold)" />
-                                {property.location?.locality || property.location?.sector}, {property.location?.city}
-                            </div>
-                            <div style={{ width: '1px', height: '24px', backgroundColor: 'rgba(255,255,255,0.2)' }}></div>
-                            <div style={{ display: 'flex', alignItems: 'center', gap: '8px' }}>
-                                <Building2 size={22} color="var(--color-gold)" />
-                                {property.block}
+                            <div style={{ display: 'flex', alignItems: 'center', gap: '10px' }}>
+                                <MapPin size={24} color="var(--color-gold)" />
+                                <span>in <span style={{ color: 'var(--color-gold)' }}>{property.title || property.unitName}</span>, {property.location?.locality || property.location?.sector}, {property.location?.city}</span>
                             </div>
                         </div>
 
@@ -137,8 +132,8 @@ const PropertyHeader = ({ property, onBookConsultation }) => {
                                 <div style={{ color: 'white', fontSize: '1.5rem', fontWeight: 700 }}>{property.sqft}</div>
                             </div>
                             <div style={{ backgroundColor: 'rgba(15, 23, 42, 0.4)', padding: '2.5rem', textAlign: 'center' }}>
-                                <div style={{ color: 'rgba(255,255,255,0.5)', fontSize: '0.75rem', fontWeight: 800, textTransform: 'uppercase', marginBottom: '10px', letterSpacing: '2px' }}>Stage</div>
-                                <div style={{ color: 'white', fontSize: '1.5rem', fontWeight: 700 }}>{property.stage}</div>
+                                <div style={{ color: 'rgba(255,255,255,0.5)', fontSize: '0.75rem', fontWeight: 800, textTransform: 'uppercase', marginBottom: '10px', letterSpacing: '2px' }}>Status</div>
+                                <div style={{ color: 'white', fontSize: '1.5rem', fontWeight: 700 }}>Available</div>
                             </div>
                         </div>
                     </div>

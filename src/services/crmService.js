@@ -69,18 +69,32 @@ const mapDealToProperty = (deal) => {
         .map(doc => fixDriveUrl(doc.url))
         .filter(url => url) || [];
 
+    const intent = deal.intent || 'Sell';
+    const rawCategory = deal.category || '';
+    const category = /^[0-9a-fA-F]{24}$/.test(rawCategory) ? '' : rawCategory;
+    const subCat = /^[0-9a-fA-F]{24}$/.test(deal.subCategory) ? '' : (deal.subCategory || '');
+    const sizeLabel = deal.sizeLabel || deal.unitSpecification?.sizeLabel || '';
+    
+    const detailsArr = [category, sizeLabel, subCat].filter(Boolean);
+    const detailsString = detailsArr.length > 0 ? `, ${detailsArr.join(' ')}` : '';
+    const availableString = `Available For ${intent}${detailsString}`;
+
+    const rawProjectName = deal.projectName || '';
+    const cleanProjectName = /^[0-9a-fA-F]{24}$/.test(rawProjectName) ? '' : rawProjectName;
+    const blockString = deal.block && deal.block !== 'N/A' ? deal.block : '';
+
     return {
         id: deal._id,
         slug: deal.websiteMetadata?.slug || deal._id,
         title: deal.websiteMetadata?.title || 
                (deal.propertyDetails?.bhk ? `${deal.propertyDetails.bhk} BHK ` : '') + 
-               (deal.propertyType || 'Premium Property') + 
-               ` at ${deal.projectName}`,
-        unitName: deal.websiteMetadata?.title || deal.projectName || 'Premium Property',
+               (blockString || deal.propertyType || 'Property') + 
+               (cleanProjectName ? ` at ${cleanProjectName}` : ''),
+        unitName: deal.websiteMetadata?.title || blockString || cleanProjectName || 'Property',
         price: formatPrice(deal.price || deal.quotePrice),
         location: { 
             city: deal.location || deal.address?.city || 'Unknown',
-            display: `${deal.projectName}${deal.block ? `, Block ${deal.block}` : ''}`,
+            display: `${cleanProjectName || blockString || 'Property'}`,
             address: deal.address?.address || deal.location || '',
             street: deal.address?.street || '',
             locality: deal.address?.locality || '',
@@ -88,21 +102,25 @@ const mapDealToProperty = (deal) => {
             country: deal.address?.country || 'India',
             zip: deal.address?.zip || ''
         },
-        beds: flattenMeasurement(deal.propertyDetails?.bhk, ''),
-        baths: flattenMeasurement(deal.propertyDetails?.bathrooms, ''),
-        sqft: flattenMeasurement(deal.size, deal.sizeUnit || 'Sq.Ft'),
+        beds: String(deal.propertyDetails?.bhk || '0'),
+        baths: String(deal.propertyDetails?.bathrooms || '0'),
+        sqft: flattenMeasurement(deal.size, deal.sizeUnit || 'Sq.Ft') || 'Area on Request',
+        block: blockString,
         image: deal.websiteMetadata?.featuredImage || images[0] || null,
         images: images,
         media: images,
         status: deal.status || 'Available',
         type: deal.propertyType || 'Residential',
         propertyType: deal.propertyType || 'Residential',
-        subCategory: /^[0-9a-fA-F]{24}$/.test(deal.subCategory) ? '' : (deal.subCategory || 'Property'),
-        sizeLabel: deal.unitSpecification?.sizeLabel || '',
+        subCategory: subCat,
+        sizeLabel: sizeLabel,
+        intent: intent,
+        availableString: availableString,
         description: deal.websiteMetadata?.description || deal.remarks || deal.description,
         builtupDetails: {
-            area: flattenMeasurement(deal.size),
-            unit: deal.sizeUnit || 'Sq.Ft'
+            area: String(deal.size || '0'),
+            unit: deal.sizeUnit || 'Sq.Ft',
+            floors: []
         },
         construction: deal.propertyDetails?.furnishing || 'Unfurnished',
         coords: { lat: parseFloat(deal.latitude) || 28.4595, lng: parseFloat(deal.longitude) || 77.0266 },
@@ -110,6 +128,8 @@ const mapDealToProperty = (deal) => {
             floorNumber: deal.propertyDetails?.floorNumber || 'N/A',
             totalFloors: deal.propertyDetails?.totalFloors || 'N/A',
             facing: deal.propertyDetails?.facing || 'N/A',
+            direction: deal.propertyDetails?.direction || 'N/A',
+            roadWidth: deal.propertyDetails?.roadWidth || 'N/A',
             age: deal.propertyDetails?.ageOfProperty || 'New',
             registration: deal.priceDetails?.registrationCharges || 'Extra',
             maintenance: deal.priceDetails?.maintenanceCharges || 'N/A'

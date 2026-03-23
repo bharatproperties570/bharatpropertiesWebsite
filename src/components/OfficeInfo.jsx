@@ -1,10 +1,59 @@
+"use client";
+
 import React from 'react';
 import Image from 'next/image';
 import { MapPin, Phone, Mail, Clock, ExternalLink, Navigation } from 'lucide-react';
+import Script from 'next/script';
 
 const OfficeInfo = () => {
     const kkrGMapLink = "https://www.google.com/maps/dir//Bharat+Properties,+Sector+3+Market,+Sector+30,+Sector+3,+Kurukshetra,+Haryana+136118,+India/@29.9490011,76.8836256,15z/data=!3m1!4b1!4m8!4m7!1m0!1m5!1m1!1s0x390e46d0c969312b:0x8ed8c65fa39c306d!2m2!1d76.8899997!2d29.9602037";
     const mohaliGMapLink = "https://maps.app.goo.gl/SrXsJrh5L23qLEtM6";
+
+    const GOOGLE_MAPS_API_KEY = process.env.NEXT_PUBLIC_GOOGLE_MAPS_API_KEY || "";
+
+    const LOCATOR_CONFIG = {
+        "locations": [
+            {
+                "title": "Bharat Properties - Kurukshetra (HQ)",
+                "address1": "Shop No 166, Sector 3 Market",
+                "address2": "Kurukshetra, Haryana 136118",
+                "coords": { "lat": 29.9602037, "lng": 76.8899997 },
+                "placeId": "ChIJIzFpydBGDjkRbTCZol_G2I8"
+            },
+            {
+                "title": "Bharat Properties - Mohali",
+                "address1": "Airport Road, Sector 82 Industrial Area",
+                "address2": "Mohali, Punjab",
+                "coords": { "lat": 30.6661, "lng": 76.7414 }
+            }
+        ],
+        "mapOptions": {
+            "center": { "lat": 30.3, "lng": 76.8 },
+            "zoom": 8,
+            "mapId": "DEMO_MAP_ID"
+        },
+        "mapsApiKey": GOOGLE_MAPS_API_KEY,
+        "capabilities": { "input": true, "autocomplete": true, "directions": true, "distanceMatrix": true, "details": true, "actions": false }
+    };
+
+    const locatorHtml = `
+      <gmpx-api-loader key="${GOOGLE_MAPS_API_KEY}" solution-id="V9667X"></gmpx-api-loader>
+      <gmpx-store-locator style="width: 100%; height: 100%; --gmpx-color-surface: #ffffff; --gmpx-color-on-surface: #1a1a1b; --gmpx-color-primary: #1a1b3a; --gmpx-color-on-primary: #ffffff; --gmpx-font-family-base: 'Outfit', sans-serif; --gmpx-font-family-headings: 'Outfit', sans-serif;"></gmpx-store-locator>
+      <script>
+        (async () => {
+          const locator = document.querySelector('gmpx-store-locator');
+          const config = ${JSON.stringify(LOCATOR_CONFIG)};
+          if (locator) {
+            await customElements.whenDefined('gmpx-store-locator');
+            if (typeof locator.configureFromQuickBuilder === 'function') {
+              locator.configureFromQuickBuilder(config);
+            } else if (typeof locator.configure === 'function') {
+              locator.configure(config);
+            }
+          }
+        })();
+      </script>
+    `;
 
     return (
         <section style={{ 
@@ -13,12 +62,14 @@ const OfficeInfo = () => {
             position: 'relative',
             overflow: 'hidden'
         }}>
-            {/* Decorative Orbs */}
-            <div style={{ position: 'absolute', top: '-10%', left: '-5%', width: '400px', height: '400px', background: 'var(--grad-indigo)', opacity: 0.1, filter: 'blur(100px)', borderRadius: '50%', pointerEvents: 'none' }}></div>
-            <div style={{ position: 'absolute', bottom: '-10%', right: '-5%', width: '400px', height: '400px', background: 'var(--grad-gold)', opacity: 0.1, filter: 'blur(100px)', borderRadius: '50%', pointerEvents: 'none' }}></div>
-
+            <Script 
+                src="https://unpkg.com/@googlemaps/extended-component-library@0.6.11/dist/index.min.js"
+                strategy="afterInteractive"
+                type="module"
+            />
+            {/* ... rest of the section ... */}
             <div className="container">
-                {/* Centered Header */}
+                {/* ... header ... */}
                 <div className="reveal" style={{ textAlign: 'center', marginBottom: '4rem' }}>
                     <span style={{ 
                         background: 'var(--grad-gold)', 
@@ -47,83 +98,43 @@ const OfficeInfo = () => {
 
                 <div className="reveal" style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(320px, 1fr))', gap: '5rem', alignItems: 'start' }}>
 
-                    {/* Left Side: Visual/Branding */}
+                    {/* Left Side: Interactive Map */}
                     <div className="hover-lift" style={{ position: 'relative' }}>
                         <div style={{
-                            height: '480px',
+                            height: '520px',
                             borderRadius: '2.5rem',
                             overflow: 'hidden',
                             position: 'relative',
                             boxShadow: 'var(--shadow-premium)',
-                            background: 'var(--grad-premium)',
+                            background: '#f8f9fa',
+                            border: '1px solid rgba(0,0,0,0.05)'
                         }}>
-                            <div className="noise-overlay"></div>
-                            
-                            {/* Animated Background Content */}
-                            <div style={{
-                                width: '100%',
-                                height: '100%',
-                                display: 'flex',
-                                flexDirection: 'column',
-                                alignItems: 'center',
-                                justifyContent: 'center',
-                                textAlign: 'center',
-                                color: 'white',
-                                padding: '3rem',
-                                position: 'relative',
-                                zIndex: 2
-                            }}>
-                                <div className="animate-floating" style={{ 
-                                    background: 'rgba(255,255,255,0.95)', 
-                                    backdropFilter: 'blur(20px)', 
-                                    padding: '1.5rem', 
-                                    borderRadius: '2.5rem', 
-                                    marginBottom: '1.5rem',
-                                    boxShadow: '0 20px 40px rgba(0,0,0,0.2)',
-                                    border: '1px solid rgba(255,255,255,0.3)',
-                                    width: '120px',
-                                    height: '120px',
-                                    display: 'flex',
+                            {GOOGLE_MAPS_API_KEY ? (
+                                <div 
+                                    style={{ width: '100%', height: '100%' }}
+                                    dangerouslySetInnerHTML={{ __html: locatorHtml }}
+                                />
+                            ) : (
+                                <div style={{ 
+                                    padding: '2rem', 
+                                    textAlign: 'center', 
+                                    height: '100%', 
+                                    display: 'flex', 
+                                    flexDirection: 'column', 
+                                    justifyContent: 'center',
                                     alignItems: 'center',
-                                    justifyContent: 'center'
+                                    gap: '1rem'
                                 }}>
-                                    <Image 
-                                        src="/assets/logo-main.png" 
-                                        alt="Bharat Properties" 
-                                        width={100} 
-                                        height={100}
-                                        style={{ width: '100%', height: '100%', objectFit: 'contain' }} 
-                                    />
+                                    <MapPin size={48} color="var(--color-accent)" />
+                                    <h3 style={{ color: 'var(--color-primary)' }}>Find Us on Map</h3>
+                                    <p style={{ color: 'var(--color-text-muted)', maxWidth: '300px' }}>
+                                        Visit our offices in Mohali and Kurukshetra.
+                                    </p>
+                                    <a href={kkrGMapLink} target="_blank" rel="noopener noreferrer" className="btn btn-primary" style={{ marginTop: '1rem' }}>
+                                        View on Google Maps
+                                    </a>
                                 </div>
-                                <h3 style={{ fontSize: '3rem', fontWeight: 900, marginBottom: '1rem', fontFamily: 'var(--font-heading)', letterSpacing: '-0.02em' }}>Visit Us</h3>
-                                <p style={{ fontSize: '1.25rem', opacity: 0.8, maxWidth: '280px', margin: '0 auto 2rem', lineHeight: 1.4 }}>Where luxury real estate meets premium consultation.</p>
-                                
-                                <a 
-                                    href={kkrGMapLink} 
-                                    target="_blank" 
-                                    rel="noopener noreferrer"
-                                    className="glass-premium"
-                                    style={{ 
-                                        padding: '1.25rem 2.5rem', 
-                                        borderRadius: '1.25rem', 
-                                        color: 'var(--color-primary)', 
-                                        textDecoration: 'none',
-                                        display: 'flex',
-                                        alignItems: 'center',
-                                        gap: '1rem',
-                                        fontWeight: 800,
-                                        transition: 'all 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275)',
-                                        border: '1px solid rgba(255,255,255,0.8)',
-                                        boxShadow: '0 10px 30px rgba(0,0,0,0.1)'
-                                    }}
-                                >
-                                    <Navigation size={22} fill="var(--color-primary)" />
-                                    Get Directions
-                                </a>
-                            </div>
-
-                            {/* Decorative background shape */}
-                            <div style={{ position: 'absolute', top: '-20%', right: '-20%', width: '300px', height: '300px', background: 'var(--grad-gold)', borderRadius: '50%', opacity: 0.2, filter: 'blur(60px)' }}></div>
+                            )}
                         </div>
                     </div>
 

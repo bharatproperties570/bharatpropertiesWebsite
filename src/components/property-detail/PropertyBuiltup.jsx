@@ -1,5 +1,5 @@
 import React from 'react';
-import { Sofa, Construction, CalendarSync, Ruler, CheckCircle2, LayoutGrid } from 'lucide-react';
+import { Sofa, Construction, CalendarSync, Ruler, CheckCircle2, LayoutGrid, Info } from 'lucide-react';
 
 const PropertyBuiltup = ({ builtup, furnishing }) => {
     if (!builtup || !furnishing) return null;

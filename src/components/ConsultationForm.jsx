@@ -350,14 +350,11 @@ const ConsultationForm = ({ onClose }) => {
                             >
                                 <option value="Call">Call</option>
                                 <option value="Meeting">Meeting</option>
-                                <option value="Site Visit">Site Visit</option>
                             </select>
                         </div>
                         <div>
                             <label style={labelStyles}>
-                                {formData.activityType === 'Meeting' ? 'Agenda / Meeting Purpose' : 
-                                 formData.activityType === 'Site Visit' ? 'Visit Type' : 
-                                 'Call Purpose'}
+                                {formData.activityType === 'Meeting' ? 'Agenda / Meeting Purpose' : 'Call Purpose'}
                             </label>
                             <select
                                 name="reason"
@@ -367,16 +364,18 @@ const ConsultationForm = ({ onClose }) => {
                                 required
                             >
                                 <option value="">Select Purpose</option>
-                                {formData.activityType === 'Meeting' && activityMasterFields.meetingPurposes?.map(p => (
-                                    <option key={p} value={p}>{p}</option>
-                                ))}
-                                {formData.activityType === 'Site Visit' && activityMasterFields.siteVisitTypes?.map(p => (
-                                    <option key={p} value={p}>{p}</option>
-                                ))}
-                                {formData.activityType === 'Call' && activityMasterFields.callPurposes?.map(p => (
-                                    <option key={p} value={p}>{p}</option>
-                                ))}
-                                <option value="General Inquiry">General Inquiry</option>
+                                {formData.activityType === 'Meeting' && activityMasterFields.meetingPurposes
+                                    ?.filter(p => !['General Inquiry', 'General Enquiry'].includes(p))
+                                    .map(p => (
+                                        <option key={p} value={p}>{p}</option>
+                                    ))
+                                }
+                                {formData.activityType === 'Call' && activityMasterFields.callPurposes
+                                    ?.filter(p => !['Follow-up', 'Negotiation', 'Post-Visit Feedback', 'Payment Reminder', 'Post-Meeting Feedback', 'General Inquiry', 'General Enquiry'].includes(p))
+                                    .map(p => (
+                                        <option key={p} value={p}>{p}</option>
+                                    ))
+                                }
                             </select>
                         </div>
                     </div>
@@ -477,107 +476,7 @@ const ConsultationForm = ({ onClose }) => {
                             />
                         </div>
                     )}
-                    {formData.activityType === 'Site Visit' && (
-                        <div style={{ marginBottom: '2rem' }}>
-                            <label style={labelStyles}>Site Visit Location / Pickup Point</label>
-                            <div style={{ display: 'flex', gap: '1rem' }}>
-                                <input
-                                    name="locationAddress"
-                                    value={formData.locationAddress}
-                                    onChange={handleChange}
-                                    style={inputStyles}
-                                    placeholder="Enter detailed pickup address or site location"
-                                    required
-                                />
-                                <button
-                                    type="button"
-                                    onClick={() => setShowMapPlaceholder(!showMapPlaceholder)}
-                                    style={{
-                                        ...inputStyles,
-                                        width: 'auto',
-                                        display: 'flex',
-                                        alignItems: 'center',
-                                        gap: '0.5rem',
-                                        backgroundColor: '#eff6ff',
-                                        color: '#2563eb',
-                                        border: '1px solid #bfdbfe'
-                                    }}
-                                >
-                                    <MapPin size={18} /> {showMapPlaceholder ? 'Hide' : 'Pick on Map'}
-                                </button>
-                            </div>
-                        </div>
-                    )}
 
-                    {/* Inventory Section - 3 Columns (Optional) */}
-                    <div style={{
-                        backgroundColor: '#f1f5f9',
-                        padding: '1.5rem',
-                        borderRadius: '20px',
-                        marginBottom: '2rem'
-                    }}>
-                        <h3 style={{ fontSize: '0.85rem', fontWeight: 700, color: '#475569', marginBottom: '1rem', display: 'flex', alignItems: 'center', gap: '0.5rem' }}>
-                            <Building size={16} /> INVENTORY DETAILS (OPTIONAL)
-                        </h3>
-                        <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr 1fr', gap: '1rem' }}>
-                            <div>
-                                <label style={labelStyles}>Project Name</label>
-                                <select
-                                    name="projectName"
-                                    value={formData.projectName}
-                                    onChange={(e) => handleProjectSelect(e.target.value)}
-                                    style={{ ...inputStyles, backgroundColor: 'white' }}
-                                >
-                                    <option value="">Select Project</option>
-                                    {projects.map(p => (
-                                        <option key={p.id || p._id} value={p.name}>{p.name}</option>
-                                    ))}
-                                </select>
-                            </div>
-                            <div>
-                                <label style={labelStyles}>Block</label>
-                                <select
-                                    name="block"
-                                    value={formData.block}
-                                    onChange={handleChange}
-                                    style={{ ...inputStyles, backgroundColor: 'white' }}
-                                >
-                                    <option value="">Select Block</option>
-                                    {filteredBlocks.map(b => (
-                                        <option key={b} value={b}>{b}</option>
-                                    ))}
-                                    <option value="General">General</option>
-                                </select>
-                            </div>
-                            <div>
-                                <label style={labelStyles}>Unit / Property No.</label>
-                                {availableUnits.length > 0 ? (
-                                    <select
-                                        name="unitNumber"
-                                        value={formData.unitNumber}
-                                        onChange={(e) => handleUnitSelect(e.target.value)}
-                                        style={{ ...inputStyles, backgroundColor: 'white' }}
-                                    >
-                                        <option value="">Select Unit</option>
-                                        {availableUnits.map(u => (
-                                            <option key={u.id || u.unitNo} value={u.unitNo}>
-                                                {u.unitNo} {u.size ? `(${u.size.value || ''} ${u.size.unit || ''})` : ''}
-                                            </option>
-                                        ))}
-                                    </select>
-                                ) : (
-                                    <input
-                                        name="unitNumber"
-                                        value={formData.unitNumber}
-                                        onChange={handleChange}
-                                        style={{ ...inputStyles, backgroundColor: 'white' }}
-                                        placeholder={fetchingUnits ? "Loading..." : "e.g. 1972 P"}
-                                        disabled={fetchingUnits}
-                                    />
-                                )}
-                            </div>
-                        </div>
-                    </div>
 
                     {/* Contact Info Section - HIGHLIGHTED */}
                     <div style={{

@@ -5,7 +5,7 @@ import { Calendar, Clock, User, Phone, Mail, Send, CheckCircle, Loader2 } from '
 import { countryCodes } from '../../data/countryCodes';
 import { submitLead } from '../../services/crmService';
 
-const SiteVisitForm = ({ projectName }) => {
+const SiteVisitForm = ({ projectName, block, unitNo, propertyTitle }) => {
     const [formData, setFormData] = useState({
         name: '',
         email: '',
@@ -30,9 +30,11 @@ const SiteVisitForm = ({ projectName }) => {
                 mobile: `${formData.countryCode}${formData.phone}`,
                 email: formData.email,
                 activityType: 'Site Visit',
-                reason: `Site Visit for ${projectName}`,
+                reason: `Site Visit for ${propertyTitle || projectName}`,
                 remarks: formData.message,
                 projectName: projectName,
+                block: block,
+                unitNumber: unitNo,
                 dueDate: formData.date,
                 dueTime: formData.time
             });
@@ -71,7 +73,7 @@ const SiteVisitForm = ({ projectName }) => {
                             Schedule a Site Visit
                         </h2>
                         <p style={{ color: 'var(--color-text-muted)', fontSize: '1.1rem' }}>
-                            Visit {projectName} and explore your future home
+                            Visit {propertyTitle || projectName} and explore your future home
                         </p>
                     </div>
 

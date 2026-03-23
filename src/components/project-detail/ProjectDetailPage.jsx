@@ -61,7 +61,7 @@ const ProjectDetailPage = ({ projectId, onBookConsultation, onAddToCompare }) =>
                 description={project.seo?.description || project.overview?.substring(0, 160) || `Discover ${project.name}, a premium real estate project.`}
                 keywords={project.seo?.tags?.join(', ') || `${project.name}, Real Estate Project, ${project.address?.city}`}
             />
-            {/* Project Header (Sticky & Hero) */}
+            {/* Project Header (Sticky) */}
             <ProjectHeader
                 project={project}
                 onBookConsultation={onBookConsultation}
@@ -69,17 +69,15 @@ const ProjectDetailPage = ({ projectId, onBookConsultation, onAddToCompare }) =>
             />
 
             <main>
+                {/* Visual Showcase (Gallery) */}
+                {project.images && project.images.length > 0 && (
+                    <ImageGallery images={project.images} projectName={project.name} />
+                )}
+
                 {/* Core Details Container */}
-                <div style={{ position: 'relative', marginTop: '-1px' }}>
+                <div style={{ position: 'relative' }}>
                     {/* Overview & Highlights */}
                     {project.overview && <ProjectOverview project={project} />}
-
-                    {/* Visual Showcase (Gallery) - Moved below overview for better flow */}
-                    {project.images && project.images.length > 0 && (
-                        <div style={{ padding: '2rem 0', backgroundColor: '#000' }}>
-                            <ImageGallery images={project.images} projectName={project.name} />
-                        </div>
-                    )}
 
                     {/* Architectural Detail */}
                     {project.blocks && project.blocks.length > 0 && (
@@ -103,14 +101,16 @@ const ProjectDetailPage = ({ projectId, onBookConsultation, onAddToCompare }) =>
 
                     {/* Geography */}
                     {project.address && (
-                        <div style={{ padding: '8rem 0', backgroundColor: '#fff', borderTop: '1px solid #f1f5f9' }}>
+                        <div style={{ padding: '2rem 0', backgroundColor: '#fff' }}>
                             <ProjectLocation address={project.address} projectName={project.name} />
                         </div>
                     )}
+
+
                 </div>
 
                 {/* Conversion Section (Form) */}
-                <div id="visit-form" style={{ padding: '8rem 0', backgroundColor: '#F8FAFC' }}>
+                <div id="visit-form" style={{ padding: '2rem 0 5rem 0', backgroundColor: '#F8FAFC' }}>
                     <SiteVisitForm projectName={project.name} />
                 </div>
             </main>

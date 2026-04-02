@@ -97,7 +97,7 @@ const HeroSection = ({ onExplore }) => {
                     color: '#FFFFFF',
                     position: 'relative'
                 }}>
-                    Bharat Properties
+                    Marketing OS
                     <div style={{
                         position: 'absolute',
                         top: '50%',
@@ -105,18 +105,18 @@ const HeroSection = ({ onExplore }) => {
                         transform: 'translate(-50%, -50%)',
                         width: '100%',
                         height: '100%',
-                        background: 'radial-gradient(circle, rgba(251, 191, 36, 0.1) 0%, transparent 70%)',
+                        background: 'radial-gradient(circle, rgba(201, 146, 26, 0.2) 0%, transparent 70%)',
                         zIndex: -1,
                         filter: 'blur(40px)'
                     }}></div>
                 </h1>
-                <p id="hero-slogan-v2" className="animate-fade-in-up" style={{
+                <p id="hero-slogan-v2.5" className="animate-fade-in-up" style={{
                     fontSize: 'clamp(1.1rem, 2.5vw, 1.4rem)',
                     marginBottom: '4rem',
                     color: '#f1f5f9',
                     fontFamily: 'var(--font-heading)',
                     fontWeight: 400,
-                    maxWidth: '800px',
+                    maxWidth: '850px',
                     marginLeft: 'auto',
                     marginRight: 'auto',
                     lineHeight: 1.6,
@@ -125,8 +125,8 @@ const HeroSection = ({ onExplore }) => {
                     opacity: 0.9,
                     animationDelay: '200ms'
                 }}>
-                    <span style={{ color: 'var(--color-gold)', fontWeight: 700 }}>Exclusive</span> Destination for Luxury Real Estate in North India. <br />
-                    Premium Collections in <span style={{ borderBottom: '2px solid var(--color-gold)' }}>Chandigarh, Mohali, Panchkula & Kurukshetra.</span>
+                    <span style={{ color: '#C9921A', fontWeight: 800 }}>Bharat Properties</span> — The Advanced AI Ecosystem for Luxury Real Estate. <br />
+                    Powered by <span style={{ color: '#C9921A', fontWeight: 700 }}>AI Marketing OS v2.5</span> • Active Agent Suite • Automated Lead Ingestion
                 </p>
 
                 <button

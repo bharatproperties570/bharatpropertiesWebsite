@@ -48,8 +48,10 @@ const ConsultationForm = ({ onClose }) => {
 
     // Dynamic Data State
     const [projects, setProjects] = useState([]);
+    // eslint-disable-next-line no-unused-vars
     const [filteredBlocks, setFilteredBlocks] = useState([]);
     const [availableUnits, setAvailableUnits] = useState([]);
+    // eslint-disable-next-line no-unused-vars
     const [fetchingUnits, setFetchingUnits] = useState(false);
     const [activityMasterFields, setActivityMasterFields] = useState({});
 
@@ -93,6 +95,7 @@ const ConsultationForm = ({ onClose }) => {
         loadUnits();
     }, [formData.projectName, formData.block]);
 
+    // eslint-disable-next-line no-unused-vars
     const handleProjectSelect = (projectName) => {
         const selectedProject = projects.find(p => p.name === projectName);
         const blocks = (selectedProject?.blocks || []).map(b => typeof b === 'object' ? b.name : b);
@@ -106,6 +109,7 @@ const ConsultationForm = ({ onClose }) => {
         }));
     };
 
+    // eslint-disable-next-line no-unused-vars
     const handleUnitSelect = (unitNo) => {
         const unit = availableUnits.find(u => u.unitNo === unitNo);
         if (unit) {

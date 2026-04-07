@@ -136,7 +136,7 @@ const mapDealToProperty = (deal) => {
         },
         // Old field mappings for compatibility
         unitNo: deal.unitNo || deal.inventoryId?.unitNo || 'N/A',
-        block: deal.block || 'N/A',
+        
         ownership: deal.propertyDetails?.ownership || 'Freehold',
         stage: deal.status || 'Available',
         seo: {

@@ -1,3 +1,5 @@
+/* global process */
+
 'use client';
 
 import React from 'react';

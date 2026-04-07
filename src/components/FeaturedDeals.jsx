@@ -38,6 +38,7 @@ const FeaturedDeals = ({ city = '', initialData = [] }) => {
             setLoading(false);
         };
         loadDeals();
+        // eslint-disable-next-line react-hooks/exhaustive-deps
     }, [activeTab, city, initialData]);
 
     const scroll = (direction) => {

@@ -127,7 +127,9 @@ const Chatbot = () => {
             if (data.success && data.reply) {
                 setMessages(prev => [...prev, { type: 'bot', text: data.reply, timestamp: new Date() }]);
             }
-        } catch (e) { }
+        } catch (error) { 
+            console.error("Hidden message error:", error); 
+        }
         setIsLoading(false);
     };
 

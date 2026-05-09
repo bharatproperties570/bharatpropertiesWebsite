@@ -1,344 +1,134 @@
-import React, { useState, useRef, useEffect, useCallback } from 'react';
-import { MessageCircle, X, Send, Bot, User, CheckCircle, MapPin, IndianRupee } from 'lucide-react';
-import { PROPERTY_DATA } from '../data/propertyData';
-import { SAMPLE_PROJECTS } from '../data/sampleProjects';
-
-// 60+ MESSAGES LIBRARY
-const LIB = {
-    GREETINGS: [
-        "Hello 👋\nMain Bharat Properties se baat kar raha hoon.",
-        "Welcome 😊\nAap property buy, sell ya rent ke liye dekh rahe hain?",
-        "Hi!\nBataiye, main aapko kis type ki property me help kar sakta hoon?",
-        "Namaste 🙏\nBharat Properties me aapka swagat hai.",
-        "Aap buyer hain ya seller?",
-        "Property se related koi requirement hai? Bataiye 👍"
-    ],
-    BUY_QUESTIONS: {
-        TYPE: "Residential ya Commercial property chahiye?",
-        SUBTYPE: "Plot dekh rahe hain ya House/Flat?",
-        LOCATION: "Kis city / area me property chahiye?",
-        LOCALITY: "Sector ya locality ka naam pata hai?",
-        BUDGET: "Approx budget range bata denge?",
-        BUDGET_SOFT: "Budget rough ho to bhi chalega 👍",
-        INTENT: "End-use ke liye chahiye ya investment ke liye?",
-        STATUS: "Ready property chahiye ya under-construction?",
-        PREFERENCE: "Facing ya road width ki koi preference?",
-        TIMELINE: "Immediate purchase plan hai ya future me?"
-    },
-    SELL_QUESTIONS: {
-        START: "Aap kaunsi property sell karna chahte hain?",
-        TYPE: "Plot, House ya Commercial property?",
-        LOCATION: "Property kis area / sector / city me hai?",
-        LEGAL: "Ownership clear hai na?",
-        INTENT: "Immediate sell plan hai ya thoda time hai?",
-        PRICE: "Price expectation approx kya hai?",
-        BUYER_TYPE: "Aap direct buyer chahte hain ya investor bhi?",
-        OFFICE: "Kya aap office visit ke liye comfortable hain?"
-    },
-    RENT_QUESTIONS: {
-        START: "Rent ya Lease ke liye property chahiye?",
-        TYPE: "Residential ya Commercial?",
-        LOCATION: "Kis area me chahiye?",
-        BUDGET: "Monthly budget range kya rahega?",
-        USE: "Family ke liye ya office use ke liye?",
-        POSSESSION: "Immediate possession chahiye?"
-    },
-    WEBSITE_MATCH: [
-        "Is requirement ke hisaab se\nwebsite par kuch verified options available hain 👍",
-        "Main aapko live property details dikha raha hoon 👇",
-        "Ye property hamare Projects section me listed hai.",
-        "Is range me 2–3 genuine options hain.",
-        "Ye details directly hamari website se aa rahi hain.",
-        "Aap chahein to main similar options bhi dikha sakta hoon.",
-        "Is time website par ye option available nahi hai.",
-        "Main check karke aapko confirm karta hoon 👍"
-    ],
-    CTA: [
-        "Kya main details share kar doon?",
-        "Site visit plan karna chahenge?",
-        "Aap hamare Kurukshetra office bhi aa sakte hain 😊",
-        "Aaj nahi to weekend par visit possible hai?",
-        "Call ya WhatsApp par details bhej doon?",
-        "Aapka convenient time kya rahega?",
-        "Main aapki requirement note kar raha hoon 👍"
-    ],
-    TRUST: [
-        "Hum sirf verified properties deal karte hain.",
-        "No fake listings, no false commitment.",
-        "Deals direct owners & developers ke sath hoti hain.",
-        "Transparency aur trust hamari priority hai.",
-        "Aap bilkul tension-free enquiry kar sakte hain 😊"
-    ],
-    FALLBACK: [
-        "Main sirf property-related help kar sakta hoon 👍",
-        "Loan ya legal advice ke liye team guide karegi.",
-        "Ye information confirm karke hi share ki jaati hai.",
-        "Is point par thoda verification required hai.",
-        "Main galat information share nahi karta.",
-        "Aap chahein to office visit best rahega."
-    ],
-    CLOSING: [
-        "Perfect 😊\nAapki requirement clear ho gayi hai.",
-        "Main details CRM me note kar raha hoon.",
-        "Hamari team aapse short time me connect karegi.",
-        "Thank you for contacting Bharat Properties 🙏",
-        "Koi aur query ho to bataiye.",
-        "Hum aapki property journey me help karenge 👍"
-    ]
-};
+import React, { useState, useRef, useEffect } from 'react';
+import { MessageCircle, X, Send, Bot, User, Phone } from 'lucide-react';
 
 const Chatbot = () => {
     const [isOpen, setIsOpen] = useState(false);
-    const [messages, setMessages] = useState([
-        {
-            type: 'bot',
-            text: LIB.GREETINGS[0],
-            timestamp: new Date()
-        }
-    ]);
+    const [messages, setMessages] = useState([]);
     const [inputText, setInputText] = useState('');
-    const [flow, setFlow] = useState(null); // 'BUY', 'SELL', 'RENT'
-    const [step, setStep] = useState(1);
-    const [userRequirement, setUserRequirement] = useState({});
-    const [leadScore, setLeadScore] = useState(0);
+    const [sessionId, setSessionId] = useState('');
+    const [isLoading, setIsLoading] = useState(false);
+    
+    // Intake State
+    const [isIdentified, setIsIdentified] = useState(false);
+    const [userName, setUserName] = useState('');
+    const [userMobile, setUserMobile] = useState('');
+    const [showIntakeForm, setShowIntakeForm] = useState(false);
+
     const messagesEndRef = useRef(null);
 
     const scrollToBottom = () => {
         messagesEndRef.current?.scrollIntoView({ behavior: 'smooth' });
     };
 
-    const addMessage = useCallback((type, text, data = null) => {
-        setMessages(prev => [...prev, { type, text, data, timestamp: new Date() }]);
+    useEffect(() => {
+        const storedSession = localStorage.getItem('bp_chat_session');
+        if (storedSession) {
+            setSessionId(storedSession);
+            const history = localStorage.getItem(`bp_chat_history_${storedSession}`);
+            if (history) {
+                setMessages(JSON.parse(history));
+            } else {
+                setMessages([{ type: 'bot', text: 'Hello 👋\nMain Bharat Properties se baat kar raha hoon. Bataiye, main aapko kis type ki property me help kar sakta hoon?', timestamp: new Date() }]);
+            }
+        } else {
+            const newSession = 'sess_' + Math.random().toString(36).substring(2, 15);
+            setSessionId(newSession);
+            localStorage.setItem('bp_chat_session', newSession);
+            setMessages([{ type: 'bot', text: 'Hello 👋\nMain Bharat Properties se baat kar raha hoon. Bataiye, main aapko kis type ki property me help kar sakta hoon?', timestamp: new Date() }]);
+        }
+
+        const storedMobile = localStorage.getItem('bp_chat_mobile');
+        if (storedMobile) {
+            setIsIdentified(true);
+            setUserMobile(storedMobile);
+            setUserName(localStorage.getItem('bp_chat_name') || '');
+        }
     }, []);
 
     useEffect(() => {
-        if (isOpen && messages.length === 1) {
-            setTimeout(() => {
-                addMessage('bot', LIB.GREETINGS[1]);
-            }, 800);
-        }
-    }, [isOpen, messages.length, addMessage]);
-
-    useEffect(() => {
         scrollToBottom();
-    }, [messages]);
+        if (messages.length > 0 && sessionId) {
+            localStorage.setItem(`bp_chat_history_${sessionId}`, JSON.stringify(messages));
+        }
+    }, [messages, isOpen, sessionId]);
 
-
-
-    const updateLeadScore = (points) => {
-        setLeadScore(prev => prev + points);
-    };
-
-    const logLead = (score, data) => {
-        console.log("--- CRM LEAD CAPTURED ---");
-        console.log("Score:", score);
-        console.log("Data:", data);
-        console.log("-------------------------");
-    };
-
-    const handleSend = (overrideText = null) => {
+    const handleSend = async (overrideText = null) => {
         const text = (overrideText || inputText).trim();
         if (!text) return;
 
-        addMessage('user', text);
+        setMessages(prev => [...prev, { type: 'user', text, timestamp: new Date() }]);
         setInputText('');
+        setIsLoading(true);
 
-        setTimeout(() => {
-            processResponse(text);
-        }, 600);
-    };
-
-    const processResponse = (userInput) => {
-        const input = userInput.toLowerCase();
-
-        if (!flow) {
-            if (input.includes('buy') || input.includes('khareedna') || input.includes('buyer')) {
-                setFlow('BUY');
-                setStep(2);
-                addMessage('bot', LIB.BUY_QUESTIONS.TYPE);
-                return;
-            } else if (input.includes('sell') || input.includes('bechna') || input.includes('seller')) {
-                setFlow('SELL');
-                setStep(2);
-                addMessage('bot', LIB.SELL_QUESTIONS.START);
-                return;
-            } else if (input.includes('rent') || input.includes('kiraya')) {
-                setFlow('RENT');
-                setStep(2);
-                addMessage('bot', LIB.RENT_QUESTIONS.START);
-                return;
-            } else {
-                addMessage('bot', LIB.GREETINGS[2]);
-                return;
-            }
-        }
-
-        if (flow === 'BUY') handleBuyFlow(input);
-        else if (flow === 'SELL') handleSellFlow(input);
-        else if (flow === 'RENT') handleRentFlow(input);
-    };
-
-    const handleBuyFlow = (input) => {
-        switch (step) {
-            case 2: // Type
-                setUserRequirement(prev => ({ ...prev, type: input.includes('comm') ? 'Commercial' : 'Residential' }));
-                setStep(3);
-                addMessage('bot', LIB.BUY_QUESTIONS.SUBTYPE);
-                break;
-            case 3: // Subtype
-                setUserRequirement(prev => ({ ...prev, subType: input }));
-                setStep(4);
-                addMessage('bot', LIB.BUY_QUESTIONS.LOCATION);
-                break;
-            case 4: // Location
-                setUserRequirement(prev => ({ ...prev, location: input }));
-                updateLeadScore(30);
-                setStep(5);
-                addMessage('bot', LIB.BUY_QUESTIONS.BUDGET);
-                break;
-            case 5: { // Budget
-                setUserRequirement(prev => ({ ...prev, budget: input }));
-                updateLeadScore(30);
-                setStep(6);
-
-                addMessage('bot', LIB.WEBSITE_MATCH[0]);
-
-                const matches = [
-                    ...PROPERTY_DATA.filter(p => p.location.toLowerCase().includes(userRequirement.location?.toLowerCase() || '')),
-                    ...SAMPLE_PROJECTS.filter(p => p.address.city.toLowerCase().includes(userRequirement.location?.toLowerCase() || ''))
-                ].slice(0, 2);
-
-                if (matches.length > 0) {
-                    setTimeout(() => addMessage('bot', LIB.WEBSITE_MATCH[1], matches), 800);
-                } else {
-                    setTimeout(() => addMessage('bot', LIB.WEBSITE_MATCH[6]), 800);
-                }
-
+        try {
+            const userMsgCount = messages.filter(m => m.type === 'user').length;
+            if (userMsgCount === 1 && !isIdentified && !showIntakeForm) {
                 setTimeout(() => {
-                    setStep(7);
-                    addMessage('bot', LIB.CTA[1]);
-                }, 2000);
-                break;
-            }
-            case 7: // Action
-                addMessage('bot', LIB.CLOSING[0]);
-                setTimeout(() => addMessage('bot', LIB.CLOSING[1]), 800);
-                setTimeout(() => addMessage('bot', LIB.CLOSING[2]), 1600);
-                logLead(leadScore + 40, userRequirement);
-                resetChat();
-                break;
-            default:
-                break;
-        }
-    };
-
-    const handleSellFlow = (input) => {
-        switch (step) {
-            case 2: // Type
-                setUserRequirement(prev => ({ ...prev, type: input, flow: 'SELL' }));
-                setStep(3);
-                addMessage('bot', LIB.SELL_QUESTIONS.LOCATION);
-                break;
-            case 3: // Location
-                setUserRequirement(prev => ({ ...prev, location: input }));
-                setStep(4);
-                addMessage('bot', LIB.SELL_QUESTIONS.INTENT);
-                break;
-            case 4: // Intent
-                setUserRequirement(prev => ({ ...prev, intent: input }));
-                setStep(5);
-                addMessage('bot', LIB.TRUST[1]);
-                setTimeout(() => {
-                    setStep(6);
-                    addMessage('bot', LIB.SELL_QUESTIONS.OFFICE);
+                    setShowIntakeForm(true);
+                    setMessages(prev => [...prev, { 
+                        type: 'bot', 
+                        text: 'Aage badhne se pehle, kya aap apna Naam aur Mobile Number share kar sakte hain taki hum aapko behtar options bhej sakein?',
+                        timestamp: new Date()
+                    }]);
+                    setIsLoading(false);
                 }, 1000);
-                break;
-            case 6: // Action
-                addMessage('bot', LIB.CLOSING[3]);
-                logLead(50, userRequirement);
-                resetChat();
-                break;
-            default:
-                break;
-        }
-    };
-
-    const handleRentFlow = (input) => {
-        switch (step) {
-            case 2: // Type
-                setUserRequirement(prev => ({ ...prev, type: input, flow: 'RENT' }));
-                setStep(3);
-                addMessage('bot', LIB.RENT_QUESTIONS.LOCATION);
-                break;
-            case 3: // Location
-                setUserRequirement(prev => ({ ...prev, location: input }));
-                updateLeadScore(30);
-                setStep(4);
-                addMessage('bot', LIB.RENT_QUESTIONS.BUDGET);
-                break;
-            case 4: { // Budget
-                setUserRequirement(prev => ({ ...prev, budget: input }));
-                updateLeadScore(30);
-                setStep(5);
-                addMessage('bot', LIB.WEBSITE_MATCH[1]);
-
-                const matches = PROPERTY_DATA.slice(0, 1);
-                setTimeout(() => addMessage('bot', "Ye check karein:", matches), 800);
-
-                setTimeout(() => {
-                    setStep(6);
-                    addMessage('bot', LIB.CTA[0]);
-                }, 2000);
-                break;
+                return;
             }
-            case 6: // Action
-                addMessage('bot', LIB.CLOSING[0]);
-                setTimeout(() => addMessage('bot', LIB.CLOSING[2]), 800);
-                logLead(leadScore + 40, userRequirement);
-                resetChat();
-                break;
-            default:
-                break;
+
+            const payload = {
+                sessionId,
+                message: text,
+                name: userName,
+                mobile: userMobile
+            };
+
+            const response = await fetch('https://api.bharatproperties.co/api/webhooks/website-chat', {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify(payload)
+            });
+
+            const data = await response.json();
+            
+            if (data.success && data.reply) {
+                setMessages(prev => [...prev, { type: 'bot', text: data.reply, timestamp: new Date() }]);
+            } else {
+                setMessages(prev => [...prev, { type: 'bot', text: "Mafi chahunga, abhi system se connect nahi ho pa raha. Kripya thodi der me try karein.", timestamp: new Date() }]);
+            }
+        } catch (error) {
+            console.error("Chat error:", error);
+            setMessages(prev => [...prev, { type: 'bot', text: "Network error. Please try again.", timestamp: new Date() }]);
+        } finally {
+            setIsLoading(false);
         }
     };
 
-    const resetChat = () => {
-        setTimeout(() => {
-            setFlow(null);
-            setStep(1);
-            setUserRequirement({});
-            setLeadScore(0);
-        }, 5000);
-    }
+    const handleIntakeSubmit = (e) => {
+        e.preventDefault();
+        if (userMobile.length >= 10) {
+            setIsIdentified(true);
+            setShowIntakeForm(false);
+            localStorage.setItem('bp_chat_mobile', userMobile);
+            localStorage.setItem('bp_chat_name', userName);
+            
+            handleSendHiddenMsg(`User provided contact info: Name=${userName}, Mobile=${userMobile}. Please acknowledge and ask how you can help.`);
+        }
+    };
 
-    const renderDataCard = (item) => {
-        const isProject = item.name !== undefined;
-        return (
-            <div style={{
-                backgroundColor: 'white',
-                borderRadius: '12px',
-                overflow: 'hidden',
-                boxShadow: '0 4px 12px rgba(0,0,0,0.08)',
-                margin: '8px 0',
-                border: '1px solid #eee'
-            }}>
-                <img
-                    src={isProject ? item.images[0] : item.image}
-                    alt={isProject ? item.name : item.title}
-                    style={{ width: '100%', height: '100px', objectFit: 'cover' }}
-                />
-                <div style={{ padding: '8px 12px' }}>
-                    <div style={{ fontWeight: 700, fontSize: '0.85rem' }}>{isProject ? item.name : item.title}</div>
-                    <div style={{ fontSize: '0.75rem', color: '#666', marginTop: '2px' }}>
-                        <MapPin size={10} style={{ display: 'inline', marginRight: '4px' }} />
-                        {isProject ? item.address.city : item.location}
-                    </div>
-                    <div style={{ fontWeight: 700, color: 'var(--color-primary)', fontSize: '0.9rem', marginTop: '4px' }}>
-                        {item.price || (item.unitSizes?.[0]?.price)}
-                    </div>
-                </div>
-            </div>
-        );
+    const handleSendHiddenMsg = async (hiddenMsg) => {
+        setIsLoading(true);
+        try {
+            const response = await fetch('https://api.bharatproperties.co/api/webhooks/website-chat', {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({ sessionId, message: hiddenMsg, name: userName, mobile: userMobile })
+            });
+            const data = await response.json();
+            if (data.success && data.reply) {
+                setMessages(prev => [...prev, { type: 'bot', text: data.reply, timestamp: new Date() }]);
+            }
+        } catch (e) { }
+        setIsLoading(false);
     };
 
     return (
@@ -347,21 +137,12 @@ const Chatbot = () => {
                 <button
                     onClick={() => setIsOpen(true)}
                     style={{
-                        position: 'fixed',
-                        bottom: '2rem',
-                        right: '2rem',
-                        width: '60px',
-                        height: '60px',
-                        borderRadius: '50%',
-                        backgroundColor: '#25D366',
-                        color: 'white',
-                        border: 'none',
-                        cursor: 'pointer',
+                        position: 'fixed', bottom: '2rem', right: '2rem',
+                        width: '60px', height: '60px', borderRadius: '50%',
+                        backgroundColor: '#25D366', color: 'white',
+                        border: 'none', cursor: 'pointer',
                         boxShadow: '0 8px 24px rgba(37, 211, 102, 0.4)',
-                        zIndex: 1000,
-                        display: 'flex',
-                        alignItems: 'center',
-                        justifyContent: 'center',
+                        zIndex: 1000, display: 'flex', alignItems: 'center', justifyContent: 'center',
                         transition: 'transform 0.2s'
                     }}
                     onMouseEnter={e => e.currentTarget.style.transform = 'scale(1.1)'}
@@ -373,34 +154,20 @@ const Chatbot = () => {
 
             {isOpen && (
                 <div style={{
-                    position: 'fixed',
-                    bottom: '2rem',
-                    right: '2rem',
-                    width: 'min(360px, 90vw)',
-                    height: 'min(550px, 80vh)',
-                    backgroundColor: '#E5DDD5',
-                    borderRadius: '16px',
+                    position: 'fixed', bottom: '2rem', right: '2rem',
+                    width: 'min(360px, 90vw)', height: 'min(550px, 80vh)',
+                    backgroundColor: '#E5DDD5', borderRadius: '16px',
                     boxShadow: '0 12px 48px rgba(0,0,0,0.2)',
-                    zIndex: 10001,
-                    display: 'flex',
-                    flexDirection: 'column',
-                    overflow: 'hidden'
+                    zIndex: 10001, display: 'flex', flexDirection: 'column', overflow: 'hidden'
                 }}>
-                    <div style={{
-                        padding: '12px 16px',
-                        backgroundColor: '#075E54',
-                        color: 'white',
-                        display: 'flex',
-                        alignItems: 'center',
-                        justifyContent: 'space-between'
-                    }}>
+                    <div style={{ padding: '12px 16px', backgroundColor: '#075E54', color: 'white', display: 'flex', alignItems: 'center', justifyContent: 'space-between' }}>
                         <div style={{ display: 'flex', alignItems: 'center', gap: '10px' }}>
                             <div style={{ width: '36px', height: '36px', borderRadius: '50%', backgroundColor: 'white', display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
                                 <Bot size={22} color="#075E54" />
                             </div>
                             <div>
                                 <div style={{ fontWeight: 600, fontSize: '0.95rem' }}>Bharat Properties</div>
-                                <div style={{ fontSize: '0.7rem', opacity: 0.9 }}>Online</div>
+                                <div style={{ fontSize: '0.7rem', opacity: 0.9 }}>AI Agent Online</div>
                             </div>
                         </div>
                         <button onClick={() => setIsOpen(false)} style={{ background: 'none', border: 'none', color: 'white', cursor: 'pointer' }}>
@@ -408,92 +175,79 @@ const Chatbot = () => {
                         </button>
                     </div>
 
-                    <div style={{
-                        flex: 1,
-                        overflowY: 'auto',
-                        padding: '16px',
-                        display: 'flex',
-                        flexDirection: 'column',
-                        gap: '8px'
-                    }}>
+                    <div style={{ flex: 1, overflowY: 'auto', padding: '16px', display: 'flex', flexDirection: 'column', gap: '8px' }}>
                         {messages.map((msg, idx) => (
-                            <div key={idx} style={{
-                                alignSelf: msg.type === 'user' ? 'flex-end' : 'flex-start',
-                                maxWidth: '85%',
-                                minWidth: '60px'
-                            }}>
+                            <div key={idx} style={{ alignSelf: msg.type === 'user' ? 'flex-end' : 'flex-start', maxWidth: '85%', minWidth: '60px' }}>
                                 <div style={{
-                                    padding: '8px 12px',
-                                    borderRadius: msg.type === 'user' ? '12px 0 12px 12px' : '0 12px 12px 12px',
-                                    backgroundColor: msg.type === 'user' ? '#DCF8C6' : 'white',
-                                    color: '#333',
-                                    boxShadow: '0 1px 1px rgba(0,0,0,0.1)',
-                                    fontSize: '0.9rem',
-                                    lineHeight: '1.4',
-                                    whiteSpace: 'pre-line',
-                                    position: 'relative'
+                                    padding: '8px 12px', borderRadius: msg.type === 'user' ? '12px 0 12px 12px' : '0 12px 12px 12px',
+                                    backgroundColor: msg.type === 'user' ? '#DCF8C6' : 'white', color: '#333',
+                                    boxShadow: '0 1px 1px rgba(0,0,0,0.1)', fontSize: '0.9rem', lineHeight: '1.4', whiteSpace: 'pre-line', position: 'relative'
                                 }}>
                                     {msg.text}
                                     <div style={{ fontSize: '0.65rem', color: '#999', textAlign: 'right', marginTop: '4px' }}>
-                                        {msg.timestamp.toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })}
+                                        {msg.timestamp ? new Date(msg.timestamp).toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' }) : ''}
                                     </div>
                                 </div>
-                                {msg.data && Array.isArray(msg.data) && (
-                                    <div style={{ marginTop: '8px' }}>
-                                        {msg.data.map((item, i) => (
-                                            <div key={i} onClick={() => setIsOpen(false)}>
-                                                {renderDataCard(item)}
-                                            </div>
-                                        ))}
-                                    </div>
-                                )}
                             </div>
                         ))}
+
+                        {showIntakeForm && !isIdentified && (
+                            <div style={{ background: 'white', padding: '16px', borderRadius: '0 12px 12px 12px', border: '1px solid #e2e8f0', boxShadow: '0 1px 1px rgba(0,0,0,0.1)', marginTop: '4px', maxWidth: '85%', alignSelf: 'flex-start' }}>
+                                <div style={{ fontSize: '0.85rem', fontWeight: 600, color: '#475569', marginBottom: '12px' }}>Please provide your details:</div>
+                                <form onSubmit={handleIntakeSubmit} style={{ display: 'flex', flexDirection: 'column', gap: '10px' }}>
+                                    <div style={{ display: 'flex', alignItems: 'center', background: '#f1f5f9', borderRadius: '8px', padding: '0 10px' }}>
+                                        <User size={14} color="#64748b" />
+                                        <input type="text" placeholder="Your Name" required value={userName} onChange={e => setUserName(e.target.value)} style={{ border: 'none', background: 'transparent', padding: '10px', width: '100%', outline: 'none', fontSize: '0.9rem' }} />
+                                    </div>
+                                    <div style={{ display: 'flex', alignItems: 'center', background: '#f1f5f9', borderRadius: '8px', padding: '0 10px' }}>
+                                        <Phone size={14} color="#64748b" />
+                                        <input type="tel" placeholder="Mobile Number" required value={userMobile} onChange={e => setUserMobile(e.target.value)} style={{ border: 'none', background: 'transparent', padding: '10px', width: '100%', outline: 'none', fontSize: '0.9rem' }} />
+                                    </div>
+                                    <button type="submit" style={{ background: '#25D366', color: '#fff', border: 'none', padding: '10px', borderRadius: '8px', fontWeight: 600, cursor: 'pointer', marginTop: '4px' }}>
+                                        Continue Chat
+                                    </button>
+                                </form>
+                            </div>
+                        )}
+
+                        {isLoading && (
+                            <div style={{ alignSelf: 'flex-start', backgroundColor: 'white', padding: '12px 16px', borderRadius: '0 12px 12px 12px' }}>
+                                <div style={{ display: 'flex', gap: '4px' }}>
+                                    <span style={{ width: '6px', height: '6px', background: '#cbd5e1', borderRadius: '50%', animation: 'bounce 1.4s infinite ease-in-out both' }}></span>
+                                    <span style={{ width: '6px', height: '6px', background: '#cbd5e1', borderRadius: '50%', animation: 'bounce 1.4s infinite ease-in-out both', animationDelay: '0.2s' }}></span>
+                                    <span style={{ width: '6px', height: '6px', background: '#cbd5e1', borderRadius: '50%', animation: 'bounce 1.4s infinite ease-in-out both', animationDelay: '0.4s' }}></span>
+                                </div>
+                            </div>
+                        )}
                         <div ref={messagesEndRef} />
                     </div>
 
-                    <div style={{
-                        padding: '10px 12px',
-                        backgroundColor: '#F0F0F0',
-                        display: 'flex',
-                        gap: '8px',
-                        alignItems: 'center'
-                    }}>
+                    <div style={{ padding: '10px 12px', backgroundColor: '#F0F0F0', display: 'flex', gap: '8px', alignItems: 'center' }}>
                         <input
                             type="text"
                             value={inputText}
                             onChange={(e) => setInputText(e.target.value)}
                             onKeyPress={(e) => e.key === 'Enter' && handleSend()}
                             placeholder="Type a message..."
-                            style={{
-                                flex: 1,
-                                padding: '10px 16px',
-                                border: 'none',
-                                borderRadius: '24px',
-                                outline: 'none',
-                                fontSize: '0.9rem'
-                            }}
+                            disabled={showIntakeForm && !isIdentified}
+                            style={{ flex: 1, padding: '10px 16px', border: 'none', borderRadius: '24px', outline: 'none', fontSize: '0.9rem', backgroundColor: (showIntakeForm && !isIdentified) ? '#e2e8f0' : 'white' }}
                         />
                         <button
                             onClick={() => handleSend()}
-                            style={{
-                                backgroundColor: '#075E54',
-                                color: 'white',
-                                width: '40px',
-                                height: '40px',
-                                borderRadius: '50%',
-                                border: 'none',
-                                cursor: 'pointer',
-                                display: 'flex',
-                                alignItems: 'center',
-                                justifyContent: 'center'
-                            }}
+                            disabled={!inputText.trim() || isLoading || (showIntakeForm && !isIdentified)}
+                            style={{ backgroundColor: (!inputText.trim() || (showIntakeForm && !isIdentified)) ? '#cbd5e1' : '#075E54', color: 'white', width: '40px', height: '40px', borderRadius: '50%', border: 'none', cursor: (!inputText.trim() || (showIntakeForm && !isIdentified)) ? 'not-allowed' : 'pointer', display: 'flex', alignItems: 'center', justifyContent: 'center' }}
                         >
                             <Send size={18} />
                         </button>
                     </div>
                 </div>
             )}
+            <style>{`
+                @keyframes bounce {
+                    0%, 80%, 100% { transform: scale(0); }
+                    40% { transform: scale(1); }
+                }
+            `}</style>
         </>
     );
 };

@@ -82,8 +82,9 @@ const Chatbot = () => {
                 mobile: userMobile
             };
 
-            const baseUrl = process.env.NEXT_PUBLIC_CRM_API_URL?.replace(/\/api\/public$/, '') || 'https://api.bharatproperties.co';
-            const response = await fetch(`${baseUrl}/api/webhooks/website-chat`, {
+            // Use relative path to leverage Vercel rewrites, fallback to hardcoded only if necessary
+            const apiUrl = '/api/webhooks/website-chat';
+            const response = await fetch(apiUrl, {
                 method: 'POST',
                 headers: { 'Content-Type': 'application/json' },
                 body: JSON.stringify(payload)
@@ -119,8 +120,8 @@ const Chatbot = () => {
     const handleSendHiddenMsg = async (hiddenMsg) => {
         setIsLoading(true);
         try {
-            const baseUrl = process.env.NEXT_PUBLIC_CRM_API_URL?.replace(/\/api\/public$/, '') || 'https://api.bharatproperties.co';
-            const response = await fetch(`${baseUrl}/api/webhooks/website-chat`, {
+            const apiUrl = '/api/webhooks/website-chat';
+            const response = await fetch(apiUrl, {
                 method: 'POST',
                 headers: { 'Content-Type': 'application/json' },
                 body: JSON.stringify({ sessionId, message: hiddenMsg, name: userName, mobile: userMobile })

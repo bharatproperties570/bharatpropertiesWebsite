@@ -82,7 +82,8 @@ const Chatbot = () => {
                 mobile: userMobile
             };
 
-            const response = await fetch('https://api.bharatproperties.co/api/webhooks/website-chat', {
+            const baseUrl = process.env.NEXT_PUBLIC_CRM_API_URL?.replace(/\/api\/public$/, '') || 'https://api.bharatproperties.co';
+            const response = await fetch(`${baseUrl}/api/webhooks/website-chat`, {
                 method: 'POST',
                 headers: { 'Content-Type': 'application/json' },
                 body: JSON.stringify(payload)
@@ -118,7 +119,8 @@ const Chatbot = () => {
     const handleSendHiddenMsg = async (hiddenMsg) => {
         setIsLoading(true);
         try {
-            const response = await fetch('https://api.bharatproperties.co/api/webhooks/website-chat', {
+            const baseUrl = process.env.NEXT_PUBLIC_CRM_API_URL?.replace(/\/api\/public$/, '') || 'https://api.bharatproperties.co';
+            const response = await fetch(`${baseUrl}/api/webhooks/website-chat`, {
                 method: 'POST',
                 headers: { 'Content-Type': 'application/json' },
                 body: JSON.stringify({ sessionId, message: hiddenMsg, name: userName, mobile: userMobile })

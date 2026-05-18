@@ -1,7 +1,14 @@
 'use client';
 
 import React, { useState } from 'react';
-import { Camera, Play, ChevronLeft, ChevronRight, Maximize2 } from 'lucide-react';
+import { Camera, Play, ChevronLeft, ChevronRight } from 'lucide-react';
+
+const getYouTubeId = (url) => {
+    if (!url) return null;
+    const regExp = /^.*(youtu.be\/|v\/|u\/\w\/|embed\/|watch\?v=|\&v=|shorts\/)([^#\&\?]*).*/;
+    const match = url.match(regExp);
+    return (match && match[2].length === 11) ? match[2] : null;
+};
 
 const PropertyMedia = ({ media }) => {
     const [selectedImg, setSelectedImg] = useState(0);
@@ -28,6 +35,10 @@ const PropertyMedia = ({ media }) => {
         );
     }
 
+    const currentMedia = images[selectedImg];
+    const ytId = getYouTubeId(currentMedia?.url);
+    const isVideo = currentMedia?.type === 'video' || currentMedia?.url?.match(/\.(mp4|webm|ogg|mov)$/i) || currentMedia?.url?.includes('video') || !!ytId;
+
     return (
         <section style={{ position: 'relative' }}>
             {/* Main Stage */}
@@ -39,11 +50,31 @@ const PropertyMedia = ({ media }) => {
                 overflow: 'hidden',
                 boxShadow: '0 40px 80px -20px rgba(0,0,0,0.2)'
             }}>
-                <img
-                    src={images[selectedImg]?.url}
-                    style={{ width: '100%', height: '100%', objectFit: 'cover', transition: 'all 0.6s cubic-bezier(0.4, 0, 0.2, 1)' }}
-                    alt={images[selectedImg]?.description}
-                />
+                {ytId ? (
+                    <iframe
+                        src={`https://www.youtube.com/embed/${ytId}?autoplay=1&mute=1&loop=1&playlist=${ytId}`}
+                        frameBorder="0"
+                        allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
+                        allowFullScreen
+                        style={{ width: '100%', height: '100%', border: 'none', backgroundColor: '#000' }}
+                    />
+                ) : isVideo ? (
+                    <video
+                        src={currentMedia?.url}
+                        controls
+                        autoPlay
+                        muted
+                        playsInline
+                        loop
+                        style={{ width: '100%', height: '100%', objectFit: 'contain', backgroundColor: '#000' }}
+                    />
+                ) : (
+                    <img
+                        src={currentMedia?.url}
+                        style={{ width: '100%', height: '100%', objectFit: 'cover', transition: 'all 0.6s cubic-bezier(0.4, 0, 0.2, 1)' }}
+                        alt={currentMedia?.description || 'Property Image'}
+                    />
+                )}
 
                 {/* Glass Overlays */}
                 <div style={{ 
@@ -138,11 +169,12 @@ const PropertyMedia = ({ media }) => {
                     background: 'linear-gradient(to top, rgba(15, 23, 42, 0.9), transparent)',
                     display: 'flex',
                     justifyContent: 'space-between',
-                    alignItems: 'flex-end'
+                    alignItems: 'flex-end',
+                    pointerEvents: 'none'
                 }}>
                     <div style={{ color: 'white' }}>
                         <div style={{ fontSize: '0.75rem', fontWeight: 800, textTransform: 'uppercase', letterSpacing: '2px', opacity: 0.6, marginBottom: '8px' }}>Space View</div>
-                        <div style={{ fontSize: '1.25rem', fontWeight: 700 }}>{images[selectedImg].description || 'Property Interior'}</div>
+                        <div style={{ fontSize: '1.25rem', fontWeight: 700 }}>{currentMedia?.description || (ytId || isVideo ? 'Property Video Showcase' : 'Property Visual')}</div>
                     </div>
                 </div>
             </div>
@@ -156,26 +188,68 @@ const PropertyMedia = ({ media }) => {
                 padding: '10px 0',
                 scrollbarWidth: 'none'
             }}>
-                {images.map((img, idx) => (
-                    <div
-                        key={idx}
-                        onClick={() => setSelectedImg(idx)}
-                        style={{
-                            width: '120px',
-                            height: '80px',
-                            borderRadius: '16px',
-                            overflow: 'hidden',
-                            cursor: 'pointer',
-                            border: selectedImg === idx ? '3px solid var(--color-gold)' : '3px solid transparent',
-                            transform: selectedImg === idx ? 'translateY(-4px)' : 'none',
-                            transition: 'all 0.3s ease',
-                            flexShrink: 0,
-                            boxShadow: selectedImg === idx ? '0 10px 20px rgba(0,0,0,0.1)' : 'none'
-                        }}
-                    >
-                        <img src={img.url} style={{ width: '100%', height: '100%', objectFit: 'cover' }} alt="Thumb" />
-                    </div>
-                ))}
+                {images.map((img, idx) => {
+                    const thumbYtId = getYouTubeId(img.url);
+                    const thumbIsVideo = img.type === 'video' || img.url?.match(/\.(mp4|webm|ogg|mov)$/i) || img.url?.includes('video') || !!thumbYtId;
+                    
+                    return (
+                        <div
+                            key={idx}
+                            onClick={() => setSelectedImg(idx)}
+                            style={{
+                                width: '120px',
+                                height: '80px',
+                                borderRadius: '16px',
+                                overflow: 'hidden',
+                                cursor: 'pointer',
+                                border: selectedImg === idx ? '3px solid var(--color-gold)' : '3px solid transparent',
+                                transform: selectedImg === idx ? 'translateY(-4px)' : 'none',
+                                transition: 'all 0.3s ease',
+                                flexShrink: 0,
+                                boxShadow: selectedImg === idx ? '0 10px 20px rgba(0,0,0,0.1)' : 'none',
+                                position: 'relative'
+                            }}
+                        >
+                            {thumbYtId ? (
+                                <>
+                                    <img 
+                                        src={`https://img.youtube.com/vi/${thumbYtId}/hqdefault.jpg`} 
+                                        style={{ width: '100%', height: '100%', objectFit: 'cover' }} 
+                                        alt="YouTube Thumb" 
+                                    />
+                                    <div style={{
+                                        position: 'absolute',
+                                        inset: 0,
+                                        background: 'rgba(0,0,0,0.4)',
+                                        display: 'flex',
+                                        alignItems: 'center',
+                                        justifyContent: 'center',
+                                        color: 'white'
+                                    }}>
+                                        <Play size={24} fill="white" />
+                                    </div>
+                                </>
+                            ) : thumbIsVideo ? (
+                                <>
+                                    <video src={img.url} style={{ width: '100%', height: '100%', objectFit: 'cover' }} muted />
+                                    <div style={{
+                                        position: 'absolute',
+                                        inset: 0,
+                                        background: 'rgba(0,0,0,0.4)',
+                                        display: 'flex',
+                                        alignItems: 'center',
+                                        justifyContent: 'center',
+                                        color: 'white'
+                                    }}>
+                                        <Play size={24} fill="white" />
+                                    </div>
+                                </>
+                            ) : (
+                                <img src={img.url} style={{ width: '100%', height: '100%', objectFit: 'cover' }} alt="Thumb" />
+                            )}
+                        </div>
+                    );
+                })}
             </div>
         </section>
     );

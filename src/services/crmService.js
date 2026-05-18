@@ -64,24 +64,101 @@ const formatPrice = (amount) => {
 
 // Mapper for CRM Deal to Website Property
 const mapDealToProperty = (deal) => {
-    const images = (deal.documents || [])
-        .filter(doc => (doc.type === 'Image' || doc.url?.match(/\.(jpg|jpeg|png|webp|gif)$/i)))
-        .map(doc => fixDriveUrl(doc.url))
-        .filter(url => url) || [];
+    // Curate images from all possible fields returned by public API
+    let resolvedImages = [];
+    if (Array.isArray(deal.images) && deal.images.length > 0) {
+        resolvedImages = deal.images;
+    } else if (Array.isArray(deal.inventoryImages) && deal.inventoryImages.length > 0) {
+        resolvedImages = deal.inventoryImages.map(img => typeof img === 'object' ? img.url : img);
+    } else if (deal.inventoryId?.inventoryImages && deal.inventoryId.inventoryImages.length > 0) {
+        resolvedImages = deal.inventoryId.inventoryImages.map(img => typeof img === 'object' ? img.url : img);
+    }
+    
+    // Process drive URLs and filter blanks
+    resolvedImages = resolvedImages.map(fixDriveUrl).filter(Boolean);
+
+    // If still empty, check the documents
+    if (resolvedImages.length === 0) {
+        resolvedImages = (deal.documents || [])
+            .filter(doc => (doc.type === 'Image' || doc.url?.match(/\.(jpg|jpeg|png|webp|gif)$/i)))
+            .map(doc => fixDriveUrl(doc.url))
+            .filter(url => url) || [];
+    }
+
+    // Now for videos
+    let resolvedVideos = [];
+    if (Array.isArray(deal.videos) && deal.videos.length > 0) {
+        resolvedVideos = deal.videos;
+    } else if (Array.isArray(deal.inventoryVideos) && deal.inventoryVideos.length > 0) {
+        resolvedVideos = deal.inventoryVideos.map(vid => typeof vid === 'object' ? vid.url : vid);
+    } else if (deal.inventoryId?.inventoryVideos && deal.inventoryId.inventoryVideos.length > 0) {
+        resolvedVideos = deal.inventoryId.inventoryVideos.map(vid => typeof vid === 'object' ? vid.url : vid);
+    }
+    
+    resolvedVideos = resolvedVideos.map(fixDriveUrl).filter(Boolean);
+
+    // If still empty, check the documents for videos
+    if (resolvedVideos.length === 0) {
+        resolvedVideos = (deal.documents || [])
+            .filter(doc => (doc.type === 'Video' || doc.url?.match(/\.(mp4|webm|ogg|mov)$/i)))
+            .map(doc => fixDriveUrl(doc.url))
+            .filter(url => url) || [];
+    }
+
+    // Construct the rich media array for PropertyMedia
+    const media = [
+        ...resolvedImages.map(url => ({ type: 'image', url, description: 'Property Image' })),
+        ...resolvedVideos.map(url => ({ type: 'video', url, description: 'Property Video' }))
+    ];
 
     const intent = deal.intent || 'Sell';
     const rawCategory = deal.category || '';
     const category = /^[0-9a-fA-F]{24}$/.test(rawCategory) ? '' : rawCategory;
     const subCat = /^[0-9a-fA-F]{24}$/.test(deal.subCategory) ? '' : (deal.subCategory || '');
-    const sizeLabel = deal.sizeLabel || deal.unitSpecification?.sizeLabel || '';
+    const rawSizeLabel = deal.sizeLabel || deal.unitSpecification?.sizeLabel || '';
+    const sizeLabel = /^[0-9a-fA-F]{24}$/.test(rawSizeLabel) ? '' : rawSizeLabel;
     
-    const detailsArr = [category, sizeLabel, subCat].filter(Boolean);
-    const detailsString = detailsArr.length > 0 ? `, ${detailsArr.join(' ')}` : '';
+    const detailsArr = [subCat].filter(Boolean);
+    const detailsString = detailsArr.length > 0 ? ` a ${detailsArr.join(' ')}` : '';
     const availableString = `Available For ${intent}${detailsString}`;
 
     const rawProjectName = deal.projectName || '';
     const cleanProjectName = /^[0-9a-fA-F]{24}$/.test(rawProjectName) ? '' : rawProjectName;
     const blockString = deal.block && deal.block !== 'N/A' ? deal.block : '';
+
+    // Compute dynamic high-fidelity Built-up parameters from CRM DB
+    const rawBuiltupDetails = deal.builtupDetails || deal.inventoryId?.builtupDetails || [];
+    const floorsMap = {};
+    rawBuiltupDetails.forEach(row => {
+        const floorName = row.floor || 'Standard Floor';
+        if (!floorsMap[floorName]) {
+            floorsMap[floorName] = [];
+        }
+        floorsMap[floorName].push({
+            name: row.cluster || 'Room/Area',
+            length: row.length || '0',
+            breadth: row.width || '0',
+            area: row.totalArea || String((parseFloat(row.length) * parseFloat(row.width)) || '0')
+        });
+    });
+
+    const formattedFloors = Object.keys(floorsMap).map(floorName => ({
+        name: floorName,
+        clusters: floorsMap[floorName]
+    }));
+
+    const builtupType = deal.builtupType || deal.inventoryId?.builtupType || 'Standard Layout';
+
+    const furnishingObj = {
+        furnishing: deal.furnishType || deal.propertyDetails?.furnishing || deal.inventoryId?.furnishType || 'Unfurnished',
+        furnishingDetails: (deal.furnishedItems || deal.inventoryId?.furnishedItems) 
+            ? (deal.furnishedItems || deal.inventoryId?.furnishedItems).split(',').map(s => s.trim()) 
+            : [],
+        occupationDate: deal.occupationDate || deal.inventoryId?.occupationDate 
+            ? new Date(deal.occupationDate || deal.inventoryId?.occupationDate).toLocaleDateString('en-GB') 
+            : 'TBD',
+        age: deal.ageOfConstruction || deal.inventoryId?.ageOfConstruction || 'New'
+    };
 
     return {
         id: deal._id,
@@ -93,36 +170,41 @@ const mapDealToProperty = (deal) => {
         unitName: deal.websiteMetadata?.title || blockString || cleanProjectName || 'Property',
         price: formatPrice(deal.price || deal.quotePrice),
         location: { 
-            city: deal.location || deal.address?.city || 'Unknown',
+            city: deal.locationDetails?.city?.lookup_value || deal.locationDetails?.city || deal.location || deal.address?.city || 'Unknown',
             display: `${cleanProjectName || blockString || 'Property'}`,
-            address: deal.address?.address || deal.location || '',
+            address: deal.address?.address || deal.locationDetails?.city?.lookup_value || deal.location || '',
             street: deal.address?.street || '',
-            locality: deal.address?.locality || '',
-            state: deal.address?.state || 'Haryana',
-            country: deal.address?.country || 'India',
+            locality: deal.locationDetails?.locality?.lookup_value || deal.locationDetails?.locality || deal.address?.locality || '',
+            state: /^[0-9a-fA-F]{24}$/.test(deal.locationDetails?.state?.lookup_value || deal.locationDetails?.state || deal.address?.state || '') ? 'Haryana' : (deal.locationDetails?.state?.lookup_value || deal.locationDetails?.state || deal.address?.state || 'Haryana'),
+            country: /^[0-9a-fA-F]{24}$/.test(deal.address?.country || '') ? 'India' : (deal.address?.country || 'India'),
             zip: deal.address?.zip || ''
         },
         beds: String(deal.propertyDetails?.bhk || '0'),
         baths: String(deal.propertyDetails?.bathrooms || '0'),
-        sqft: flattenMeasurement(deal.size, deal.sizeUnit || 'Sq.Ft') || 'Area on Request',
+        sqft: sizeLabel || flattenMeasurement(deal.size, deal.sizeUnit || 'Sq.Ft') || 'Area on Request',
         block: blockString,
-        image: deal.websiteMetadata?.featuredImage || images[0] || null,
-        images: images,
-        media: images,
+        image: deal.websiteMetadata?.featuredImage || resolvedImages[0] || null,
+        images: resolvedImages,
+        media: media,
         status: deal.status || 'Available',
         type: deal.propertyType || 'Residential',
         propertyType: deal.propertyType || 'Residential',
+        category: category || deal.category?.lookup_value || deal.category || 'Residential',
         subCategory: subCat,
-        sizeLabel: sizeLabel,
+        sizeLabel: sizeLabel || flattenMeasurement(deal.size, deal.sizeUnit || 'Sq.Ft') || 'Area on Request',
+        unitType: deal.unitType?.lookup_value || deal.unitType || deal.inventoryId?.unitType?.lookup_value || deal.inventoryId?.unitType || 'Ordinary',
+        width: deal.width || deal.inventoryId?.width || deal.inventoryId?.frontage || '',
+        length: deal.length || deal.inventoryId?.length || deal.inventoryId?.depth || '',
         intent: intent,
         availableString: availableString,
         description: deal.websiteMetadata?.description || deal.remarks || deal.description,
         builtupDetails: {
+            type: builtupType,
             area: String(deal.size || '0'),
             unit: deal.sizeUnit || 'Sq.Ft',
-            floors: []
+            floors: formattedFloors
         },
-        construction: deal.propertyDetails?.furnishing || 'Unfurnished',
+        construction: furnishingObj,
         coords: { lat: parseFloat(deal.latitude) || 28.4595, lng: parseFloat(deal.longitude) || 77.0266 },
         technical: {
             floorNumber: deal.propertyDetails?.floorNumber || 'N/A',
@@ -139,6 +221,12 @@ const mapDealToProperty = (deal) => {
         
         ownership: deal.propertyDetails?.ownership || 'Freehold',
         stage: deal.status || 'Available',
+        rawPrice: deal.price || deal.quotePrice || 0,
+        transactionType: deal.transactionType || 'Full White',
+        flexiblePercentage: deal.flexiblePercentage !== undefined ? deal.flexiblePercentage : 100,
+        collectorRate: deal.collectorRate || 0,
+        collectorRateUnit: deal.collectorRateUnit || 'Sq Yard',
+        collectorValue: deal.collectorValue || 0,
         seo: {
             title: deal.websiteMetadata?.metaTitle,
             description: deal.websiteMetadata?.metaDescription,

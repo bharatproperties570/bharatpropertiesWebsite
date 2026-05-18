@@ -48,7 +48,11 @@ const PropertyHeader = ({ property, onBookConsultation }) => {
                     <div style={{
                         position: 'absolute',
                         inset: 0,
-                        backgroundImage: `url(${property.media?.[0] || property.images?.[0] || 'https://images.unsplash.com/photo-1512917774080-9991f1c4c750?auto=format&fit=crop&q=80&w=2000'})`,
+                        backgroundImage: `url(${
+                            (typeof property.media?.[0] === 'object' ? property.media?.[0]?.url : property.media?.[0]) || 
+                            (typeof property.images?.[0] === 'object' ? property.images?.[0]?.url : property.images?.[0]) || 
+                            'https://images.unsplash.com/photo-1512917774080-9991f1c4c750?auto=format&fit=crop&q=80&w=2000'
+                        })`,
                         backgroundSize: 'cover',
                         backgroundPosition: 'center',
                         transform: 'scale(1.02)'
@@ -128,7 +132,7 @@ const PropertyHeader = ({ property, onBookConsultation }) => {
                                 <div style={{ color: 'white', fontSize: '1.5rem', fontWeight: 700 }}>{property.type || property.propertyType}</div>
                             </div>
                             <div style={{ backgroundColor: 'rgba(15, 23, 42, 0.4)', padding: '2.5rem', textAlign: 'center' }}>
-                                <div style={{ color: 'rgba(255,255,255,0.5)', fontSize: '0.75rem', fontWeight: 800, textTransform: 'uppercase', marginBottom: '10px', letterSpacing: '2px' }}>Area</div>
+                                <div style={{ color: 'rgba(255,255,255,0.5)', fontSize: '0.75rem', fontWeight: 800, textTransform: 'uppercase', marginBottom: '10px', letterSpacing: '2px' }}>Size</div>
                                 <div style={{ color: 'white', fontSize: '1.5rem', fontWeight: 700 }}>{property.sqft}</div>
                             </div>
                             <div style={{ backgroundColor: 'rgba(15, 23, 42, 0.4)', padding: '2.5rem', textAlign: 'center' }}>

@@ -2,6 +2,7 @@ import React, { useEffect, useState } from 'react';
 import PropertyHeader from './PropertyHeader';
 import PropertyOverview from './PropertyOverview';
 import PropertyBuiltup from './PropertyBuiltup';
+import PropertyCostSheet from './PropertyCostSheet';
 import PropertyLocation from './PropertyLocation';
 import PropertyMedia from './PropertyMedia';
 import SiteVisitForm from '../project-detail/SiteVisitForm';
@@ -82,6 +83,9 @@ const PropertyDetailPage = ({ propertyId, onAddToCompare, onBookConsultation }) 
                         )}
                         
                         {property.builtupDetails && <PropertyBuiltup builtup={property.builtupDetails} furnishing={property.construction} />}
+                        
+                        {/* Landed Cost Sheet Dynamic Stamp Duty Calculator */}
+                        <PropertyCostSheet property={property} />
                     </div>
 
                     <aside style={{ position: 'sticky', top: '100px', height: 'fit-content', display: 'flex', flexDirection: 'column', gap: '2rem' }}>

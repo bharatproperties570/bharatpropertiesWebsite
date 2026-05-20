@@ -50,8 +50,9 @@ const fixDriveUrl = (url) => {
     if (!url) return url;
     if (url.startsWith('/uploads/') || url.startsWith('uploads/')) {
         const normalizedUrl = url.startsWith('/') ? url : `/${url}`;
-        const baseUrl = API_URL.replace(/\/api\/public\/?$/, '').replace(/\/public\/?$/, '');
-        return `${baseUrl}${normalizedUrl}`;
+        const API_BASE = process.env.CRM_API_BASE_URL || (isProd ? 'https://api.bharatproperties.co/api/public' : 'http://localhost:4000/api/public');
+        // Prepend full API base URL to resolve absolute image URLs
+        return `${API_BASE}${normalizedUrl}`;
     }
     if (url.includes('drive.google.com')) {
         // Handle both webViewLink and webContentLink

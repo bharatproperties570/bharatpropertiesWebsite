@@ -10,7 +10,6 @@ export default async function handler(req, res) {
       method: req.method,
       headers: {
         'Content-Type': 'application/json',
-        ...(apiKey ? { Authorization: `Bearer ${apiKey}`, 'X-API-KEY': apiKey } : {}),
         ...req.headers,
       },
       body: req.method !== 'GET' && req.method !== 'HEAD' ? JSON.stringify(req.body) : undefined,

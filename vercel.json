@@ -6,6 +6,8 @@
 
   "env": {
     "CRM_API_BASE_URL": "https://api.bharatproperties.co/api/public",
+
+    "NEXT_PUBLIC_CRM_API_URL": "/api/public",
     "CRM_API_KEY": "BP-WEB-INTEGRATION-2026-X7Y9",
   }
 }

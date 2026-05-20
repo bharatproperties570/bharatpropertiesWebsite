@@ -8,5 +8,10 @@
       "source": "/api/(.*)",
       "destination": "https://api.bharatproperties.co/api/$1"
     }
-  ]
+  ],
+  "env": {
+    "NEXT_PUBLIC_CRM_API_URL": "https://api.bharatproperties.co/api/public",
+    "CRM_API_KEY": "BP-WEB-INTEGRATION-2026-X7Y9",
+    "NEXT_PUBLIC_GOOGLE_MAPS_API_KEY": "AIzaSyBd2gdMJVt5C_tgYqWoRbBiatzmevYdB9U"
+  }
 }

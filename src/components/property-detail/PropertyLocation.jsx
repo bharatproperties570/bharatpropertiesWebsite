@@ -1,10 +1,24 @@
 import React from 'react';
 import { Map, Info, Navigation2 } from 'lucide-react';
 
-const PropertyLocation = ({ location }) => {
+const PropertyLocation = ({ location, unitNumber }) => {
     return (
-        <div style={{ position: 'sticky', top: '240px' }}>
+        <div className="property-location-container">
             <div style={{ padding: '2.5rem', backgroundColor: '#0F172A', color: '#fff', borderRadius: '32px', boxShadow: '0 20px 25px -5px rgba(15,23,42,0.1)' }}>
+                {unitNumber && (
+                    <div style={{ 
+                        display: 'flex', 
+                        justifyContent: 'space-between', 
+                        alignItems: 'center', 
+                        marginBottom: '1.5rem',
+                        paddingBottom: '1.25rem',
+                        borderBottom: '1px solid rgba(255, 255, 255, 0.1)'
+                    }}>
+                        <span style={{ fontSize: '0.85rem', color: 'var(--color-gold)', fontWeight: 800, textTransform: 'uppercase', letterSpacing: '1px' }}>Unit Number</span>
+                        <span style={{ fontSize: '1.25rem', fontWeight: 900, color: '#fff', backgroundColor: 'rgba(255, 255, 255, 0.08)', padding: '4px 14px', borderRadius: '8px', border: '1px solid rgba(255, 255, 255, 0.15)' }}>{unitNumber}</span>
+                    </div>
+                )}
+
                 <div style={{ display: 'flex', alignItems: 'center', gap: '10px', marginBottom: '2rem' }}>
                     <Map size={24} className="text-primary" />
                     <h3 style={{ margin: 0, fontSize: '1.4rem', fontWeight: 800 }}>Exact Location</h3>

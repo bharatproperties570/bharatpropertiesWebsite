@@ -276,7 +276,15 @@ const PropertyMapView = ({ properties = [], onPropertySelect, onClose, embedded 
                                     <X size={14} />
                                 </button>
                             </div>
-                            <p style={{ color: 'var(--color-accent)', fontWeight: 700, fontSize: '1rem', margin: '2px 0' }}>{selectedProperty.price}</p>
+                            <div style={{ display: 'flex', alignItems: 'center', gap: '6px', margin: '2px 0' }}>
+                                <span style={{ color: 'var(--color-accent)', fontWeight: 700, fontSize: '1rem' }}>{selectedProperty.price}</span>
+                                {selectedProperty.pricingNature?.negotiable && (
+                                    <span style={{ fontSize: '0.6rem', fontWeight: 700, color: 'var(--color-gold)', backgroundColor: 'rgba(217, 119, 6, 0.1)', padding: '1px 4px', borderRadius: '3px', textTransform: 'uppercase' }}>Negotiable</span>
+                                )}
+                                {selectedProperty.pricingNature?.fixed && (
+                                    <span style={{ fontSize: '0.6rem', fontWeight: 700, color: '#64748b', backgroundColor: 'rgba(100, 116, 139, 0.1)', padding: '1px 4px', borderRadius: '3px', textTransform: 'uppercase' }}>Fixed</span>
+                                )}
+                            </div>
                             <p style={{ fontSize: '0.7rem', color: '#64748b', marginBottom: '0.5rem' }}>{selectedProperty.location}</p>
                             <button
                                 onClick={() => onPropertySelect(selectedProperty.id)}

@@ -1,5 +1,5 @@
 import React from 'react';
-import { Sofa, Construction, CalendarSync, Ruler, CheckCircle2, LayoutGrid, Info } from 'lucide-react';
+import { Sofa, Construction, CalendarSync, Ruler, CheckCircle2, LayoutGrid, Info, Eye, Play } from 'lucide-react';
 
 const PropertyBuiltup = ({ builtup, furnishing }) => {
     if (!builtup || !furnishing) return null;
@@ -33,6 +33,7 @@ const PropertyBuiltup = ({ builtup, furnishing }) => {
                                     <th style={{ padding: '1.5rem 2rem', textAlign: 'left', fontSize: '0.75rem', color: '#64748b', fontWeight: 800, textTransform: 'uppercase', letterSpacing: '1px' }}>Component</th>
                                     <th style={{ padding: '1.5rem 2rem', textAlign: 'center', fontSize: '0.75rem', color: '#64748b', fontWeight: 800, textTransform: 'uppercase', letterSpacing: '1px' }}>Dim (ft)</th>
                                     <th style={{ padding: '1.5rem 2rem', textAlign: 'right', fontSize: '0.75rem', color: '#64748b', fontWeight: 800, textTransform: 'uppercase', letterSpacing: '1px' }}>Area</th>
+                                    <th style={{ padding: '1.5rem 2rem', textAlign: 'center', fontSize: '0.75rem', color: '#64748b', fontWeight: 800, textTransform: 'uppercase', letterSpacing: '1px' }}>Media</th>
                                 </tr>
                             </thead>
                             <tbody>
@@ -43,6 +44,45 @@ const PropertyBuiltup = ({ builtup, furnishing }) => {
                                             <td style={{ padding: '1.25rem 2rem', color: '#475569', fontWeight: 600 }}>{cluster.name}</td>
                                             <td style={{ padding: '1.25rem 2rem', textAlign: 'center', color: '#0F172A', fontWeight: 700 }}>{cluster.length} <span style={{ opacity: 0.3 }}>×</span> {cluster.breadth}</td>
                                             <td style={{ padding: '1.25rem 2rem', textAlign: 'right', color: 'var(--color-primary)', fontWeight: 900 }}>{cluster.area} <span style={{ fontSize: '0.7rem', fontWeight: 600 }}>SQ.FT</span></td>
+                                            <td style={{ padding: '1.25rem 2rem', textAlign: 'center', verticalAlign: 'middle' }}>
+                                                <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'center', gap: '8px' }}>
+                                                    {cluster.imageUrl ? (
+                                                        <a href={cluster.imageUrl} target="_blank" rel="noopener noreferrer" title="View Image" style={{
+                                                            display: 'inline-flex',
+                                                            alignItems: 'center',
+                                                            justifyContent: 'center',
+                                                            width: '28px',
+                                                            height: '28px',
+                                                            backgroundColor: 'rgba(79, 70, 229, 0.08)',
+                                                            color: 'var(--color-primary)',
+                                                            borderRadius: '6px',
+                                                            transition: 'all 0.2s',
+                                                            border: '1px solid rgba(79, 70, 229, 0.15)'
+                                                        }}>
+                                                            <Eye size={14} />
+                                                        </a>
+                                                    ) : null}
+                                                    {cluster.videoUrl ? (
+                                                        <a href={cluster.videoUrl} target="_blank" rel="noopener noreferrer" title="Watch Video" style={{
+                                                            display: 'inline-flex',
+                                                            alignItems: 'center',
+                                                            justifyContent: 'center',
+                                                            width: '28px',
+                                                            height: '28px',
+                                                            backgroundColor: 'rgba(220, 38, 38, 0.08)',
+                                                            color: '#dc2626',
+                                                            borderRadius: '6px',
+                                                            transition: 'all 0.2s',
+                                                            border: '1px solid rgba(220, 38, 38, 0.15)'
+                                                        }}>
+                                                            <Play size={14} fill="#dc2626" />
+                                                        </a>
+                                                    ) : null}
+                                                    {!cluster.imageUrl && !cluster.videoUrl && (
+                                                        <span style={{ fontSize: '0.8rem', color: '#94a3b8', fontStyle: 'italic', fontWeight: 500 }}>Standard</span>
+                                                    )}
+                                                </div>
+                                            </td>
                                         </tr>
                                     ))
                                 ))}
@@ -57,7 +97,7 @@ const PropertyBuiltup = ({ builtup, furnishing }) => {
                 </div>
             </div>
 
-            <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(350px, 1fr))', gap: '2.5rem', marginTop: '3rem' }}>
+            <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(280px, 1fr))', gap: '2.5rem', marginTop: '3rem' }}>
                 <div className="glass-card" style={{ padding: '2.5rem', border: '1px solid #f1f5f9' }}>
                     <div style={{ display: 'flex', alignItems: 'center', gap: '12px', marginBottom: '2rem' }}>
                         <div style={{ padding: '10px', background: 'rgba(79, 70, 229, 0.05)', borderRadius: '12px', color: 'var(--color-primary)' }}>

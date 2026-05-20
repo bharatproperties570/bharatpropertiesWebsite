@@ -35,22 +35,9 @@ const PropertyListItem = ({ property, onClick }) => {
                         objectFit: 'cover'
                     }}
                 />
-                {property.status && (
-                    <div style={{
-                        position: 'absolute',
-                        top: '1rem',
-                        left: '1rem',
-                        backgroundColor: 'rgba(0,0,0,0.7)',
-                        color: 'white',
-                        padding: '0.25rem 0.75rem',
-                        borderRadius: '4px',
-                        fontSize: '0.75rem',
-                        fontWeight: 600,
-                        textTransform: 'uppercase'
-                    }}>
-                        {property.status}
-                    </div>
-                )}
+
+
+
                 <button style={{
                     position: 'absolute',
                     top: '1rem',
@@ -95,8 +82,14 @@ const PropertyListItem = ({ property, onClick }) => {
                     {/* Price and Area Grid */}
                     <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '1.5rem', marginTop: '1.5rem', marginBottom: '1.5rem' }}>
                         <div>
-                            <div style={{ fontSize: '1.5rem', fontWeight: 800, color: 'var(--color-primary)' }}>
-                                {property.price}
+                            <div style={{ display: 'flex', alignItems: 'center', gap: '8px' }}>
+                                <span style={{ fontSize: '1.5rem', fontWeight: 800, color: 'var(--color-primary)' }}>{property.price}</span>
+                                {property.pricingNature?.negotiable && (
+                                    <span style={{ fontSize: '0.65rem', fontWeight: 700, color: 'var(--color-gold)', backgroundColor: 'rgba(217, 119, 6, 0.1)', padding: '2px 6px', borderRadius: '4px', textTransform: 'uppercase' }}>Negotiable</span>
+                                )}
+                                {property.pricingNature?.fixed && (
+                                    <span style={{ fontSize: '0.65rem', fontWeight: 700, color: '#64748b', backgroundColor: 'rgba(100, 116, 139, 0.1)', padding: '2px 6px', borderRadius: '4px', textTransform: 'uppercase' }}>Fixed</span>
+                                )}
                             </div>
                             <div style={{ fontSize: '0.85rem', color: 'var(--color-text-muted)' }}>
                                 Price (Approx.)

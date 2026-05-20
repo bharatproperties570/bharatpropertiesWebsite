@@ -83,23 +83,7 @@ const PropertyOverview = ({ property }) => {
         { label: 'Registration', value: property.technical?.registration || 'Extra', icon: <Landmark size={16} /> }
     ];
 
-    // Styled Category Panel Helper
-    const getSectionStyle = (sectionId, baseColor) => {
-        const isHovered = hoveredSection === sectionId;
-        return {
-            padding: '2.25rem 1.75rem',
-            borderRadius: '24px',
-            background: isHovered ? `${baseColor}0b` : `${baseColor}04`,
-            border: isHovered ? `1px solid ${baseColor}30` : `1px solid ${baseColor}0e`,
-            transform: isHovered ? 'translateY(-4px)' : 'translateY(0)',
-            boxShadow: isHovered ? `0 15px 30px -10px ${baseColor}1a` : 'none',
-            transition: 'all 0.35s cubic-bezier(0.16, 1, 0.3, 1)',
-            display: 'flex',
-            flexDirection: 'column',
-            gap: '1.25rem',
-            cursor: 'pointer'
-        };
-    };
+
 
     return (
         <section>
@@ -112,101 +96,182 @@ const PropertyOverview = ({ property }) => {
 
             {/* UNIFIED SPECIFICATION CARD */}
             <div style={{
-                padding: '2.5rem',
+                padding: '2rem 2.5rem',
                 borderRadius: '36px',
                 background: 'linear-gradient(135deg, rgba(255, 255, 255, 0.98) 0%, rgba(248, 250, 252, 0.99) 100%)',
                 border: '1px solid rgba(226, 232, 240, 0.8)',
-                boxShadow: '0 25px 50px -12px rgba(15, 23, 42, 0.04)'
+                boxShadow: '0 25px 50px -12px rgba(15, 23, 42, 0.04)',
+                display: 'flex',
+                flexDirection: 'column',
+                gap: '1.25rem'
             }}>
-                <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(290px, 1fr))', gap: '1.5rem' }}>
+                <style dangerouslySetInnerHTML={{ __html: `
+                    .spec-landscape-card {
+                        display: flex;
+                        align-items: center;
+                        gap: 2rem;
+                        padding: 1.25rem 1.75rem;
+                        border-radius: 20px;
+                        transition: all 0.35s cubic-bezier(0.16, 1, 0.3, 1);
+                        cursor: pointer;
+                        width: 100%;
+                    }
+                    .spec-landscape-card-header {
+                        width: 180px;
+                        flex-shrink: 0;
+                    }
+                    .spec-landscape-card-divider {
+                        width: 1px;
+                        align-self: stretch;
+                    }
+                    .spec-landscape-card-items {
+                        display: flex;
+                        flex: 1;
+                        gap: 1.5rem;
+                        flex-wrap: wrap;
+                        justify-content: space-between;
+                        align-items: center;
+                    }
+                    .spec-landscape-item {
+                        display: flex;
+                        align-items: center;
+                        gap: 12px;
+                        min-width: 150px;
+                    }
+                    @media (max-width: 991px) {
+                        .spec-landscape-card {
+                            gap: 1.5rem;
+                            padding: 1rem 1.25rem;
+                        }
+                        .spec-landscape-card-header {
+                            width: 140px;
+                        }
+                    }
+                    @media (max-width: 768px) {
+                        .spec-landscape-card {
+                            flex-direction: column;
+                            align-items: flex-start;
+                            gap: 1rem;
+                            padding: 1.25rem;
+                        }
+                        .spec-landscape-card-header {
+                            width: 100%;
+                        }
+                        .spec-landscape-card-divider {
+                            width: 100%;
+                            height: 1px;
+                            align-self: auto;
+                        }
+                        .spec-landscape-card-items {
+                            width: 100%;
+                            gap: 1rem;
+                        }
+                        .spec-landscape-item {
+                            min-width: 100%;
+                        }
+                    }
+                `}} />
+
+                {/* SECTION 1: Classification details */}
+                <div 
+                    className="spec-landscape-card"
+                    style={{
+                        background: hoveredSection === 'class' ? 'rgba(79, 70, 229, 0.05)' : 'rgba(79, 70, 229, 0.015)',
+                        border: hoveredSection === 'class' ? '1px solid rgba(79, 70, 229, 0.3)' : '1px solid rgba(79, 70, 229, 0.08)',
+                        transform: hoveredSection === 'class' ? 'translateY(-2px)' : 'translateY(0)',
+                        boxShadow: hoveredSection === 'class' ? '0 10px 25px -10px rgba(79, 70, 229, 0.15)' : 'none'
+                    }}
+                    onMouseEnter={() => setHoveredSection('class')}
+                    onMouseLeave={() => setHoveredSection(null)}
+                >
+                    <div className="spec-landscape-card-header">
+                        <span style={{ fontSize: '0.65rem', fontWeight: 900, color: '#4f46e5', textTransform: 'uppercase', letterSpacing: '1.2px' }}>Classification</span>
+                        <h3 style={{ fontSize: '1.05rem', fontWeight: 900, color: '#0F172A', margin: '4px 0 0 0' }}>Type & Category</h3>
+                    </div>
                     
-                    {/* SECTION 1: Classification details */}
-                    <div 
-                        style={getSectionStyle('class', '#4f46e5')}
-                        onMouseEnter={() => setHoveredSection('class')}
-                        onMouseLeave={() => setHoveredSection(null)}
-                    >
-                        <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
-                            <span style={{ fontSize: '0.65rem', fontWeight: 900, color: '#4f46e5', textTransform: 'uppercase', letterSpacing: '1.2px' }}>Classification</span>
-                            <ChevronRight size={14} style={{ color: hoveredSection === 'class' ? '#4f46e5' : '#94a3b8', transform: hoveredSection === 'class' ? 'translateX(3px)' : 'translateX(0)', transition: 'transform 0.3s' }} />
-                        </div>
-                        <h3 style={{ fontSize: '1.15rem', fontWeight: 900, color: '#0F172A', margin: 0 }}>Type & Category</h3>
-                        
-                        <div style={{ height: '1px', background: 'rgba(79, 70, 229, 0.08)' }}></div>
+                    <div className="spec-landscape-card-divider" style={{ background: 'rgba(79, 70, 229, 0.12)' }}></div>
 
-                        <div style={{ display: 'flex', flexDirection: 'column', gap: '1.15rem' }}>
-                            {plate1Items.map((item, idx) => (
-                                <div key={idx} style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between' }}>
-                                    <div style={{ display: 'flex', alignItems: 'center', gap: '12px' }}>
-                                        <div style={{ padding: '8px', borderRadius: '10px', background: `${item.color}0d`, color: item.color, display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
-                                            {item.icon}
-                                        </div>
-                                        <span style={{ fontSize: '0.8rem', color: '#64748b', fontWeight: 600 }}>{item.label}</span>
-                                    </div>
+                    <div className="spec-landscape-card-items">
+                        {plate1Items.map((item, idx) => (
+                            <div key={idx} className="spec-landscape-item">
+                                <div style={{ padding: '8px', borderRadius: '10px', background: `${item.color}0d`, color: item.color, display: 'flex', alignItems: 'center', justifyContent: 'center', flexShrink: 0 }}>
+                                    {item.icon}
+                                </div>
+                                <div style={{ display: 'flex', alignItems: 'center', gap: '6px', flexWrap: 'wrap' }}>
+                                    <span style={{ fontSize: '0.8rem', color: '#64748b', fontWeight: 600 }}>{item.label}:</span>
                                     <span style={{ fontSize: '0.85rem', fontWeight: 800, color: '#1e293b' }}>{item.value}</span>
                                 </div>
-                            ))}
-                        </div>
+                            </div>
+                        ))}
                     </div>
+                </div>
 
-                    {/* SECTION 2: Orientation details */}
-                    <div 
-                        style={getSectionStyle('orient', '#8b5cf6')}
-                        onMouseEnter={() => setHoveredSection('orient')}
-                        onMouseLeave={() => setHoveredSection(null)}
-                    >
-                        <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
-                            <span style={{ fontSize: '0.65rem', fontWeight: 900, color: '#8b5cf6', textTransform: 'uppercase', letterSpacing: '1.2px' }}>Orientation</span>
-                            <ChevronRight size={14} style={{ color: hoveredSection === 'orient' ? '#8b5cf6' : '#94a3b8', transform: hoveredSection === 'orient' ? 'translateX(3px)' : 'translateX(0)', transition: 'transform 0.3s' }} />
-                        </div>
-                        <h3 style={{ fontSize: '1.15rem', fontWeight: 900, color: '#0F172A', margin: 0 }}>Facing & Access</h3>
-                        
-                        <div style={{ height: '1px', background: 'rgba(139, 92, 246, 0.08)' }}></div>
+                {/* SECTION 2: Orientation details */}
+                <div 
+                    className="spec-landscape-card"
+                    style={{
+                        background: hoveredSection === 'orient' ? 'rgba(139, 92, 246, 0.05)' : 'rgba(139, 92, 246, 0.015)',
+                        border: hoveredSection === 'orient' ? '1px solid rgba(139, 92, 246, 0.3)' : '1px solid rgba(139, 92, 246, 0.08)',
+                        transform: hoveredSection === 'orient' ? 'translateY(-2px)' : 'translateY(0)',
+                        boxShadow: hoveredSection === 'orient' ? '0 10px 25px -10px rgba(139, 92, 246, 0.15)' : 'none'
+                    }}
+                    onMouseEnter={() => setHoveredSection('orient')}
+                    onMouseLeave={() => setHoveredSection(null)}
+                >
+                    <div className="spec-landscape-card-header">
+                        <span style={{ fontSize: '0.65rem', fontWeight: 900, color: '#8b5cf6', textTransform: 'uppercase', letterSpacing: '1.2px' }}>Orientation</span>
+                        <h3 style={{ fontSize: '1.05rem', fontWeight: 900, color: '#0F172A', margin: '4px 0 0 0' }}>Facing & Access</h3>
+                    </div>
+                    
+                    <div className="spec-landscape-card-divider" style={{ background: 'rgba(139, 92, 246, 0.12)' }}></div>
 
-                        <div style={{ display: 'flex', flexDirection: 'column', gap: '1.15rem' }}>
-                            {plate2Items.map((item, idx) => (
-                                <div key={idx} style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between' }}>
-                                    <div style={{ display: 'flex', alignItems: 'center', gap: '12px' }}>
-                                        <div style={{ padding: '8px', borderRadius: '10px', background: `${item.color}0d`, color: item.color, display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
-                                            {item.icon}
-                                        </div>
-                                        <span style={{ fontSize: '0.8rem', color: '#64748b', fontWeight: 600 }}>{item.label}</span>
-                                    </div>
+                    <div className="spec-landscape-card-items">
+                        {plate2Items.map((item, idx) => (
+                            <div key={idx} className="spec-landscape-item">
+                                <div style={{ padding: '8px', borderRadius: '10px', background: `${item.color}0d`, color: item.color, display: 'flex', alignItems: 'center', justifyContent: 'center', flexShrink: 0 }}>
+                                    {item.icon}
+                                </div>
+                                <div style={{ display: 'flex', alignItems: 'center', gap: '6px', flexWrap: 'wrap' }}>
+                                    <span style={{ fontSize: '0.8rem', color: '#64748b', fontWeight: 600 }}>{item.label}:</span>
                                     <span style={{ fontSize: '0.85rem', fontWeight: 800, color: '#1e293b' }}>{item.value}</span>
                                 </div>
-                            ))}
-                        </div>
+                            </div>
+                        ))}
                     </div>
+                </div>
 
-                    {/* SECTION 3: Size & Metric details */}
-                    <div 
-                        style={getSectionStyle('size', '#14b8a6')}
-                        onMouseEnter={() => setHoveredSection('size')}
-                        onMouseLeave={() => setHoveredSection(null)}
-                    >
-                        <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
-                            <span style={{ fontSize: '0.65rem', fontWeight: 900, color: '#14b8a6', textTransform: 'uppercase', letterSpacing: '1.2px' }}>Space Metrics</span>
-                            <ChevronRight size={14} style={{ color: hoveredSection === 'size' ? '#14b8a6' : '#94a3b8', transform: hoveredSection === 'size' ? 'translateX(3px)' : 'translateX(0)', transition: 'transform 0.3s' }} />
-                        </div>
-                        <h3 style={{ fontSize: '1.15rem', fontWeight: 900, color: '#0F172A', margin: 0 }}>Size & Dimensions</h3>
-                        
-                        <div style={{ height: '1px', background: 'rgba(20, 184, 166, 0.08)' }}></div>
+                {/* SECTION 3: Size & Metric details */}
+                <div 
+                    className="spec-landscape-card"
+                    style={{
+                        background: hoveredSection === 'size' ? 'rgba(20, 184, 166, 0.05)' : 'rgba(20, 184, 166, 0.015)',
+                        border: hoveredSection === 'size' ? '1px solid rgba(20, 184, 166, 0.3)' : '1px solid rgba(20, 184, 166, 0.08)',
+                        transform: hoveredSection === 'size' ? 'translateY(-2px)' : 'translateY(0)',
+                        boxShadow: hoveredSection === 'size' ? '0 10px 25px -10px rgba(20, 184, 166, 0.15)' : 'none'
+                    }}
+                    onMouseEnter={() => setHoveredSection('size')}
+                    onMouseLeave={() => setHoveredSection(null)}
+                >
+                    <div className="spec-landscape-card-header">
+                        <span style={{ fontSize: '0.65rem', fontWeight: 900, color: '#14b8a6', textTransform: 'uppercase', letterSpacing: '1.2px' }}>Space Metrics</span>
+                        <h3 style={{ fontSize: '1.05rem', fontWeight: 900, color: '#0F172A', margin: '4px 0 0 0' }}>Size & Dimensions</h3>
+                    </div>
+                    
+                    <div className="spec-landscape-card-divider" style={{ background: 'rgba(20, 184, 166, 0.12)' }}></div>
 
-                        <div style={{ display: 'flex', flexDirection: 'column', gap: '1.15rem' }}>
-                            {plate3Items.map((item, idx) => (
-                                <div key={idx} style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between' }}>
-                                    <div style={{ display: 'flex', alignItems: 'center', gap: '12px' }}>
-                                        <div style={{ padding: '8px', borderRadius: '10px', background: `${item.color}0d`, color: item.color, display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
-                                            {item.icon}
-                                        </div>
-                                        <span style={{ fontSize: '0.8rem', color: '#64748b', fontWeight: 600 }}>{item.label}</span>
-                                    </div>
+                    <div className="spec-landscape-card-items">
+                        {plate3Items.map((item, idx) => (
+                            <div key={idx} className="spec-landscape-item">
+                                <div style={{ padding: '8px', borderRadius: '10px', background: `${item.color}0d`, color: item.color, display: 'flex', alignItems: 'center', justifyContent: 'center', flexShrink: 0 }}>
+                                    {item.icon}
+                                </div>
+                                <div style={{ display: 'flex', alignItems: 'center', gap: '6px', flexWrap: 'wrap' }}>
+                                    <span style={{ fontSize: '0.8rem', color: '#64748b', fontWeight: 600 }}>{item.label}:</span>
                                     <span style={{ fontSize: '0.85rem', fontWeight: 800, color: '#1e293b' }}>{item.value}</span>
                                 </div>
-                            ))}
-                        </div>
+                            </div>
+                        ))}
                     </div>
-
                 </div>
             </div>
 

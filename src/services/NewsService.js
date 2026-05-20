@@ -82,7 +82,15 @@ export const fetchRealEstateNews = async (city = null) => {
     try {
         const officialUpdates = fetchOfficialAnnouncements();
         const fetchPromises = RSS_FEEDS.map(feed =>
-            fetch(`${PROXY_URL}${encodeURIComponent(feed)}`).then(res => res.json())
+            fetch(`${PROXY_URL}${encodeURIComponent(feed)}`)
+                .then(res => {
+                    if (!res.ok) throw new Error(`HTTP error! status: ${res.status}`);
+                    return res.json();
+                })
+                .catch(err => {
+                    console.warn(`Failed to fetch RSS feed (${feed}):`, err);
+                    return { items: [] };
+                })
         );
 
         const results = await Promise.all(fetchPromises);

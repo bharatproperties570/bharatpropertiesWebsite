@@ -88,24 +88,13 @@ const PropertyCostSheet = ({ property }) => {
 
                 <div style={{ padding: '2.5rem' }}>
                     {/* Interactive Transaction Type Tab Switcher */}
-                    <div style={{ display: 'flex', gap: '8px', padding: '6px', backgroundColor: '#f8fafc', borderRadius: '16px', border: '1px solid #f1f5f9', marginBottom: '1.5rem' }}>
+                    <div className="cost-switcher-row">
                         <button
                             onClick={() => setSelectedTxType('Full White')}
+                            className="cost-switcher-btn"
                             style={{
-                                flex: 1,
-                                padding: '12px 14px',
-                                border: 'none',
-                                borderRadius: '12px',
                                 backgroundColor: selectedTxType === 'Full White' ? '#0F172A' : 'transparent',
-                                color: selectedTxType === 'Full White' ? '#fff' : '#64748b',
-                                fontWeight: 800,
-                                fontSize: '0.8rem',
-                                cursor: 'pointer',
-                                transition: 'all 0.25s',
-                                display: 'flex',
-                                alignItems: 'center',
-                                justifyContent: 'center',
-                                gap: '8px'
+                                color: selectedTxType === 'Full White' ? '#fff' : '#64748b'
                             }}
                         >
                             <span>📄</span>
@@ -113,21 +102,10 @@ const PropertyCostSheet = ({ property }) => {
                         </button>
                         <button
                             onClick={() => setSelectedTxType('Collector Rate')}
+                            className="cost-switcher-btn"
                             style={{
-                                flex: 1,
-                                padding: '12px 14px',
-                                border: 'none',
-                                borderRadius: '12px',
                                 backgroundColor: selectedTxType === 'Collector Rate' ? '#0F172A' : 'transparent',
-                                color: selectedTxType === 'Collector Rate' ? '#fff' : '#64748b',
-                                fontWeight: 800,
-                                fontSize: '0.8rem',
-                                cursor: 'pointer',
-                                transition: 'all 0.25s',
-                                display: 'flex',
-                                alignItems: 'center',
-                                justifyContent: 'center',
-                                gap: '8px'
+                                color: selectedTxType === 'Collector Rate' ? '#fff' : '#64748b'
                             }}
                         >
                             <span>🏛️</span>
@@ -136,21 +114,10 @@ const PropertyCostSheet = ({ property }) => {
                         {property.transactionType === 'Flexible' && (
                             <button
                                 onClick={() => setSelectedTxType('Flexible')}
+                                className="cost-switcher-btn"
                                 style={{
-                                    flex: 1,
-                                    padding: '12px 14px',
-                                    border: 'none',
-                                    borderRadius: '12px',
                                     backgroundColor: selectedTxType === 'Flexible' ? '#0F172A' : 'transparent',
-                                    color: selectedTxType === 'Flexible' ? '#fff' : '#64748b',
-                                    fontWeight: 800,
-                                    fontSize: '0.8rem',
-                                    cursor: 'pointer',
-                                    transition: 'all 0.25s',
-                                    display: 'flex',
-                                    alignItems: 'center',
-                                    justifyContent: 'center',
-                                    gap: '8px'
+                                    color: selectedTxType === 'Flexible' ? '#fff' : '#64748b'
                                 }}
                             >
                                 <span>⚖️</span>
@@ -193,7 +160,7 @@ const PropertyCostSheet = ({ property }) => {
                     )}
 
                     {/* Dynamic Gender/Ownership Segmented Selector */}
-                    <div style={{ display: 'flex', gap: '8px', padding: '6px', backgroundColor: '#f8fafc', borderRadius: '16px', border: '1px solid #f1f5f9', marginBottom: '2.5rem' }}>
+                    <div className="gender-switcher-row">
                         {[
                             { id: 'male', label: 'Male Owner', rate: '7%', icon: '👨' },
                             { id: 'female', label: 'Female Owner', rate: '5%', icon: '👩' },
@@ -202,21 +169,10 @@ const PropertyCostSheet = ({ property }) => {
                             <button
                                 key={item.id}
                                 onClick={() => setGender(item.id)}
+                                className="gender-switcher-btn"
                                 style={{
-                                    flex: 1,
-                                    padding: '14px 16px',
-                                    border: 'none',
-                                    borderRadius: '12px',
                                     backgroundColor: gender === item.id ? '#0F172A' : 'transparent',
                                     color: gender === item.id ? '#fff' : '#64748b',
-                                    fontWeight: 800,
-                                    fontSize: '0.85rem',
-                                    cursor: 'pointer',
-                                    transition: 'all 0.25s',
-                                    display: 'flex',
-                                    alignItems: 'center',
-                                    justifyContent: 'center',
-                                    gap: '8px',
                                     boxShadow: gender === item.id ? '0 10px 15px -3px rgba(15, 23, 42, 0.15)' : 'none'
                                 }}
                             >

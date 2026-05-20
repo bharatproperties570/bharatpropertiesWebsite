@@ -191,3 +191,193 @@ html {
     background-size: 200% 200%;
     animation: textGradient 6s ease infinite;
 }
+
+/* ==========================================
+   MOBILE RESPONSIVENESS OVERRIDES
+   Leaves desktop styling exactly as it was.
+   ========================================== */
+
+/* Main Layout Grid & Sidebar */
+.property-detail-grid {
+    display: grid !important;
+    grid-template-columns: minmax(0, 2fr) minmax(0, 1fr) !important;
+    gap: 4rem !important;
+}
+
+.property-detail-sidebar {
+    position: sticky !important;
+    top: 100px !important;
+    height: fit-content !important;
+    display: flex !important;
+    flex-direction: column !important;
+    gap: 2rem !important;
+}
+
+.property-location-container {
+    position: sticky !important;
+    top: 240px !important;
+}
+
+/* Sticky Header on Scroll */
+.sticky-nav-row {
+    display: flex !important;
+    justify-content: space-between !important;
+    align-items: center !important;
+}
+
+.sticky-nav-info {
+    display: flex !important;
+    align-items: center !important;
+    gap: 20px !important;
+}
+
+.sticky-nav-actions {
+    display: flex !important;
+    align-items: center !important;
+    gap: 12px !important;
+}
+
+/* Expected Price Glass Card */
+.hero-price-card {
+    background-color: rgba(255, 255, 255, 0.08) !important;
+    padding: 1px !important;
+    width: fit-content !important;
+    min-width: 550px !important;
+    max-width: 95% !important;
+    margin: 0 auto !important;
+    overflow: hidden !important;
+    border-radius: 24px !important;
+    box-shadow: 0 20px 40px rgba(0, 0, 0, 0.25) !important;
+    border: 1px solid rgba(255, 255, 255, 0.12) !important;
+}
+
+.hero-price-card-inner {
+    background-color: rgba(15, 23, 42, 0.6) !important;
+    padding: 2.5rem 4rem !important;
+    text-align: center !important;
+}
+
+.hero-price-value {
+    color: var(--color-gold) !important;
+    font-size: 2.4rem !important;
+    font-weight: 900 !important;
+    line-height: 1.2 !important;
+    white-space: nowrap !important;
+}
+
+/* Cost Sheet Tab Switchers */
+.cost-switcher-row {
+    display: flex !important;
+    gap: 8px !important;
+    padding: 6px !important;
+    background-color: #f8fafc !important;
+    border-radius: 16px !important;
+    border: 1px solid #f1f5f9 !important;
+    margin-bottom: 1.5rem !important;
+}
+
+.cost-switcher-btn {
+    flex: 1 !important;
+    padding: 12px 14px !important;
+    border: none !important;
+    border-radius: 12px !important;
+    font-weight: 800 !important;
+    font-size: 0.8rem !important;
+    cursor: pointer !important;
+    transition: all 0.25s !important;
+    display: flex !important;
+    align-items: center !important;
+    justify-content: center !important;
+    gap: 8px !important;
+}
+
+.gender-switcher-row {
+    display: flex !important;
+    gap: 8px !important;
+    padding: 6px !important;
+    background-color: #f8fafc !important;
+    border-radius: 16px !important;
+    border: 1px solid #f1f5f9 !important;
+    margin-bottom: 2.5rem !important;
+}
+
+.gender-switcher-btn {
+    flex: 1 !important;
+    padding: 14px 16px !important;
+    border: none !important;
+    border-radius: 12px !important;
+    font-weight: 800 !important;
+    font-size: 0.85rem !important;
+    cursor: pointer !important;
+    transition: all 0.25s !important;
+    display: flex !important;
+    align-items: center !important;
+    justify-content: center !important;
+    gap: 8px !important;
+}
+
+/* Media Queries for Responsive Adaptation */
+@media (max-width: 1024px) {
+    .property-detail-grid {
+        grid-template-columns: 1fr !important;
+        gap: 2.5rem !important;
+    }
+    
+    .property-detail-sidebar {
+        position: static !important;
+    }
+    
+    .property-location-container {
+        position: static !important;
+    }
+}
+
+@media (max-width: 768px) {
+    .sticky-nav-row {
+        flex-direction: column !important;
+        gap: 12px !important;
+        align-items: stretch !important;
+        text-align: center !important;
+        padding: 1rem 0 !important;
+    }
+    
+    .sticky-nav-info {
+        flex-direction: column !important;
+        gap: 8px !important;
+        align-items: center !important;
+    }
+    
+    .sticky-nav-actions {
+        justify-content: center !important;
+        width: 100% !important;
+    }
+}
+
+@media (max-width: 640px) {
+    .hero-price-card {
+        min-width: 100% !important;
+        border-radius: 16px !important;
+    }
+    
+    .hero-price-card-inner {
+        padding: 1.5rem 1rem !important;
+    }
+    
+    .hero-price-value {
+        font-size: 1.65rem !important;
+        white-space: normal !important;
+    }
+
+    .cost-switcher-row,
+    .gender-switcher-row {
+        flex-direction: column !important;
+        gap: 8px !important;
+        padding: 8px !important;
+    }
+    
+    .cost-switcher-btn,
+    .gender-switcher-btn {
+        width: 100% !important;
+        padding: 10px 12px !important;
+    }
+}

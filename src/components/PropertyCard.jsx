@@ -48,48 +48,28 @@ const PropertyCard = ({ property, onClick }) => {
                     </div>
                 )}
 
-                {/* Status Badge - Glassmorphism */}
-                <div style={{
-                    position: 'absolute',
-                    top: '1rem',
-                    left: '1rem',
-                    display: 'flex',
-                    flexDirection: 'column',
-                    gap: '0.5rem',
-                    zIndex: 2
-                }}>
+                {/* Subcategory Badge - Glassmorphism */}
+                {property.subCategory && property.subCategory !== 'Property' && (
                     <div style={{
-                        backgroundColor: 'rgba(15, 23, 42, 0.8)',
+                        position: 'absolute',
+                        top: '1rem',
+                        left: '1rem',
+                        backgroundColor: 'rgba(59, 130, 246, 0.9)',
                         backdropFilter: 'blur(12px)',
                         color: 'white',
                         padding: '0.4rem 1.2rem',
                         borderRadius: 'var(--radius-full)',
-                        fontSize: '0.7rem',
+                        fontSize: '0.65rem',
                         fontWeight: 800,
                         textTransform: 'uppercase',
                         letterSpacing: '1px',
-                        boxShadow: '0 4px 12px rgba(0,0,0,0.2)'
+                        boxShadow: '0 4px 12px rgba(0,0,0,0.1)',
+                        zIndex: 2,
+                        width: 'fit-content'
                     }}>
-                        {property.status || 'Exclusive'}
+                        {property.subCategory}
                     </div>
-                    {property.subCategory && property.subCategory !== 'Property' && (
-                        <div style={{
-                            backgroundColor: 'rgba(59, 130, 246, 0.9)',
-                            backdropFilter: 'blur(12px)',
-                            color: 'white',
-                            padding: '0.4rem 1.2rem',
-                            borderRadius: 'var(--radius-full)',
-                            fontSize: '0.65rem',
-                            fontWeight: 800,
-                            textTransform: 'uppercase',
-                            letterSpacing: '1px',
-                            boxShadow: '0 4px 12px rgba(0,0,0,0.1)',
-                            width: 'fit-content'
-                        }}>
-                            {property.subCategory}
-                        </div>
-                    )}
-                </div>
+                )}
 
                 <button
                     onClick={(e) => {
@@ -157,15 +137,23 @@ const PropertyCard = ({ property, onClick }) => {
                     right: '1rem',
                     background: 'white',
                     color: 'var(--color-primary)',
-                    padding: '0.6rem 1.5rem',
+                    padding: '0.5rem 1.2rem',
                     borderRadius: 'var(--radius-md)',
-                    fontWeight: 800,
-                    fontSize: '1.2rem',
                     boxShadow: 'var(--shadow-premium)',
                     zIndex: 2,
-                    border: '1px solid rgba(15, 23, 42, 0.05)'
+                    border: '1px solid rgba(15, 23, 42, 0.05)',
+                    display: 'flex',
+                    flexDirection: 'column',
+                    alignItems: 'center',
+                    gap: '2px'
                 }}>
-                    {property.price}
+                    <span style={{ fontWeight: 800, fontSize: '1.15rem', lineHeight: '1.1' }}>{property.price}</span>
+                    {property.pricingNature?.negotiable && (
+                        <span style={{ fontSize: '0.55rem', fontWeight: 800, color: 'var(--color-gold)', letterSpacing: '0.5px', textTransform: 'uppercase' }}>Negotiable</span>
+                    )}
+                    {property.pricingNature?.fixed && (
+                        <span style={{ fontSize: '0.55rem', fontWeight: 800, color: '#64748b', letterSpacing: '0.5px', textTransform: 'uppercase' }}>Fixed</span>
+                    )}
                 </div>
 
                 {/* Sustainability Score Badge (Future Feature) */}

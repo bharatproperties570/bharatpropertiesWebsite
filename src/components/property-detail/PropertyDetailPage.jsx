@@ -67,10 +67,47 @@ const PropertyDetailPage = ({ propertyId, onAddToCompare, onBookConsultation }) 
             />
 
             <main className="container" style={{ position: 'relative', marginTop: '4rem', paddingBottom: '8rem' }}>
-                <div style={{ display: 'grid', gridTemplateColumns: 'minmax(0, 2fr) minmax(0, 1fr)', gap: '4rem' }}>
+                <div className="property-detail-grid">
                     <div style={{ display: 'flex', flexDirection: 'column', gap: '4rem' }}>
                         {/* Highlights & Technical Specs first */}
                         <PropertyOverview property={property} />
+
+                        {/* Premium Editorial Listing Description Card */}
+                        {property.description && (
+                            <section style={{
+                                padding: '3rem',
+                                borderRadius: '36px',
+                                background: 'linear-gradient(135deg, #ffffff 0%, #f8fafc 100%)',
+                                border: '1px solid rgba(226, 232, 240, 0.8)',
+                                boxShadow: '0 20px 40px rgba(15, 23, 42, 0.03)'
+                            }}>
+                                <div style={{ 
+                                    display: 'flex', 
+                                    alignItems: 'center', 
+                                    gap: '12px', 
+                                    color: '#4f46e5', 
+                                    fontWeight: 800, 
+                                    fontSize: '0.85rem', 
+                                    textTransform: 'uppercase', 
+                                    letterSpacing: '0.15em', 
+                                    marginBottom: '2rem' 
+                                }}>
+                                    <span style={{ width: '40px', height: '1.5px', backgroundColor: '#e2e8f0' }}></span>
+                                    <span>About This Property</span>
+                                    <span style={{ fontWeight: 900, color: '#0F172A' }}>Detailed Overview</span>
+                                </div>
+                                
+                                <div style={{ 
+                                    fontSize: '1.1rem', 
+                                    color: '#334155', 
+                                    lineHeight: '1.8', 
+                                    fontWeight: 400,
+                                    whiteSpace: 'pre-line' 
+                                }}>
+                                    {property.description}
+                                </div>
+                            </section>
+                        )}
                         
                         {/* Media Showcase */}
                         {property.media && property.media.length > 0 && (
@@ -88,10 +125,10 @@ const PropertyDetailPage = ({ propertyId, onAddToCompare, onBookConsultation }) 
                         <PropertyCostSheet property={property} />
                     </div>
 
-                    <aside style={{ position: 'sticky', top: '100px', height: 'fit-content', display: 'flex', flexDirection: 'column', gap: '2rem' }}>
+                    <aside className="property-detail-sidebar">
                         {property.location && (
                             <div className="glass-card" style={{ padding: '2rem', border: '1px solid #f1f5f9' }}>
-                                <PropertyLocation location={property.location} />
+                                <PropertyLocation location={property.location} unitNumber={property.unitNo || property.unitNumber} />
                             </div>
                         )}
                         

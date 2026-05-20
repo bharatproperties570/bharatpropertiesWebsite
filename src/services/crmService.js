@@ -20,6 +20,19 @@ const crmApi = axios.create({
     }
 });
 
+// Cache-busting request interceptor for real-time live CRM synchronization
+crmApi.interceptors.request.use(config => {
+    if (config.method === 'get') {
+        config.params = {
+            ...config.params,
+            _t: Date.now()
+        };
+    }
+    return config;
+}, error => {
+    return Promise.reject(error);
+});
+
 // Helper to flatten measurement objects (e.g. {value, unit} or {amount, unit})
 const flattenMeasurement = (measure, defaultUnit = '') => {
     if (!measure) return '';
@@ -35,6 +48,11 @@ const flattenMeasurement = (measure, defaultUnit = '') => {
 // Helper to fix Google Drive URLs for <img> tags
 const fixDriveUrl = (url) => {
     if (!url) return url;
+    if (url.startsWith('/uploads/') || url.startsWith('uploads/')) {
+        const normalizedUrl = url.startsWith('/') ? url : `/${url}`;
+        const baseUrl = API_URL.replace(/\/api\/public\/?$/, '').replace(/\/public\/?$/, '');
+        return `${baseUrl}${normalizedUrl}`;
+    }
     if (url.includes('drive.google.com')) {
         // Handle both webViewLink and webContentLink
         const fileIdMatch = url.match(/\/file\/d\/([^/]+)/) || url.match(/[?&]id=([^&]+)/);
@@ -64,51 +82,128 @@ const formatPrice = (amount) => {
 
 // Mapper for CRM Deal to Website Property
 const mapDealToProperty = (deal) => {
-    // Curate images from all possible fields returned by public API
-    let resolvedImages = [];
-    if (Array.isArray(deal.images) && deal.images.length > 0) {
-        resolvedImages = deal.images;
-    } else if (Array.isArray(deal.inventoryImages) && deal.inventoryImages.length > 0) {
-        resolvedImages = deal.inventoryImages.map(img => typeof img === 'object' ? img.url : img);
-    } else if (deal.inventoryId?.inventoryImages && deal.inventoryId.inventoryImages.length > 0) {
-        resolvedImages = deal.inventoryId.inventoryImages.map(img => typeof img === 'object' ? img.url : img);
+    // Curate images and videos from all possible fields returned by public API
+    let rawImagesList = [];
+    
+    // 1. If we have a featured image, prepend it
+    if (deal.websiteMetadata?.featuredImage) {
+        rawImagesList.push(deal.websiteMetadata.featuredImage);
     }
     
-    // Process drive URLs and filter blanks
-    resolvedImages = resolvedImages.map(fixDriveUrl).filter(Boolean);
+    // 2. Add other deal/inventory images
+    if (Array.isArray(deal.images) && deal.images.length > 0) {
+        deal.images.forEach(img => rawImagesList.push(typeof img === 'object' ? img.url : img));
+    } else if (Array.isArray(deal.inventoryImages) && deal.inventoryImages.length > 0) {
+        deal.inventoryImages.forEach(img => rawImagesList.push(typeof img === 'object' ? img.url : img));
+    } else if (deal.inventoryId?.inventoryImages && deal.inventoryId.inventoryImages.length > 0) {
+        deal.inventoryId.inventoryImages.forEach(img => rawImagesList.push(typeof img === 'object' ? img.url : img));
+    }
+    
+    // 3. Add images from builtup details
+    const rawBuiltupDetails = deal.builtupDetails || deal.inventoryId?.builtupDetails || [];
+    if (Array.isArray(rawBuiltupDetails)) {
+        rawBuiltupDetails.forEach(row => {
+            if (row.imageUrl) {
+                rawImagesList.push(row.imageUrl);
+            }
+        });
+    }
+    
+    // Process drive URLs, filter blanks, and deduplicate keeping original order
+    let resolvedImages = [];
+    const seenImages = new Set();
+    rawImagesList.forEach(img => {
+        const fixed = fixDriveUrl(img);
+        if (fixed && !seenImages.has(fixed)) {
+            seenImages.add(fixed);
+            resolvedImages.push(fixed);
+        }
+    });
 
     // If still empty, check the documents
     if (resolvedImages.length === 0) {
-        resolvedImages = (deal.documents || [])
+        const docImages = (deal.documents || [])
             .filter(doc => (doc.type === 'Image' || doc.url?.match(/\.(jpg|jpeg|png|webp|gif)$/i)))
             .map(doc => fixDriveUrl(doc.url))
             .filter(url => url) || [];
+        docImages.forEach(img => {
+            if (!seenImages.has(img)) {
+                seenImages.add(img);
+                resolvedImages.push(img);
+            }
+        });
     }
 
     // Now for videos
-    let resolvedVideos = [];
+    let rawVideosList = [];
     if (Array.isArray(deal.videos) && deal.videos.length > 0) {
-        resolvedVideos = deal.videos;
+        deal.videos.forEach(vid => rawVideosList.push(typeof vid === 'object' ? vid.url : vid));
     } else if (Array.isArray(deal.inventoryVideos) && deal.inventoryVideos.length > 0) {
-        resolvedVideos = deal.inventoryVideos.map(vid => typeof vid === 'object' ? vid.url : vid);
+        deal.inventoryVideos.forEach(vid => rawVideosList.push(typeof vid === 'object' ? vid.url : vid));
     } else if (deal.inventoryId?.inventoryVideos && deal.inventoryId.inventoryVideos.length > 0) {
-        resolvedVideos = deal.inventoryId.inventoryVideos.map(vid => typeof vid === 'object' ? vid.url : vid);
+        deal.inventoryId.inventoryVideos.forEach(vid => rawVideosList.push(typeof vid === 'object' ? vid.url : vid));
+    }
+
+    if (Array.isArray(rawBuiltupDetails)) {
+        rawBuiltupDetails.forEach(row => {
+            if (row.videoUrl) {
+                rawVideosList.push(row.videoUrl);
+            }
+        });
     }
     
-    resolvedVideos = resolvedVideos.map(fixDriveUrl).filter(Boolean);
+    let resolvedVideos = [];
+    const seenVideos = new Set();
+    rawVideosList.forEach(vid => {
+        const fixed = fixDriveUrl(vid);
+        if (fixed && !seenVideos.has(fixed)) {
+            seenVideos.add(fixed);
+            resolvedVideos.push(fixed);
+        }
+    });
 
     // If still empty, check the documents for videos
     if (resolvedVideos.length === 0) {
-        resolvedVideos = (deal.documents || [])
+        const docVideos = (deal.documents || [])
             .filter(doc => (doc.type === 'Video' || doc.url?.match(/\.(mp4|webm|ogg|mov)$/i)))
             .map(doc => fixDriveUrl(doc.url))
             .filter(url => url) || [];
+        docVideos.forEach(vid => {
+            if (!seenVideos.has(vid)) {
+                seenVideos.add(vid);
+                resolvedVideos.push(vid);
+            }
+        });
     }
+
+    // Helper functions for descriptions/labels
+    const getMediaDescription = (url) => {
+        if (deal.websiteMetadata?.featuredImage && fixDriveUrl(deal.websiteMetadata.featuredImage) === url) {
+            return 'Featured Property Image';
+        }
+        if (Array.isArray(rawBuiltupDetails)) {
+            const matchedRow = rawBuiltupDetails.find(row => row.imageUrl && fixDriveUrl(row.imageUrl) === url);
+            if (matchedRow) {
+                return `${matchedRow.floor}${matchedRow.cluster ? ` - ${matchedRow.cluster}` : ''}`;
+            }
+        }
+        return 'Property Image';
+    };
+
+    const getVideoDescription = (url) => {
+        if (Array.isArray(rawBuiltupDetails)) {
+            const matchedRow = rawBuiltupDetails.find(row => row.videoUrl && fixDriveUrl(row.videoUrl) === url);
+            if (matchedRow) {
+                return `Walkthrough: ${matchedRow.floor}${matchedRow.cluster ? ` - ${matchedRow.cluster}` : ''}`;
+            }
+        }
+        return 'Property Video';
+    };
 
     // Construct the rich media array for PropertyMedia
     const media = [
-        ...resolvedImages.map(url => ({ type: 'image', url, description: 'Property Image' })),
-        ...resolvedVideos.map(url => ({ type: 'video', url, description: 'Property Video' }))
+        ...resolvedImages.map(url => ({ type: 'image', url, description: getMediaDescription(url) })),
+        ...resolvedVideos.map(url => ({ type: 'video', url, description: getVideoDescription(url) }))
     ];
 
     const intent = deal.intent || 'Sell';
@@ -118,16 +213,13 @@ const mapDealToProperty = (deal) => {
     const rawSizeLabel = deal.sizeLabel || deal.unitSpecification?.sizeLabel || '';
     const sizeLabel = /^[0-9a-fA-F]{24}$/.test(rawSizeLabel) ? '' : rawSizeLabel;
     
-    const detailsArr = [subCat].filter(Boolean);
-    const detailsString = detailsArr.length > 0 ? ` a ${detailsArr.join(' ')}` : '';
-    const availableString = `Available For ${intent}${detailsString}`;
+    const availableString = `Available For ${intent}`.trim();
 
     const rawProjectName = deal.projectName || '';
     const cleanProjectName = /^[0-9a-fA-F]{24}$/.test(rawProjectName) ? '' : rawProjectName;
     const blockString = deal.block && deal.block !== 'N/A' ? deal.block : '';
 
     // Compute dynamic high-fidelity Built-up parameters from CRM DB
-    const rawBuiltupDetails = deal.builtupDetails || deal.inventoryId?.builtupDetails || [];
     const floorsMap = {};
     rawBuiltupDetails.forEach(row => {
         const floorName = row.floor || 'Standard Floor';
@@ -138,7 +230,9 @@ const mapDealToProperty = (deal) => {
             name: row.cluster || 'Room/Area',
             length: row.length || '0',
             breadth: row.width || '0',
-            area: row.totalArea || String((parseFloat(row.length) * parseFloat(row.width)) || '0')
+            area: row.totalArea || String((parseFloat(row.length) * parseFloat(row.width)) || '0'),
+            imageUrl: row.imageUrl || '',
+            videoUrl: row.videoUrl || ''
         });
     });
 
@@ -147,15 +241,22 @@ const mapDealToProperty = (deal) => {
         clusters: floorsMap[floorName]
     }));
 
-    const builtupType = deal.builtupType || deal.inventoryId?.builtupType || 'Standard Layout';
+    let builtupTypeVal = deal.builtupType || deal.inventoryId?.builtupType || deal.inventoryInfo?.builtupType || 'Standard Layout';
+    if (builtupTypeVal && typeof builtupTypeVal === 'object') {
+        builtupTypeVal = builtupTypeVal.lookup_value || builtupTypeVal.name || 'Standard Layout';
+    }
+    if (builtupTypeVal === '69cfec103dc8a3ece367942d') {
+        builtupTypeVal = 'Vacant';
+    }
+    const builtupType = builtupTypeVal;
 
     const furnishingObj = {
         furnishing: deal.furnishType || deal.propertyDetails?.furnishing || deal.inventoryId?.furnishType || 'Unfurnished',
-        furnishingDetails: (deal.furnishedItems || deal.inventoryId?.furnishedItems) 
-            ? (deal.furnishedItems || deal.inventoryId?.furnishedItems).split(',').map(s => s.trim()) 
+        furnishingDetails: (deal.furnishedItems || (deal.inventoryId && deal.inventoryId.furnishedItems)) 
+            ? (deal.furnishedItems || deal.inventoryId.furnishedItems).split(',').map(s => s.trim()) 
             : [],
-        occupationDate: deal.occupationDate || deal.inventoryId?.occupationDate 
-            ? new Date(deal.occupationDate || deal.inventoryId?.occupationDate).toLocaleDateString('en-GB') 
+        occupationDate: (deal.occupationDate || (deal.inventoryId && deal.inventoryId.occupationDate)) 
+            ? new Date(deal.occupationDate || deal.inventoryId.occupationDate).toLocaleDateString('en-GB') 
             : 'TBD',
         age: deal.ageOfConstruction || deal.inventoryId?.ageOfConstruction || 'New'
     };
@@ -183,7 +284,7 @@ const mapDealToProperty = (deal) => {
         baths: String(deal.propertyDetails?.bathrooms || '0'),
         sqft: sizeLabel || flattenMeasurement(deal.size, deal.sizeUnit || 'Sq.Ft') || 'Area on Request',
         block: blockString,
-        image: deal.websiteMetadata?.featuredImage || resolvedImages[0] || null,
+        image: deal.websiteMetadata?.featuredImage ? fixDriveUrl(deal.websiteMetadata.featuredImage) : (resolvedImages[0] || null),
         images: resolvedImages,
         media: media,
         status: deal.status || 'Available',
@@ -197,7 +298,11 @@ const mapDealToProperty = (deal) => {
         length: deal.length || deal.inventoryId?.length || deal.inventoryId?.depth || '',
         intent: intent,
         availableString: availableString,
-        description: deal.websiteMetadata?.description || deal.remarks || deal.description,
+        description: (deal.websiteMetadata?.description && 
+                       deal.websiteMetadata.description !== 'Check out this new property listing at Bharat Properties.' && 
+                       deal.websiteMetadata.description !== 'Check out this updated property listing at Bharat Properties.')
+                       ? deal.websiteMetadata.description 
+                       : (deal.description || deal.websiteMetadata?.description || deal.remarks || ''),
         builtupDetails: {
             type: builtupType,
             area: String(deal.size || '0'),
@@ -227,6 +332,7 @@ const mapDealToProperty = (deal) => {
         collectorRate: deal.collectorRate || 0,
         collectorRateUnit: deal.collectorRateUnit || 'Sq Yard',
         collectorValue: deal.collectorValue || 0,
+        pricingNature: deal.pricingNature || { negotiable: false, fixed: false },
         seo: {
             title: deal.websiteMetadata?.metaTitle,
             description: deal.websiteMetadata?.metaDescription,

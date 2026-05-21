@@ -1,8 +1,8 @@
 
 
+/* global process */
 export default async function handler(req, res) {
   const apiBaseUrl = process.env.CRM_API_BASE_URL || 'https://api.bharatproperties.co/api/public';
-  const apiKey = process.env.CRM_API_KEY;
   const path = req.url.replace(/^\/api\/public/, '');
   const apiUrl = `${apiBaseUrl}${path}`;
   try {

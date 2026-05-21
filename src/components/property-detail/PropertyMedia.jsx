@@ -73,6 +73,7 @@ const PropertyMedia = ({ media }) => {
                         src={currentMedia?.url}
                         style={{ width: '100%', height: '100%', objectFit: 'cover', transition: 'all 0.6s cubic-bezier(0.4, 0, 0.2, 1)' }}
                         alt={currentMedia?.description || 'Property Image'}
+                        referrerPolicy="no-referrer"
                     />
                 )}
 
@@ -245,7 +246,7 @@ const PropertyMedia = ({ media }) => {
                                     </div>
                                 </>
                             ) : (
-                                <img src={img.url} style={{ width: '100%', height: '100%', objectFit: 'cover' }} alt="Thumb" />
+                                <img src={img.url} style={{ width: '100%', height: '100%', objectFit: 'cover' }} alt="Thumb" referrerPolicy="no-referrer" />
                             )}
                         </div>
                     );

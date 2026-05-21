@@ -1,6 +1,5 @@
 'use client';
 import React, { useState, useEffect, useRef } from 'react';
-import Image from 'next/image';
 import { fetchFeaturedProjects } from '../services/crmService';
 import { MapPin, Building2, ChevronRight } from 'lucide-react';
 import './FeaturedProjects.css';
@@ -61,13 +60,13 @@ const FeaturedProjects = ({ city = '', initialData = [] }) => {
                                     <div className="premium-project-card">
                                         <div className="project-image-container">
                                             {project.image ? (
-                                                <Image 
+                                                <img 
                                                     src={project.image} 
                                                     alt={project.name} 
-                                                    fill
-                                                    sizes="(max-width: 768px) 100vw, (max-width: 1200px) 50vw, 33vw"
                                                     className="project-image"
-                                                    style={{ objectFit: 'cover' }}
+                                                    style={{ width: '100%', height: '100%', objectFit: 'cover' }}
+                                                    referrerPolicy="no-referrer"
+                                                    loading="lazy"
                                                 />
                                             ) : (
                                                 <div className="no-image-placeholder" style={{

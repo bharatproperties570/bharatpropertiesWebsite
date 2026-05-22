@@ -59,7 +59,7 @@ const fixDriveUrl = (url) => {
     }
     if (url.includes('drive.google.com')) {
         // Updated to use lh3.googleusercontent.com for reliable embedding
-        const fileIdMatch = url.match(/\/file\/d\/([^\/]+)/) || url.match(/[?&]id=([^&]+)/);
+        const fileIdMatch = url.match(/\/file\/d\/([^/]+)/) || url.match(/[?&]id=([^&]+)/);
         if (fileIdMatch && fileIdMatch[1]) {
             return 'https://lh3.googleusercontent.com/d/' + fileIdMatch[1];
         }

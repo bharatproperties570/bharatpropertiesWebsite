@@ -9,7 +9,10 @@ const cache = {
 const CACHE_TTL_MS = 5 * 60 * 1000; // 5 minutes
 
 const isProd = process.env.NODE_ENV === 'production';
-const API_URL = process.env.NEXT_PUBLIC_CRM_API_URL || (isProd ? 'https://api.bharatproperties.co/api/public' : 'http://localhost:4000/api/public');
+const isServer = typeof window === 'undefined';
+const API_URL = isServer
+    ? (process.env.CRM_API_BASE_URL || (isProd ? 'https://api.bharatproperties.co/api/public' : 'http://localhost:4000/api/public'))
+    : (process.env.NEXT_PUBLIC_CRM_API_URL || '/api/public');
 const API_KEY = process.env.CRM_API_KEY || 'BP-WEB-INTEGRATION-2026-X7Y9';
 
 const crmApi = axios.create({
@@ -50,15 +53,15 @@ const fixDriveUrl = (url) => {
     if (!url) return url;
     if (url.startsWith('/uploads/') || url.startsWith('uploads/')) {
         const normalizedUrl = url.startsWith('/') ? url : `/${url}`;
-        const UPLOAD_BASE = process.env.CRM_UPLOAD_BASE_URL || (isProd ? 'https://api.bharatproperties.co' : 'http://localhost:4000');
+        const UPLOAD_BASE = process.env.CRM_UPLOAD_BASE_URL || (isProd ? 'https://api.bharatproperties.co' : '/');
         // Prepend server origin (without /api/public) to resolve upload image URLs
         return `${UPLOAD_BASE}${normalizedUrl}`;
     }
     if (url.includes('drive.google.com')) {
-        // Handle both webViewLink and webContentLink
-        const fileIdMatch = url.match(/\/file\/d\/([^/]+)/) || url.match(/[?&]id=([^&]+)/);
+        // Updated to use lh3.googleusercontent.com for reliable embedding
+        const fileIdMatch = url.match(/\/file\/d\/([^\/]+)/) || url.match(/[?&]id=([^&]+)/);
         if (fileIdMatch && fileIdMatch[1]) {
-            return `https://drive.google.com/uc?export=view&id=${fileIdMatch[1]}`;
+            return 'https://lh3.googleusercontent.com/d/' + fileIdMatch[1];
         }
     }
     return url;
@@ -92,7 +95,11 @@ const mapDealToProperty = (deal) => {
     }
     
     // 2. Add other deal/inventory images
-    if (Array.isArray(deal.images) && deal.images.length > 0) {
+    if (Array.isArray(deal.propertyImages) && deal.propertyImages.length > 0) {
+        deal.propertyImages.forEach(img => rawImagesList.push(typeof img === 'object' ? img.url : img));
+    } else if (Array.isArray(deal.imagesDetail) && deal.imagesDetail.length > 0) {
+        deal.imagesDetail.forEach(img => rawImagesList.push(typeof img === 'object' ? img.url : img));
+    } else if (Array.isArray(deal.images) && deal.images.length > 0) {
         deal.images.forEach(img => rawImagesList.push(typeof img === 'object' ? img.url : img));
     } else if (Array.isArray(deal.inventoryImages) && deal.inventoryImages.length > 0) {
         deal.inventoryImages.forEach(img => rawImagesList.push(typeof img === 'object' ? img.url : img));
@@ -137,7 +144,11 @@ const mapDealToProperty = (deal) => {
 
     // Now for videos
     let rawVideosList = [];
-    if (Array.isArray(deal.videos) && deal.videos.length > 0) {
+    if (Array.isArray(deal.propertyVideos) && deal.propertyVideos.length > 0) {
+        deal.propertyVideos.forEach(vid => rawVideosList.push(typeof vid === 'object' ? vid.url : vid));
+    } else if (Array.isArray(deal.videosDetail) && deal.videosDetail.length > 0) {
+        deal.videosDetail.forEach(vid => rawVideosList.push(typeof vid === 'object' ? vid.url : vid));
+    } else if (Array.isArray(deal.videos) && deal.videos.length > 0) {
         deal.videos.forEach(vid => rawVideosList.push(typeof vid === 'object' ? vid.url : vid));
     } else if (Array.isArray(deal.inventoryVideos) && deal.inventoryVideos.length > 0) {
         deal.inventoryVideos.forEach(vid => rawVideosList.push(typeof vid === 'object' ? vid.url : vid));

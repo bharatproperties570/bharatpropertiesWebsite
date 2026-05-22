@@ -18,19 +18,28 @@ const FeaturedProjects = ({ city = '', initialData = [] }) => {
         { id: 'Pre-launched', label: '✨ Pre-launched' }
     ];
 
+    const isFirstRender = useRef(true);
+
     useEffect(() => {
+        if (isFirstRender.current && initialData && initialData.length > 0) {
+            isFirstRender.current = false;
+            return;
+        }
+
         const loadProjects = async () => {
-            if (activeTab === 'All' && initialData.length > 0 && projects === initialData) {
-                setLoading(false);
-                return;
-            }
             setLoading(true);
-            const data = await fetchFeaturedProjects(activeTab, city);
-            setProjects(data);
-            setLoading(false);
+            try {
+                const data = await fetchFeaturedProjects(activeTab, city);
+                setProjects(data);
+            } catch (err) {
+                console.error('Failed to load featured projects', err);
+                setProjects([]);
+            } finally {
+                setLoading(false);
+            }
         };
         loadProjects();
-    }, [activeTab, city, initialData, projects]);
+    }, [activeTab, city]);
 
     return (
         <section className="featured-projects-section">

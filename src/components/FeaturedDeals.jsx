@@ -6,7 +6,7 @@ import { useRouter } from 'next/navigation';
 import { ChevronLeft, ChevronRight } from 'lucide-react';
 import './FeaturedDeals.css';
 
-const FeaturedDeals = ({ city = '', initialData = [] }) => {
+const FeaturedDeals = ({ city = '', initialData = [], ownerInfo = {} }) => {
     const [activeTab, setActiveTab] = useState('hot');
     const [deals, setDeals] = useState(initialData);
     const [loading, setLoading] = useState(initialData.length === 0);
@@ -19,27 +19,40 @@ const FeaturedDeals = ({ city = '', initialData = [] }) => {
         { id: 'cheapest', label: '💰 Cheapest Deal' }
     ];
 
+    const isFirstRender = useRef(true);
+
     useEffect(() => {
+        const { unitNumber, mobile, name } = ownerInfo || {};
+        
+        if (isFirstRender.current && initialData && initialData.length > 0) {
+            isFirstRender.current = false;
+            return;
+        }
+
         const loadDeals = async () => {
-            if (activeTab === 'hot' && initialData.length > 0 && deals === initialData) {
-                setLoading(false);
-                return;
-            }
-            
             setLoading(true);
-            const data = await fetchFeaturedDeals(activeTab, city);
-            
-            if (activeTab === 'hot' && data.length === 0) {
-                setActiveTab('latest');
-                return;
+            try {
+                const data = await fetchFeaturedDeals(activeTab, city);
+                const hasFilter = unitNumber || mobile || name;
+                const filtered = hasFilter ? data.filter((deal) => {
+                    const dealUnit = deal.unitNumber || deal.unit || deal.unitNo || '';
+                    const dealMobile = deal.mobile || deal.contactMobile || '';
+                    const dealName = deal.contactName || deal.name || '';
+                    const matchUnit = unitNumber && String(dealUnit) === String(unitNumber);
+                    const matchMobile = mobile && String(dealMobile) === String(mobile);
+                    const matchName = name && String(dealName).toLowerCase() === String(name).toLowerCase();
+                    return matchUnit || matchMobile || matchName;
+                }) : data;
+                setDeals(filtered);
+            } catch (err) {
+                console.error('Failed to load featured deals', err);
+                setDeals([]);
+            } finally {
+                setLoading(false);
             }
-            
-            setDeals(data);
-            setLoading(false);
         };
         loadDeals();
-        // eslint-disable-next-line react-hooks/exhaustive-deps
-    }, [activeTab, city, initialData]);
+    }, [activeTab, city, ownerInfo?.unitNumber, ownerInfo?.mobile, ownerInfo?.name]);
 
     const scroll = (direction) => {
         if (scrollRef.current) {

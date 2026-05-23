@@ -3,13 +3,16 @@
 /* global process */
 export default async function handler(req, res) {
   const apiBaseUrl = process.env.CRM_API_BASE_URL || 'https://api.bharatproperties.co/api/public';
-  const apiKey = process.env.CRM_API_KEY;
-  const path = req.url.replace(/^\/api\/public/, '');
-  const apiUrl = `${apiBaseUrl}${path}`;
+  const apiKey = process.env.CRM_API_KEY || 'BP-WEB-INTEGRATION-2026-X7Y9';
+  const slugPath = req.query.slug ? '/' + (Array.isArray(req.query.slug) ? req.query.slug.join('/') : req.query.slug) : '';
+  const queryString = req.url.includes('?') ? req.url.substring(req.url.indexOf('?')) : '';
+  const apiUrl = `${apiBaseUrl}${slugPath}${queryString}`;
   try {
     const headers = { ...req.headers };
     delete headers.host;
     delete headers.connection;
+    delete headers['x-api-key'];
+    delete headers.authorization;
 
     const response = await fetch(apiUrl, {
       method: req.method,

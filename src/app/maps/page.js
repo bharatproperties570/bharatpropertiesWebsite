@@ -44,10 +44,7 @@ export default function MapsPage() {
                             height: '100%',
                             transition: 'transform 0.2s',
                             cursor: 'pointer',
-                        }}
-                        onMouseEnter={(e) => e.currentTarget.style.transform = 'translateY(-5px)'}
-                        onMouseLeave={(e) => e.currentTarget.style.transform = 'translateY(0)'}
-                        >
+                        }}>
                             <div style={{ 
                                 backgroundColor: 'var(--color-gold, #fbbf24)', 
                                 width: '50px', 

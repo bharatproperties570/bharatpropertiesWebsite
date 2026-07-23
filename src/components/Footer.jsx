@@ -32,7 +32,7 @@ const Footer = ({ onPrivacyClick, onTermsClick, onCalculatorClick, onAboutClick 
                             EMI Calculator
                         </button>
                         <a href="#featured">Featured Properties</a>
-                        <a href="/Huda_Map_Book_KKR.pdf" target="_blank" rel="noopener noreferrer">Map Download</a>
+                        <a href="/maps" style={{ textDecoration: 'none', color: 'inherit' }}>Map Downloads</a>
                         <button onClick={onAboutClick} style={{ background: 'none', border: 'none', color: 'inherit', textAlign: 'left', cursor: 'pointer', padding: 0, fontSize: 'inherit', fontFamily: 'inherit' }}>
                             About Us
                         </button>

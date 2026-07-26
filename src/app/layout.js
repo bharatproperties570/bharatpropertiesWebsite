@@ -26,6 +26,16 @@ export const metadata = {
         card: 'summary_large_image',
         title: 'Bharat Properties | Premium Real Estate',
         description: 'Discover luxury properties in North India.',
+    },
+    icons: {
+        icon: [
+            { url: '/favicon-light.png', media: '(prefers-color-scheme: light)' },
+            { url: '/favicon-dark.png', media: '(prefers-color-scheme: dark)' }
+        ],
+        apple: [
+            { url: '/favicon-light.png', media: '(prefers-color-scheme: light)' },
+            { url: '/favicon-dark.png', media: '(prefers-color-scheme: dark)' }
+        ]
     }
 }
 

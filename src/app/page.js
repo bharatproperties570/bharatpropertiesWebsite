@@ -1,10 +1,9 @@
 import React from 'react';
+import dynamic from 'next/dynamic';
 import HeroSection from '../components/BP_Hero_Final_v4';
 import SearchBarOverlay from '../components/SearchBarOverlay';
 import CityGrid from '../components/CityGrid';
 import ReviewsSection from '../components/ReviewsSection';
-import OfficeInfo from '../components/OfficeInfo';
-import MarketTrends from '../components/MarketTrends';
 import NewsSection from '../components/NewsSection';
 import { AboutSection, ContactSection } from '../components/Sections';
 import FeaturedDeals from '../components/FeaturedDeals';
@@ -14,6 +13,13 @@ import FAQ from '../components/FAQ';
 import { FAQS } from '../content/faqs';
 import { fetchFeaturedDeals, fetchFeaturedProjects, fetchGoogleReviews } from '../services/crmService';
 import { fetchRealEstateNews } from '../services/NewsService';
+
+const OfficeInfo = dynamic(() => import('../components/OfficeInfo'), {
+    loading: () => <div style={{ minHeight: '400px' }} />,
+});
+const MarketTrends = dynamic(() => import('../components/MarketTrends'), {
+    loading: () => <div style={{ minHeight: '300px' }} />,
+});
 
 // Incremental static regeneration: fast, cacheable HTML that still refreshes from the CRM.
 export const revalidate = 300;

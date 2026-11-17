@@ -9,8 +9,21 @@ const Hero = ({ onSearch, city, videos, image }) => {
     const [searchType, setSearchType] = React.useState('Buy'); // Buy, Rent, Commercial
     const [videoIndex, setVideoIndex] = React.useState(0);
     const [videoError, setVideoError] = React.useState(false);
+    const [canPlayVideo, setCanPlayVideo] = React.useState(false);
     const defaultVideos = ["https://cdn.pixabay.com/video/2025/03/04/262412_large.mp4"];
     const currentVideos = (videos && videos.length > 0) ? videos : defaultVideos;
+
+    React.useEffect(() => {
+        if (typeof window === 'undefined') return;
+        const prefersReducedMotion = window.matchMedia && window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+        const nav = typeof navigator !== 'undefined' ? navigator : null;
+        const conn = nav?.connection || nav?.mozConnection || nav?.webkitConnection;
+        const isSlow = conn && (conn.saveData || /2g/i.test(conn.effectiveType));
+
+        if (!prefersReducedMotion && !isSlow) {
+            setCanPlayVideo(true);
+        }
+    }, []);
 
     // Reset error when city changes
     React.useEffect(() => {
@@ -43,11 +56,12 @@ const Hero = ({ onSearch, city, videos, image }) => {
             backgroundColor: '#1a1a1a'
         }}>
             {/* Background Image / Video with Fallback */}
-            {(!videoError && currentVideos.length > 0) ? (
+            {(!videoError && canPlayVideo && currentVideos.length > 0) ? (
                 <video
                     key={`${city}-${videoIndex}`}
                     autoPlay
                     muted
+                    preload="metadata"
                     onEnded={handleVideoEnd}
                     onError={handleVideoError}
                     playsInline

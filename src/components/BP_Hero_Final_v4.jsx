@@ -12,6 +12,19 @@ const HERO_VIDEOS = [
 const HeroSection = ({ onExplore }) => {
     const [videoIndex, setVideoIndex] = React.useState(0);
     const [isLoaded, setIsLoaded] = React.useState(false);
+    const [canPlayVideo, setCanPlayVideo] = React.useState(false);
+
+    React.useEffect(() => {
+        if (typeof window === 'undefined') return;
+        const prefersReducedMotion = window.matchMedia && window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+        const nav = typeof navigator !== 'undefined' ? navigator : null;
+        const conn = nav?.connection || nav?.mozConnection || nav?.webkitConnection;
+        const isSlow = conn && (conn.saveData || /2g/i.test(conn.effectiveType));
+
+        if (!prefersReducedMotion && !isSlow) {
+            setCanPlayVideo(true);
+        }
+    }, []);
 
     const defaultExplore = () => {
         const el = document.getElementById('cities');
@@ -21,6 +34,8 @@ const HeroSection = ({ onExplore }) => {
     const handleVideoEnd = () => {
         setVideoIndex((prev) => (prev + 1) % HERO_VIDEOS.length);
     };
+
+    const posterUrl = "https://images.unsplash.com/photo-1512917774080-9991f1c4c750?auto=format&fit=crop&w=1200&q=80";
 
     return (
         <div style={{
@@ -33,42 +48,47 @@ const HeroSection = ({ onExplore }) => {
             marginTop: '-80px',
             overflow: 'hidden'
         }}>
-            {/* Video Background */}
-            <video
-                key={HERO_VIDEOS[videoIndex]}
-                autoPlay
-                muted
-                loop={false}
-                onEnded={handleVideoEnd}
-                onCanPlay={() => setIsLoaded(true)}
-                playsInline
-                aria-hidden="true"
-                style={{
-                    position: 'absolute',
-                    top: '50%',
-                    left: '50%',
-                    minWidth: '100%',
-                    minHeight: '100%',
-                    width: 'auto',
-                    height: 'auto',
-                    transform: 'translate(-50%, -50%)',
-                    objectFit: 'cover',
-                    zIndex: 0,
-                    opacity: isLoaded ? 1 : 0,
-                    transition: 'opacity 1s ease-in-out'
-                }}
-            >
-                <source src={HERO_VIDEOS[videoIndex]} type="video/mp4" />
-            </video>
+            {/* Video Background (only for capable connections without reduced-motion) */}
+            {canPlayVideo && (
+                <video
+                    key={HERO_VIDEOS[videoIndex]}
+                    autoPlay
+                    muted
+                    loop={false}
+                    preload="metadata"
+                    poster={posterUrl}
+                    onEnded={handleVideoEnd}
+                    onCanPlay={() => setIsLoaded(true)}
+                    playsInline
+                    aria-hidden="true"
+                    style={{
+                        position: 'absolute',
+                        top: '50%',
+                        left: '50%',
+                        minWidth: '100%',
+                        minHeight: '100%',
+                        width: 'auto',
+                        height: 'auto',
+                        transform: 'translate(-50%, -50%)',
+                        objectFit: 'cover',
+                        zIndex: 0,
+                        opacity: isLoaded ? 1 : 0,
+                        transition: 'opacity 1s ease-in-out'
+                    }}
+                >
+                    <source src={HERO_VIDEOS[videoIndex]} type="video/mp4" />
+                </video>
+            )}
 
             {/* Poster using next/image for optimization */}
-            {!isLoaded && (
+            {(!isLoaded || !canPlayVideo) && (
                 <div style={{ position: 'absolute', inset: 0, zIndex: -1 }}>
                     <Image 
-                        src="https://images.unsplash.com/photo-1512917774080-9991f1c4c750?auto=format&fit=crop&w=1200&q=80"
-                        alt="Real Estate Background"
+                        src={posterUrl}
+                        alt="Bharat Properties Luxury Real Estate"
                         fill
                         priority
+                        sizes="100vw"
                         style={{ objectFit: 'cover' }}
                     />
                 </div>

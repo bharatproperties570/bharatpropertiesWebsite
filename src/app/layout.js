@@ -10,7 +10,7 @@ import '../styles/global.css'
 import '../styles/variables.css'
 import { SITE_URL, SITE_NAME, DEFAULT_OG_IMAGE } from '../lib/seo'
 
-const outfit = Outfit({ subsets: ['latin'] })
+const outfit = Outfit({ subsets: ['latin'], display: 'swap' })
 
 export const metadata = {
     metadataBase: new URL(SITE_URL),

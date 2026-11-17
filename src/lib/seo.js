@@ -3,7 +3,7 @@
 
 export const SITE_URL = (process.env.NEXT_PUBLIC_SITE_URL || 'https://www.bharatproperties.co').replace(/\/$/, '');
 export const SITE_NAME = 'Bharat Properties';
-export const DEFAULT_OG_IMAGE = '/assets/logo-main.png';
+export const DEFAULT_OG_IMAGE = '/opengraph-image';
 export const PHONE = '+91-9991333570';
 
 // Verified from src/app/locations/page.js. Add postalCode / per-branch phone once confirmed.

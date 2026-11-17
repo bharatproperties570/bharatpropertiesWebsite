@@ -75,19 +75,26 @@ const PropertyHeader = ({ property, onBookConsultation }) => {
                 justifyContent: 'center',
                 overflow: 'hidden'
             }}>
-                {/* Background Image */}
+                {/* Background Image / Placeholder */}
                 <div style={{
                     position: 'absolute',
                     inset: 0,
-                    backgroundImage: `url(${
-                        property.image ||
+                    ...(property.image ||
                         (typeof property.media?.[0] === 'object' ? property.media?.[0]?.url : property.media?.[0]) || 
-                        (typeof property.images?.[0] === 'object' ? property.images?.[0]?.url : property.images?.[0]) || 
-                        'https://images.unsplash.com/photo-1512917774080-9991f1c4c750?auto=format&fit=crop&q=80&w=2000'
-                    })`,
-                    backgroundSize: 'cover',
-                    backgroundPosition: 'center',
-                    transform: 'scale(1.02)'
+                        (typeof property.images?.[0] === 'object' ? property.images?.[0]?.url : property.images?.[0])
+                        ? {
+                            backgroundImage: `url(${
+                                property.image ||
+                                (typeof property.media?.[0] === 'object' ? property.media?.[0]?.url : property.media?.[0]) || 
+                                (typeof property.images?.[0] === 'object' ? property.images?.[0]?.url : property.images?.[0])
+                            })`,
+                            backgroundSize: 'cover',
+                            backgroundPosition: 'center',
+                            transform: 'scale(1.02)'
+                        }
+                        : {
+                            background: 'linear-gradient(135deg, #0F172A 0%, #1E293B 100%)'
+                        })
                 }}>
                     <div style={{
                         position: 'absolute',

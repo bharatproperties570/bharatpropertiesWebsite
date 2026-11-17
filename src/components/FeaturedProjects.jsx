@@ -71,7 +71,7 @@ const FeaturedProjects = ({ city = '', initialData = [] }) => {
                                             {project.image ? (
                                                 <img 
                                                     src={project.image} 
-                                                    alt={project.name} 
+                                                    alt={`${project.name}${project.category ? ` - ${project.category}` : ''}${project.location ? ` in ${project.location}` : ''}`} 
                                                     className="project-image"
                                                     style={{ width: '100%', height: '100%', objectFit: 'cover' }}
                                                     referrerPolicy="no-referrer"

@@ -524,7 +524,7 @@ export const fetchFeaturedProjects = async (status = '', city = '') => {
             developer: p.developerName,
             location: p.address?.city?.lookup_value || (typeof p.address?.city === 'string' ? p.address.city : null) || p.locationSearch || 'Unknown',
             status: p.status?.lookup_value || p.status || 'Active',
-            image: fixDriveUrl(p.websiteMetadata?.featuredImage || p.projectImages?.find(img => img.category === 'Main' || img.category === 'main')?.url || p.projectImages?.find(img => img.category === 'Main' || img.category === 'main')?.path || p.projectImages?.[0]?.url || p.projectImages?.[0]?.path) || 'https://images.unsplash.com/photo-1486406146926-c627a92ad1ab?auto=format&fit=crop&q=80&w=1000',
+            image: fixDriveUrl(p.websiteMetadata?.featuredImage || p.projectImages?.find(img => img.category === 'Main' || img.category === 'main')?.url || p.projectImages?.find(img => img.category === 'Main' || img.category === 'main')?.path || p.projectImages?.[0]?.url || p.projectImages?.[0]?.path) || null,
             price: p.pricing?.basePrice?.amount ? `${p.pricing.basePrice.amount} ${p.pricing.basePrice.unit}` : 'Contact for Price'
         }));
         cache.featuredProjects = { data: result, expiry: now + CACHE_TTL_MS };

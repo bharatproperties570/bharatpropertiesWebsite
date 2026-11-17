@@ -13,13 +13,15 @@ export default async function handler(req, res) {
     delete headers.connection;
     delete headers['x-api-key'];
     delete headers.authorization;
+    delete headers.cookie;
+    delete headers['content-length'];
 
     const response = await fetch(apiUrl, {
       method: req.method,
       headers: {
+        ...headers,
         'Content-Type': 'application/json',
         ...(apiKey ? { Authorization: `Bearer ${apiKey}`, 'X-API-KEY': apiKey } : {}),
-        ...headers,
       },
       body: req.method !== 'GET' && req.method !== 'HEAD' ? JSON.stringify(req.body) : undefined,
     });

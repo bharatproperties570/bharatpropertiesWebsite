@@ -1,50 +1,62 @@
-'use client';
-
-import React, { useEffect } from 'react';
-import { useParams, useRouter, notFound } from 'next/navigation';
+import { notFound } from 'next/navigation';
 import { CITY_DATA } from '../../data/cityData';
-import Hero from '../../components/Hero';
-import CityShowcase from '../../components/CityShowcase';
-import { useGlobal } from '../../context/GlobalContext';
-import { MapPin } from 'lucide-react';
-import FeaturedDeals from '../../components/FeaturedDeals';
-import FeaturedProjects from '../../components/FeaturedProjects';
-import NewsSection from '../../components/NewsSection';
+import { SEO_DATA } from '../../data/seoData';
+import { citySlug, cleanText, absoluteUrl, breadcrumbSchema, jsonLd } from '../../lib/seo';
+import CityPageClient from './CityPageClient';
 
-export default function CityPage() {
-    const params = useParams();
-    const router = useRouter();
-    const cityName = decodeURIComponent(params.cityName);
-    const { setSelectedCity } = useGlobal();
+export const revalidate = 3600;
 
-    useEffect(() => {
-        if (cityName) setSelectedCity(cityName);
-    }, [cityName, setSelectedCity]);
+export function generateStaticParams() {
+    return CITY_DATA.map((c) => ({ cityName: citySlug(c.name) }));
+}
 
-    const cityData = CITY_DATA.find(c => c.name.toLowerCase() === cityName.toLowerCase());
-    if (!cityData) {
-        notFound();
-    }
+// Accepts "Kurukshetra", "kurukshetra", "new-chandigarh" and "New%20Chandigarh".
+const findCity = (param) => {
+    let value = param;
+    try { value = decodeURIComponent(param); } catch { /* keep raw */ }
+    const key = value.toLowerCase().trim().replace(/-/g, ' ');
+    return CITY_DATA.find((c) => c.name.toLowerCase() === key);
+};
 
-    const handleSearch = (term) => {
-        if (term) router.push(`/search?q=${term}`);
+export async function generateMetadata({ params }) {
+    const { cityName } = await params;
+    const city = findCity(cityName);
+    if (!city) return { title: 'Page not found', robots: { index: false, follow: false } };
+
+    const seo = SEO_DATA.CITIES?.[city.name];
+    const path = `/${citySlug(city.name)}`;
+    const title = seo?.title
+        ? { absolute: seo.title }
+        : `Property in ${city.name} - Plots, Flats & New Projects`;
+    const description =
+        cleanText(seo?.description, 160) ||
+        `Browse residential and commercial properties, plots and new projects in ${city.name} with Bharat Properties. ${cleanText(city.description)}.`;
+    const ogTitle = seo?.title || `Property in ${city.name}`;
+    const image = absoluteUrl(city.image);
+
+    return {
+        title,
+        description,
+        alternates: { canonical: path },
+        openGraph: { title: ogTitle, description, url: path, type: 'website', images: image ? [{ url: image, alt: `${city.name} real estate` }] : undefined },
+        twitter: { card: 'summary_large_image', title: ogTitle, description, images: image ? [image] : undefined },
     };
+}
+
+export default async function CityPage({ params }) {
+    const { cityName } = await params;
+    const city = findCity(cityName);
+    if (!city) notFound();
+
+    const crumbs = breadcrumbSchema([
+        { name: 'Home', path: '/' },
+        { name: city.name, path: `/${citySlug(city.name)}` },
+    ]);
 
     return (
         <>
-            <Hero
-                onSearch={handleSearch}
-                city={cityName}
-                videos={cityData?.videos}
-                image={cityData?.image}
-            />
-
-            <FeaturedDeals city={cityName} />
-            <FeaturedProjects city={cityName} />
-            
-            <CityShowcase city={cityData} />
-
-            <NewsSection city={cityName} />
+            <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: jsonLd(crumbs) }} />
+            <CityPageClient cityData={city} />
         </>
-    )
+    );
 }

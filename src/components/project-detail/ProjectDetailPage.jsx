@@ -9,16 +9,21 @@ import ImageGallery from './ImageGallery';
 import ProjectLocation from './ProjectLocation';
 import ProjectDeals from './ProjectDeals';
 
-import SEO from '../SEO';
 import { fetchProjectBySlug } from '../../services/crmService';
 import SkeletonLoader from '../SkeletonLoader';
 
-const ProjectDetailPage = ({ projectId, onBookConsultation, onAddToCompare }) => {
-    const [project, setProject] = useState(null);
-    const [loading, setLoading] = useState(true);
+const ProjectDetailPage = ({ projectId, initialProject = null, onBookConsultation, onAddToCompare }) => {
+    const [project, setProject] = useState(initialProject);
+    const [loading, setLoading] = useState(!initialProject);
 
     useEffect(() => {
         window.scrollTo(0, 0);
+        // Server already supplied the project (SSR/ISR): skip the client round-trip.
+        if (initialProject) {
+            setProject(initialProject);
+            setLoading(false);
+            return;
+        }
         const fetchProject = async () => {
             try {
                 setLoading(true);
@@ -36,7 +41,7 @@ const ProjectDetailPage = ({ projectId, onBookConsultation, onAddToCompare }) =>
         if (projectId) {
             fetchProject();
         }
-    }, [projectId]);
+    }, [projectId, initialProject]);
 
     if (loading) {
         return <SkeletonLoader type="detail" />;
@@ -56,11 +61,6 @@ const ProjectDetailPage = ({ projectId, onBookConsultation, onAddToCompare }) =>
 
     return (
         <div style={{ backgroundColor: '#fff', minHeight: '100vh', scrollBehavior: 'smooth' }}>
-            <SEO
-                title={project.seo?.title || `${project.name} | ${project.address?.city} | Bharat Properties`}
-                description={project.seo?.description || project.overview?.substring(0, 160) || `Discover ${project.name}, a premium real estate project.`}
-                keywords={project.seo?.tags?.join(', ') || `${project.name}, Real Estate Project, ${project.address?.city}`}
-            />
             {/* Project Header (Sticky) */}
             <ProjectHeader
                 project={project}

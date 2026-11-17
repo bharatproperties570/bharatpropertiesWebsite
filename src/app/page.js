@@ -9,10 +9,11 @@ import NewsSection from '../components/NewsSection';
 import { AboutSection, ContactSection } from '../components/Sections';
 import FeaturedDeals from '../components/FeaturedDeals';
 import FeaturedProjects from '../components/FeaturedProjects';
+import { organizationGraph, jsonLd } from '../lib/seo';
 import { fetchFeaturedDeals, fetchFeaturedProjects } from '../services/crmService';
 
-export const dynamic = 'force-dynamic';
-export const revalidate = 0;
+// Incremental static regeneration: fast, cacheable HTML that still refreshes from the CRM.
+export const revalidate = 300;
 
 export default async function HomePage() {
     // Parallel fetching on server
@@ -23,6 +24,7 @@ export default async function HomePage() {
 
     return (
         <div id="bp-root-v4-5-definitive-sync">
+            <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: jsonLd(organizationGraph()) }} />
             <HeroSection /> {/* v4.5-FINAL-SYNC */}
             <SearchBarOverlay />
             

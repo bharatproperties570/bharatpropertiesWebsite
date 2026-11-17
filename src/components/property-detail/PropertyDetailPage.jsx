@@ -7,17 +7,22 @@ import PropertyLocation from './PropertyLocation';
 import PropertyMedia from './PropertyMedia';
 import SiteVisitForm from '../project-detail/SiteVisitForm';
 import NewsSection from '../NewsSection';
-import SEO from '../SEO';
 // No static imports anymore
 import { fetchListingBySlug } from '../../services/crmService';
 import SkeletonLoader from '../SkeletonLoader';
 
-const PropertyDetailPage = ({ propertyId, onAddToCompare, onBookConsultation }) => {
-    const [property, setProperty] = useState(null);
-    const [loading, setLoading] = useState(true);
+const PropertyDetailPage = ({ propertyId, initialProperty = null, onAddToCompare, onBookConsultation }) => {
+    const [property, setProperty] = useState(initialProperty);
+    const [loading, setLoading] = useState(!initialProperty);
 
     useEffect(() => {
         window.scrollTo(0, 0);
+        // Server already supplied the listing (SSR/ISR): skip the client round-trip.
+        if (initialProperty) {
+            setProperty(initialProperty);
+            setLoading(false);
+            return;
+        }
         const fetchProperty = async () => {
             setLoading(true);
             try {
@@ -36,7 +41,7 @@ const PropertyDetailPage = ({ propertyId, onAddToCompare, onBookConsultation }) 
             }
         };
         fetchProperty();
-    }, [propertyId]);
+    }, [propertyId, initialProperty]);
 
     if (loading) {
         return <SkeletonLoader type="detail" />;
@@ -54,11 +59,6 @@ const PropertyDetailPage = ({ propertyId, onAddToCompare, onBookConsultation }) 
 
     return (
         <div style={{ backgroundColor: '#fff', minHeight: '100vh' }}>
-            <SEO
-                title={String(property.seo?.title || `${property.title || property.unitName || 'Premium Property'} | ${property.location?.city || ''} | Bharat Properties`)}
-                description={String(property.seo?.description || property.description?.substring(0, 160) || `Exclusive property at ${property.price}. Contact Bharat Properties.`)}
-                keywords={String(property.seo?.tags?.join(', ') || 'Real Estate, Bharat Properties')}
-            />
             {/* Full Bleed Header */}
             <PropertyHeader
                 property={property}

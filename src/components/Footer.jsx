@@ -2,7 +2,7 @@ import React from 'react';
 import { Facebook, Instagram, Twitter, Mail, Phone, MapPin } from 'lucide-react';
 import logo from '../assets/logo.png';
 
-const Footer = ({ onPrivacyClick, onTermsClick, onCalculatorClick, onAboutClick }) => {
+const Footer = () => {
     return (
         <footer style={{ backgroundColor: 'var(--color-primary)', color: 'white', padding: '4rem 0 2rem' }}>
             <div className="container" style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(250px, 1fr))', gap: '3rem' }}>
@@ -27,23 +27,23 @@ const Footer = ({ onPrivacyClick, onTermsClick, onCalculatorClick, onAboutClick 
                 <div>
                     <h4 style={{ marginBottom: '1.5rem', color: 'white' }}>Quick Links</h4>
                     <div style={{ display: 'flex', flexDirection: 'column', gap: '0.8rem', opacity: 0.8 }}>
-                        <a href="#">Home</a>
-                        <button onClick={onCalculatorClick} style={{ background: 'none', border: 'none', color: 'inherit', textAlign: 'left', cursor: 'pointer', padding: 0, fontSize: 'inherit', fontFamily: 'inherit' }}>
+                        <a href="/">Home</a>
+                        <a href="/calculator" style={{ textDecoration: 'none', color: 'inherit' }}>
                             EMI Calculator
-                        </button>
+                        </a>
                         <a href="#featured">Featured Properties</a>
                         <a href="/maps" style={{ textDecoration: 'none', color: 'inherit' }}>Map Downloads</a>
-                        <button onClick={onAboutClick} style={{ background: 'none', border: 'none', color: 'inherit', textAlign: 'left', cursor: 'pointer', padding: 0, fontSize: 'inherit', fontFamily: 'inherit' }}>
+                        <a href="/about" style={{ textDecoration: 'none', color: 'inherit' }}>
                             About Us
-                        </button>
+                        </a>
                         <a href="#agents">Our Agents</a>
                         <a href="#blog">Market News</a>
-                        <button onClick={onPrivacyClick} style={{ background: 'none', border: 'none', color: 'inherit', textAlign: 'left', cursor: 'pointer', padding: 0, fontSize: 'inherit', fontFamily: 'inherit' }}>
+                        <a href="/privacy" style={{ textDecoration: 'none', color: 'inherit' }}>
                             Privacy Policy
-                        </button>
-                        <button onClick={onTermsClick} style={{ background: 'none', border: 'none', color: 'inherit', textAlign: 'left', cursor: 'pointer', padding: 0, fontSize: 'inherit', fontFamily: 'inherit' }}>
+                        </a>
+                        <a href="/terms" style={{ textDecoration: 'none', color: 'inherit' }}>
                             Terms & Conditions
-                        </button>
+                        </a>
                     </div>
                 </div>
 

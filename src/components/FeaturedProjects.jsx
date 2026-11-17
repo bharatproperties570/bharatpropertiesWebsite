@@ -103,9 +103,9 @@ const FeaturedProjects = ({ city = '', initialData = [] }) => {
                                                 <MapPin size={16} />
                                                 <span>{project.location}</span>
                                             </div>
-                                            <button className="view-details-btn" onClick={() => window.location.href = `/project/${project.id}`}>
+                                            <a className="view-details-btn" href={`/project/${project.slug || project.id}`} aria-label={`View details of ${project.name}`} style={{ textDecoration: 'none' }}>
                                                 View Details <ChevronRight size={18} />
-                                            </button>
+                                            </a>
                                         </div>
                                     </div>
                                 </div>

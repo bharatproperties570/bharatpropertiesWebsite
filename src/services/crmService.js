@@ -13,13 +13,17 @@ const isServer = typeof window === 'undefined';
 const API_URL = isServer
     ? (process.env.CRM_API_BASE_URL || (isProd ? 'https://api.bharatproperties.co/api/public' : 'http://localhost:4000/api/public'))
     : (process.env.NEXT_PUBLIC_CRM_API_URL || '/api/public');
+// Fallback provided for local dev and legacy deployments; prefer setting CRM_API_KEY env.
 const API_KEY = process.env.CRM_API_KEY || 'BP-WEB-INTEGRATION-2026-X7Y9';
+if (isServer && !API_KEY) {
+    console.warn('[crmService] CRM_API_KEY is not set - CRM requests will be rejected.');
+}
 
 const crmApi = axios.create({
     baseURL: API_URL,
     headers: {
         'Content-Type': 'application/json',
-        'X-API-KEY': API_KEY
+        ...(API_KEY ? { 'X-API-KEY': API_KEY } : {})
     }
 });
 
@@ -445,27 +449,27 @@ export const fetchProjects = async () => {
 
 export const fetchProjectBySlug = async (slug) => {
     try {
-        const response = await crmApi.get(`/projects/${slug}`);
-        if (response.data.data) {
-            return mapProjectToWebProject(response.data.data);
-        }
-        return null;
+        const response = await crmApi.get(`/projects/${encodeURIComponent(slug)}`);
+        return response.data.data ? mapProjectToWebProject(response.data.data) : null;
     } catch (error) {
-        console.error(`Error fetching project with slug ${slug}:`, error);
-        return null;
+        const status = error?.response?.status;
+        if (status && status >= 400 && status < 500) return null; // genuinely missing
+        console.error(`Error fetching project with slug ${slug}:`, error?.message || error);
+        // Network / 5xx: surface a clean error (never report an outage as "not found").
+        throw new Error(`CRM request failed for ${slug}: ${error?.message || 'unknown error'}`);
     }
 };
 
 export const fetchListingBySlug = async (slug) => {
     try {
-        const response = await crmApi.get(`/listings/${slug}`);
-        if (response.data.data) {
-            return mapDealToProperty(response.data.data);
-        }
-        return null;
+        const response = await crmApi.get(`/listings/${encodeURIComponent(slug)}`);
+        return response.data.data ? mapDealToProperty(response.data.data) : null;
     } catch (error) {
-        console.error(`Error fetching listing with slug ${slug}:`, error);
-        return null;
+        const status = error?.response?.status;
+        if (status && status >= 400 && status < 500) return null; // genuinely missing
+        console.error(`Error fetching listing with slug ${slug}:`, error?.message || error);
+        // Network / 5xx: surface a clean error (never report an outage as "not found").
+        throw new Error(`CRM request failed for ${slug}: ${error?.message || 'unknown error'}`);
     }
 };
 
@@ -516,6 +520,7 @@ export const fetchFeaturedProjects = async (status = '', city = '') => {
         const projects = response.data.data || [];
         const result = projects.map(p => ({
             id: p._id,
+            slug: p.websiteMetadata?.slug || p._id,
             name: p.name,
             developer: p.developerName,
             location: p.address?.city?.lookup_value || (typeof p.address?.city === 'string' ? p.address.city : null) || p.locationSearch || 'Unknown',

@@ -114,6 +114,7 @@ const FeaturedDeals = ({ city = '', initialData = [], ownerInfo = {} }) => {
                                             property={deal} 
                                             onClick={() => router.push(`/property/${deal.slug || deal.id}`)}
                                         />
+                                        <a href={`/property/${deal.slug || deal.id}`} style={{ position: 'absolute', width: 1, height: 1, overflow: 'hidden', clip: 'rect(0 0 0 0)', whiteSpace: 'nowrap' }}>{deal.title || 'View property'}</a>
                                     </div>
                                 ))}
                             </div>

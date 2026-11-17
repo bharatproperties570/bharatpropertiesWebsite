@@ -8,24 +8,32 @@ import ConnectedFooter from '../components/ConnectedFooter'
 import ScrollReveal from '../components/ScrollReveal'
 import '../styles/global.css'
 import '../styles/variables.css'
+import { SITE_URL, SITE_NAME, DEFAULT_OG_IMAGE } from '../lib/seo'
 
 const outfit = Outfit({ subsets: ['latin'] })
 
 export const metadata = {
-    title: 'Bharat Properties | Premium Real Estate in North India',
-    description: 'Premier real estate consultancy in North India. Discover luxury homes, projects, and plots in Chandigarh, Mohali, Panchkula, and Kurukshetra.',
-    keywords: ['Real Estate', 'Chandigarh', 'Mohali', 'Panchkula', 'Luxury Homes', 'Property in North India', 'Bharat Properties'],
+    metadataBase: new URL(SITE_URL),
+    title: {
+        default: 'Bharat Properties | Real Estate in Kurukshetra, Mohali & Chandigarh',
+        template: '%s | Bharat Properties',
+    },
+    description: 'Bharat Properties is a real estate consultancy with offices in Kurukshetra and Mohali. Explore plots, flats, villas, commercial properties and new projects across Kurukshetra, Mohali, Chandigarh and Panchkula.',
+    alternates: { canonical: './' },
     openGraph: {
-        title: 'Bharat Properties | Premium Real Estate',
-        description: 'Discover luxury properties in North India with Bharat Properties.',
+        title: 'Bharat Properties | Real Estate in Kurukshetra, Mohali & Chandigarh',
+        description: 'Plots, flats, villas and new projects in Kurukshetra, Mohali, Chandigarh and Panchkula from a local real estate consultancy.',
         type: 'website',
         locale: 'en_IN',
-        siteName: 'Bharat Properties',
+        siteName: SITE_NAME,
+        url: '/',
+        images: [{ url: DEFAULT_OG_IMAGE, alt: SITE_NAME }],
     },
     twitter: {
         card: 'summary_large_image',
-        title: 'Bharat Properties | Premium Real Estate',
-        description: 'Discover luxury properties in North India.',
+        title: 'Bharat Properties | Real Estate in Kurukshetra, Mohali & Chandigarh',
+        description: 'Plots, flats, villas and new projects in Kurukshetra, Mohali, Chandigarh and Panchkula.',
+        images: [DEFAULT_OG_IMAGE],
     },
     icons: {
         icon: [
@@ -41,7 +49,7 @@ export const metadata = {
 
 export default function RootLayout({ children }) {
     return (
-        <html lang="en" suppressHydrationWarning>
+        <html lang="en-IN" suppressHydrationWarning>
             <body className={outfit.className} suppressHydrationWarning>
                 <GlobalProvider>
                     <ScrollReveal />

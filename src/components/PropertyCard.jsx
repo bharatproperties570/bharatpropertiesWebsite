@@ -202,7 +202,9 @@ const PropertyCard = ({ property, onClick }) => {
             <div style={{ padding: '1.75rem', flex: 1, display: 'flex', flexDirection: 'column' }}>
                 <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-start', marginBottom: '0.75rem' }}>
                     <h3 style={{ fontFamily: 'var(--font-heading)', fontSize: '1.35rem', color: 'var(--color-primary)', fontWeight: 700, lineHeight: 1.2 }}>
-                        {property.title}
+                        <a href={`/property/${encodeURIComponent(property.slug || property.id)}`} style={{ color: 'inherit', textDecoration: 'none' }}>
+                            {property.title}
+                        </a>
                     </h3>
                 </div>
 

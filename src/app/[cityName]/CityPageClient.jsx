@@ -9,7 +9,7 @@ import FeaturedDeals from '../../components/FeaturedDeals';
 import FeaturedProjects from '../../components/FeaturedProjects';
 import NewsSection from '../../components/NewsSection';
 
-export default function CityPageClient({ cityData }) {
+export default function CityPageClient({ cityData, initialNews = null }) {
     const router = useRouter();
     const cityName = cityData.name;
     const { setSelectedCity } = useGlobal();
@@ -33,10 +33,10 @@ export default function CityPageClient({ cityData }) {
 
             <FeaturedDeals city={cityName} />
             <FeaturedProjects city={cityName} />
-
+            
             <CityShowcase city={cityData} />
 
-            <NewsSection city={cityName} />
+            <NewsSection city={cityName} initialNews={initialNews} />
         </>
     );
 }

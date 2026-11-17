@@ -1,39 +1,39 @@
 'use client';
 import React from 'react';
-import { useRouter } from 'next/navigation';
 import { useGlobal } from '../context/GlobalContext';
 import { CITY_DATA } from '../data/cityData';
 import { ArrowRight } from 'lucide-react';
 import './CityTicker.css';
 
 const CityGrid = ({ onSelectCity }) => {
-    const router = useRouter();
     const { setSelectedCity } = useGlobal();
     const track = [...CITY_DATA, ...CITY_DATA];
 
-    const handleCityClick = (cityName) => {
-        if (onSelectCity) {
-            onSelectCity(cityName);
-        } else {
-            setSelectedCity(cityName);
-            router.push(`/${encodeURIComponent(cityName)}`);
-        }
+    const CityCard = ({ city }) => {
+        const slug = city.name.toLowerCase().replace(/\s+/g, '-');
+        return (
+            <a
+                href={`/${encodeURIComponent(slug)}`}
+                className="city-card-ticker"
+                style={{ textDecoration: 'none', color: 'inherit' }}
+                onClick={(e) => {
+                    setSelectedCity(city.name);
+                    if (onSelectCity) {
+                        e.preventDefault();
+                        onSelectCity(city.name);
+                    }
+                }}
+            >
+                <img src={city.image} alt={`${city.name} property deals - Bharat Properties`} loading="lazy" />
+                <div className="city-card-overlay">
+                    <h3>{city.name}</h3>
+                    <p style={{ display: 'flex', alignItems: 'center', gap: '8px' }}>
+                        {city.description} <ArrowRight size={16} />
+                    </p>
+                </div>
+            </a>
+        );
     };
-
-    const CityCard = ({ city }) => (
-        <div
-            className="city-card-ticker"
-            onClick={() => handleCityClick(city.name)}
-        >
-            <img src={city.image} alt={city.name} loading="lazy" />
-            <div className="city-card-overlay">
-                <h3>{city.name}</h3>
-                <p style={{ display: 'flex', alignItems: 'center', gap: '8px' }}>
-                    {city.description} <ArrowRight size={16} />
-                </p>
-            </div>
-        </div>
-    );
 
     const [isPaused, setIsPaused] = React.useState(false);
     const pauseTimer = React.useRef(null);

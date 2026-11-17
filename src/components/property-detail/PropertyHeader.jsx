@@ -126,7 +126,7 @@ const PropertyHeader = ({ property, onBookConsultation }) => {
                         letterSpacing: '-1px',
                         textShadow: '0 20px 40px rgba(0,0,0,0.3)'
                     }}>
-                        {property.availableString}
+                        {property.title || property.unitName || property.availableString}
                     </h1>
 
                     {/* Size Label • Sub Category (Unit Type) */}

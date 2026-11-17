@@ -64,14 +64,19 @@ const Header = ({ onLogoClick, selectedCity, onSelectCity, onPostProperty, onBoo
             `}</style>
             <div className="container" style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
                 {/* Logo */}
-                <div
-                    onClick={onLogoClick}
-                    role="button"
+                <a
+                    href="/"
+                    onClick={(e) => {
+                        if (onLogoClick) {
+                            e.preventDefault();
+                            onLogoClick();
+                        }
+                    }}
                     aria-label="Bharat Properties Home"
-                    style={{ fontFamily: 'var(--font-heading)', fontSize: '1.5rem', fontWeight: 700, display: 'flex', alignItems: 'center', gap: '0.75rem', cursor: 'pointer' }}>
+                    style={{ fontFamily: 'var(--font-heading)', fontSize: '1.5rem', fontWeight: 700, display: 'flex', alignItems: 'center', gap: '0.75rem', cursor: 'pointer', textDecoration: 'none', color: 'inherit' }}>
                     <Image src={logo} alt="Bharat Properties Logo" height={70} width={200} style={{ width: 'auto', height: '70px' }} priority />
                     <span>Bharat Properties</span>
-                </div>
+                </a>
 
                 {/* Desktop Nav */}
                 <nav style={{ display: 'none', gap: '2rem', alignItems: 'center' }} className="desktop-nav">
@@ -124,14 +129,20 @@ const Header = ({ onLogoClick, selectedCity, onSelectCity, onPostProperty, onBoo
                             }}>
                                 {Object.keys(projectsByCity).length > 0 ? Object.keys(projectsByCity).map(city => (
                                     <div key={city} className="submenu-trigger" style={{ position: 'relative' }}>
-                                        <div
+                                        <a
+                                            href={`/${encodeURIComponent(city.toLowerCase().replace(/\s+/g, '-'))}`}
                                             style={{ padding: '0.75rem 1rem', display: 'flex', justifyContent: 'space-between', borderRadius: 'var(--radius-sm)', textDecoration: 'none', color: 'inherit', transition: 'background 0.2s', fontSize: '0.9rem', cursor: 'pointer' }}
                                             className="dropdown-item"
-                                            onClick={() => onSelectCity && onSelectCity(city)}
+                                            onClick={(e) => {
+                                                if (onSelectCity) {
+                                                    e.preventDefault();
+                                                    onSelectCity(city);
+                                                }
+                                            }}
                                         >
                                             Projects in {city}
                                             <span style={{ fontSize: '0.8em', opacity: 0.5 }}>▶</span>
-                                        </div>
+                                        </a>
 
                                         {/* Nested Submenu */}
                                         <div className="submenu-content" style={{
@@ -207,8 +218,8 @@ const Header = ({ onLogoClick, selectedCity, onSelectCity, onPostProperty, onBoo
                                 {Object.keys(listingsByCity).length > 0 ? Object.keys(listingsByCity).map(city => (
                                     <div key={city} className="submenu-trigger" style={{ position: 'relative' }}>
                                         <a
-                                            href="#"
-                                            onClick={(e) => { e.preventDefault(); if (onSelectCity) onSelectCity(city); }}
+                                            href={`/${encodeURIComponent(city.toLowerCase().replace(/\s+/g, '-'))}`}
+                                            onClick={(e) => { if (onSelectCity) { e.preventDefault(); onSelectCity(city); } }}
                                             style={{ padding: '0.75rem 1rem', display: 'flex', justifyContent: 'space-between', borderRadius: 'var(--radius-sm)', textDecoration: 'none', color: 'inherit', transition: 'background 0.2s', fontSize: '0.9rem', cursor: 'pointer' }}
                                             className="dropdown-item"
                                         >
@@ -241,11 +252,14 @@ const Header = ({ onLogoClick, selectedCity, onSelectCity, onPostProperty, onBoo
                         </div>
                     )}
                     <a
-                        href="#about"
+                        href="/about"
                         style={navLinkStyles}
+                        className="nav-link"
                         onClick={(e) => {
-                            e.preventDefault();
-                            onAboutClick();
+                            if (onAboutClick) {
+                                e.preventDefault();
+                                onAboutClick();
+                            }
                         }}
                     >
                         About
@@ -258,7 +272,7 @@ const Header = ({ onLogoClick, selectedCity, onSelectCity, onPostProperty, onBoo
                         Blog
                     </a>
                     <a
-                        href="#contact"
+                        href="/#contact"
                         className="nav-link"
                         style={navLinkStyles}
                     >
@@ -353,19 +367,21 @@ const Header = ({ onLogoClick, selectedCity, onSelectCity, onPostProperty, onBoo
                     flexDirection: 'column',
                     gap: '1rem'
                 }}>
-                    <a href="#featured" onClick={() => setIsMobileMenuOpen(false)}>Properties</a>
+                    <a href="/#featured" onClick={() => setIsMobileMenuOpen(false)}>Properties</a>
                     <a
-                        href="#about"
+                        href="/about"
                         onClick={(e) => {
-                            e.preventDefault();
-                            setIsMobileMenuOpen(false);
-                            onAboutClick();
+                            if (onAboutClick) {
+                                e.preventDefault();
+                                setIsMobileMenuOpen(false);
+                                onAboutClick();
+                            }
                         }}
                     >
                         About
                     </a>
                     <a href="/blog" onClick={() => setIsMobileMenuOpen(false)}>Blog</a>
-                    <a href="#contact" onClick={() => setIsMobileMenuOpen(false)}>Contact</a>
+                    <a href="/#contact" onClick={() => setIsMobileMenuOpen(false)}>Contact</a>
                 </div>
             )}
 

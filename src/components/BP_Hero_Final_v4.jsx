@@ -87,17 +87,27 @@ const HeroSection = ({ onExplore }) => {
 
             <div className="container" style={{ position: 'relative', zIndex: 2, textAlign: 'center', maxWidth: '950px' }}>
                 <h1 className="animate-fade-in-up" style={{
-                    fontSize: 'clamp(3.5rem, 9vw, 7rem)',
+                    fontSize: 'clamp(2.5rem, 6vw, 4.8rem)',
                     marginBottom: '1rem',
                     fontFamily: 'var(--font-heading)',
                     fontWeight: 800,
                     textShadow: '0 20px 40px rgba(0,0,0,0.6)',
-                    letterSpacing: '-3px',
-                    lineHeight: 1,
+                    letterSpacing: '-2px',
+                    lineHeight: 1.1,
                     color: '#FFFFFF',
                     position: 'relative'
                 }}>
-                    Bharat Properties
+                    Property Dealer in Kurukshetra &amp; Mohali
+                    <span style={{
+                        display: 'block',
+                        fontSize: 'clamp(1.25rem, 2.8vw, 2rem)',
+                        fontWeight: 600,
+                        letterSpacing: '1px',
+                        marginTop: '0.6rem',
+                        color: 'var(--color-gold)'
+                    }}>
+                        Bharat Properties
+                    </span>
                     <div style={{
                         position: 'absolute',
                         top: '50%',
@@ -129,8 +139,13 @@ const HeroSection = ({ onExplore }) => {
                     Premium Collections in <span style={{ borderBottom: '2px solid var(--color-gold)' }}>Chandigarh, Mohali, Panchkula & Kurukshetra.</span>
                 </p>
 
-                <button
-                    onClick={onExplore || defaultExplore}
+                <a
+                    href="#cities"
+                    onClick={(e) => {
+                        e.preventDefault();
+                        if (onExplore) onExplore();
+                        else defaultExplore();
+                    }}
                     className="btn-premium animate-fade-in-up"
                     style={{
                         background: 'var(--grad-gold)',
@@ -139,7 +154,7 @@ const HeroSection = ({ onExplore }) => {
                         fontSize: '1.15rem',
                         borderRadius: 'var(--radius-full)',
                         fontWeight: 800,
-                        border: 'none',
+                        textDecoration: 'none',
                         cursor: 'pointer',
                         display: 'inline-flex',
                         alignItems: 'center',
@@ -160,7 +175,7 @@ const HeroSection = ({ onExplore }) => {
                     }}
                 >
                     Explore Properties <ArrowDown size={22} />
-                </button>
+                </a>
             </div>
         </div>
     );

@@ -5,12 +5,13 @@ import { Newspaper, ChevronRight, RefreshCw, AlertCircle } from 'lucide-react';
 import NewsCard from './NewsCard';
 import { fetchRealEstateNews } from '../services/NewsService';
 
-const NewsSection = ({ city = null }) => {
-    const [news, setNews] = useState([]);
-    const [loading, setLoading] = useState(true);
+const NewsSection = ({ city = null, initialNews = null }) => {
+    const [news, setNews] = useState(initialNews || []);
+    const [loading, setLoading] = useState(!initialNews || !initialNews.length);
     const [error, setError] = useState(null);
 
     useEffect(() => {
+        if (initialNews?.length && !city) return;
         let isMounted = true;
         const loadNews = async () => {
             try {
@@ -30,7 +31,7 @@ const NewsSection = ({ city = null }) => {
         };
         loadNews();
         return () => { isMounted = false; };
-    }, [city]);
+    }, [city, initialNews]);
 
     return (
         <section style={{ padding: 'var(--spacing-lg) 0', backgroundColor: 'var(--color-bg-white)' }}>

@@ -5,15 +5,19 @@ import { ChevronLeft, ChevronRight, Star, Loader2 } from 'lucide-react';
 import { useGlobal } from '../context/GlobalContext';
 import { fetchGoogleReviews } from '../services/crmService';
 
-const ReviewsSection = ({ onLeaveFeedback }) => {
+const ReviewsSection = ({ onLeaveFeedback, initialData = null }) => {
     const { setShowFeedbackModal } = useGlobal();
-    const [reviews, setReviews] = useState([]);
-    const [stats, setStats] = useState({ rating: 5, total: 0 });
-    const [isLoading, setIsLoading] = useState(true);
+    const [reviews, setReviews] = useState(initialData?.reviews || []);
+    const [stats, setStats] = useState({
+        rating: initialData?.rating || 5,
+        total: initialData?.totalReviews ?? (initialData?.reviews?.length || 0)
+    });
+    const [isLoading, setIsLoading] = useState(!initialData || !initialData.reviews?.length);
     const [currentIndex, setCurrentIndex] = useState(0);
     const reviewsPerPage = 3;
 
     useEffect(() => {
+        if (initialData?.reviews?.length) return;
         const loadReviews = async () => {
             setIsLoading(true);
             const data = await fetchGoogleReviews();
@@ -24,7 +28,7 @@ const ReviewsSection = ({ onLeaveFeedback }) => {
             setIsLoading(false);
         };
         loadReviews();
-    }, []);
+    }, [initialData]);
 
     const nextSlide = () => {
         setCurrentIndex((prev) =>

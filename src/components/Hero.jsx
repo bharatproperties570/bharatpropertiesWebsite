@@ -103,7 +103,7 @@ const Hero = ({ onSearch, city, videos, image }) => {
                     color: '#FFFFFF',
                     lineHeight: 1.1
                 }}>
-                    Explore {city || 'Elite Properties'}
+                    {city ? `Property in ${city}` : 'Elite Properties'}
                 </h1>
                 <p style={{
                     fontSize: 'clamp(1rem, 2vw, 1.25rem)',

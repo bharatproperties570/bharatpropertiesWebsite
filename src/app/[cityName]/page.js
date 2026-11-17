@@ -2,6 +2,7 @@ import { notFound } from 'next/navigation';
 import { CITY_DATA } from '../../data/cityData';
 import { SEO_DATA } from '../../data/seoData';
 import { citySlug, cleanText, absoluteUrl, breadcrumbSchema, jsonLd } from '../../lib/seo';
+import { fetchRealEstateNews } from '../../services/NewsService';
 import CityPageClient from './CityPageClient';
 
 export const revalidate = 3600;
@@ -48,15 +49,18 @@ export default async function CityPage({ params }) {
     const city = findCity(cityName);
     if (!city) notFound();
 
-    const crumbs = breadcrumbSchema([
-        { name: 'Home', path: '/' },
-        { name: city.name, path: `/${citySlug(city.name)}` },
+    const [crumbs, initialNews] = await Promise.all([
+        breadcrumbSchema([
+            { name: 'Home', path: '/' },
+            { name: city.name, path: `/${citySlug(city.name)}` },
+        ]),
+        fetchRealEstateNews(city.name).catch(() => [])
     ]);
 
     return (
         <>
             <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: jsonLd(crumbs) }} />
-            <CityPageClient cityData={city} />
+            <CityPageClient cityData={city} initialNews={initialNews} />
         </>
     );
 }

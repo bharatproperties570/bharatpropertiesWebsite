@@ -309,7 +309,7 @@ const ConsultationForm = ({ onClose }) => {
                             display: 'block',
                             marginBottom: '0.5rem'
                         }}>Schedule Your Session</span>
-                        <h1 className="gradient-text" style={{
+                        <h2 className="gradient-text" style={{
                             fontSize: '1.4rem',
                             fontWeight: 800,
                             color: '#1e293b',
@@ -318,7 +318,7 @@ const ConsultationForm = ({ onClose }) => {
                             letterSpacing: '-0.5px'
                         }}>
                             {dynamicTitle}
-                        </h1>
+                        </h2>
                     </div>
                 </div>
 

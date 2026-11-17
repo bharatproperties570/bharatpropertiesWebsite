@@ -10,16 +10,19 @@ import { AboutSection, ContactSection } from '../components/Sections';
 import FeaturedDeals from '../components/FeaturedDeals';
 import FeaturedProjects from '../components/FeaturedProjects';
 import { organizationGraph, jsonLd } from '../lib/seo';
-import { fetchFeaturedDeals, fetchFeaturedProjects } from '../services/crmService';
+import { fetchFeaturedDeals, fetchFeaturedProjects, fetchGoogleReviews } from '../services/crmService';
+import { fetchRealEstateNews } from '../services/NewsService';
 
 // Incremental static regeneration: fast, cacheable HTML that still refreshes from the CRM.
 export const revalidate = 300;
 
 export default async function HomePage() {
     // Parallel fetching on server
-    const [hotDeals, allProjects] = await Promise.all([
-        fetchFeaturedDeals('hot'),
-        fetchFeaturedProjects('All')
+    const [hotDeals, allProjects, googleReviews, newsData] = await Promise.all([
+        fetchFeaturedDeals('hot').catch(() => []),
+        fetchFeaturedProjects('All').catch(() => []),
+        fetchGoogleReviews().catch(() => ({ reviews: [], rating: 5, totalReviews: 0 })),
+        fetchRealEstateNews().catch(() => [])
     ]);
 
     return (
@@ -35,9 +38,9 @@ export default async function HomePage() {
                 <CityGrid />
             </div>
 
-            <ReviewsSection />
+            <ReviewsSection initialData={googleReviews} />
             <OfficeInfo />
-            <NewsSection />
+            <NewsSection initialNews={newsData} />
             <AboutSection />
             <MarketTrends />
             <ContactSection />

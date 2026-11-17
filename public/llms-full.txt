@@ -1,0 +1,30 @@
+# Bharat Properties - Full Context & Knowledge Specification
+
+## Overview
+Bharat Properties is a regional real estate consultancy firm serving North India with physical offices in Haryana and Punjab. We specialize in buying, selling, and leasing residential land, plotted developments, apartments, villas, and commercial real estate.
+
+## Offices & Physical Presence
+- **Kurukshetra Headquarters:** Shop No 166, Sector 3 Market, Kurukshetra, Haryana 136118. Phone: +91-9991333570.
+- **Mohali Branch Office:** PR 7, Airport Road, Mohali, Punjab. Phone: +91-9991333570.
+
+## Primary Service Territories
+1. **Kurukshetra:** Sector 3, Sector 4, Sector 7, Sector 8, Pipli, University Area, NH-44 Corridor.
+2. **Mohali:** Airport Road (PR 7), Sector 82 Industrial Area, IT City, Aerocity, Kharar, New Chandigarh.
+3. **Chandigarh & Panchkula:** Key sectors, HSVP plotted developments, Shivalik foothills luxury properties.
+4. **Zirakpur:** VIP Road, PR 7, high-connectivity residential societies.
+
+## Key Services
+- Verified Property Listings: Residential plots, villas, flats, commercial shops, and office spaces.
+- Guided Site Visits: On-ground accompanied visits with regional property specialists.
+- Documentation & Due Diligence: Verification of title deeds, allotment letters, HSVP/GMADA records, and RERA compliance.
+- Financial Planning: In-house loan assistance and EMI calculation tools.
+
+## Official Canonical URLs
+- Canonical Domain: https://www.bharatproperties.co
+- Sitemaps: https://www.bharatproperties.co/sitemap.xml
+- Robots: https://www.bharatproperties.co/robots.txt
+- About: https://www.bharatproperties.co/about
+- Locations: https://www.bharatproperties.co/locations
+- Blog: https://www.bharatproperties.co/blog
+- EMI Calculator: https://www.bharatproperties.co/calculator
+- Maps: https://www.bharatproperties.co/maps

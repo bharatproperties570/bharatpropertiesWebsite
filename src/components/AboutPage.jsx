@@ -1,5 +1,6 @@
 import React from 'react';
 import { MapPin, CheckCircle, Target, MessageSquare, Quote, Globe, Building2, Briefcase, Zap, Shield } from 'lucide-react';
+import ReraBadge from './ReraBadge';
 
 const AboutPage = ({ onBookConsultation, onTalkToExpert }) => {
     return (
@@ -18,6 +19,9 @@ const AboutPage = ({ onBookConsultation, onTalkToExpert }) => {
                     <h1 style={{ fontSize: '3.5rem', fontWeight: 900, marginBottom: '1.5rem', letterSpacing: '-0.02em' }}>
                         🏢 About Us – <span style={{ color: 'var(--color-primary)' }}>Bharat Properties</span>
                     </h1>
+                    <div style={{ marginBottom: '1.5rem' }}>
+                        <ReraBadge />
+                    </div>
                     <p style={{ fontSize: '1.3rem', maxWidth: '800px', margin: '0 auto', lineHeight: '1.6', opacity: 0.9 }}>
                         Bharat Properties ek trusted aur fast-growing real estate consultancy hai jo North India ke key cities me buyers, sellers aur investors ko verified, transparent aur result-oriented property solutions provide karti hai.
                     </p>

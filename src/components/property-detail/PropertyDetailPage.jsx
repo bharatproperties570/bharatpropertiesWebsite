@@ -10,6 +10,8 @@ import NewsSection from '../NewsSection';
 // No static imports anymore
 import { fetchListingBySlug } from '../../services/crmService';
 import SkeletonLoader from '../SkeletonLoader';
+import AnswerFirst from '../AnswerFirst';
+import { buildPropertyAnswerFirst } from '../../lib/seo';
 
 const PropertyDetailPage = ({ propertyId, initialProperty = null, onAddToCompare, onBookConsultation }) => {
     const [property, setProperty] = useState(initialProperty);
@@ -65,6 +67,8 @@ const PropertyDetailPage = ({ propertyId, initialProperty = null, onAddToCompare
                 onAddToCompare={onAddToCompare}
                 onBookConsultation={onBookConsultation}
             />
+
+            <AnswerFirst text={buildPropertyAnswerFirst(property)} />
 
             <main className="container" style={{ position: 'relative', marginTop: '4rem', paddingBottom: '8rem' }}>
                 <div className="property-detail-grid">

@@ -1,8 +1,14 @@
+/* global process */
 import React from 'react';
 import { Facebook, Instagram, Twitter, Mail, Phone, MapPin } from 'lucide-react';
 import logo from '../assets/logo.png';
+import ReraBadge from './ReraBadge';
 
 const Footer = () => {
+    const fbUrl = process.env.NEXT_PUBLIC_FACEBOOK_URL;
+    const igUrl = process.env.NEXT_PUBLIC_INSTAGRAM_URL;
+    const twUrl = process.env.NEXT_PUBLIC_TWITTER_URL;
+
     return (
         <footer style={{ backgroundColor: 'var(--color-primary)', color: 'white', padding: '4rem 0 2rem' }}>
             <div className="container" style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(250px, 1fr))', gap: '3rem' }}>
@@ -16,11 +22,12 @@ const Footer = () => {
                     <p style={{ color: 'var(--color-text-light)', opacity: 0.8, marginBottom: '1.5rem' }}>
                         Elevating your lifestyle with premium real estate solutions. We find homes that match your dreams.
                     </p>
-                    <div style={{ display: 'flex', gap: '1rem' }}>
-                        <a href="https://instagram.com" aria-label="Visit our Instagram"><Instagram size={20} /></a>
-                        <a href="https://facebook.com" aria-label="Visit our Facebook"><Facebook size={20} /></a>
-                        <a href="https://twitter.com" aria-label="Visit our Twitter"><Twitter size={20} /></a>
+                    <div style={{ display: 'flex', gap: '1rem', alignItems: 'center', marginBottom: '1rem' }}>
+                        {igUrl && <a href={igUrl} target="_blank" rel="noopener noreferrer" aria-label="Visit our Instagram"><Instagram size={20} /></a>}
+                        {fbUrl && <a href={fbUrl} target="_blank" rel="noopener noreferrer" aria-label="Visit our Facebook"><Facebook size={20} /></a>}
+                        {twUrl && <a href={twUrl} target="_blank" rel="noopener noreferrer" aria-label="Visit our Twitter"><Twitter size={20} /></a>}
                     </div>
+                    <ReraBadge />
                 </div>
 
                 {/* Quick Links */}

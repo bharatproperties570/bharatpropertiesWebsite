@@ -1,7 +1,8 @@
 import { notFound } from 'next/navigation';
 import { CITY_DATA } from '../../data/cityData';
 import { SEO_DATA } from '../../data/seoData';
-import { citySlug, cleanText, absoluteUrl, breadcrumbSchema, jsonLd } from '../../lib/seo';
+import { citySlug, cleanText, absoluteUrl, breadcrumbSchema, faqPageSchema, jsonLd } from '../../lib/seo';
+import { FAQS } from '../../content/faqs';
 import { fetchRealEstateNews } from '../../services/NewsService';
 import CityPageClient from './CityPageClient';
 
@@ -57,9 +58,16 @@ export default async function CityPage({ params }) {
         fetchRealEstateNews(city.name).catch(() => [])
     ]);
 
+    const slug = citySlug(city.name);
+    const cityFaqs = FAQS[slug];
+    const faqSchema = cityFaqs ? faqPageSchema(cityFaqs) : null;
+
     return (
         <>
             <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: jsonLd(crumbs) }} />
+            {faqSchema && (
+                <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: jsonLd(faqSchema) }} />
+            )}
             <CityPageClient cityData={city} initialNews={initialNews} />
         </>
     );

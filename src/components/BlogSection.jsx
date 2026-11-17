@@ -1,5 +1,6 @@
 'use client';
 import React from 'react';
+import Link from 'next/link';
 import { BLOG_DATA } from '../data/blogData';
 import { ArrowRight, Calendar, User } from 'lucide-react';
 
@@ -98,7 +99,9 @@ const BlogSection = () => {
                                     color: '#1E293B',
                                     lineHeight: 1.4
                                 }}>
-                                    {blog.title}
+                                    <Link href={`/blog/${blog.id}`} style={{ color: 'inherit', textDecoration: 'none' }}>
+                                        {blog.title}
+                                    </Link>
                                 </h3>
                                 <p style={{
                                     color: '#64748B',
@@ -111,41 +114,43 @@ const BlogSection = () => {
                                 }}>
                                     {blog.excerpt}
                                 </p>
-                                <button style={{
-                                    display: 'flex',
-                                    alignItems: 'center',
-                                    gap: '0.75rem',
-                                    color: 'var(--color-primary)',
-                                    fontWeight: 700,
-                                    backgroundColor: 'transparent',
-                                    border: 'none',
-                                    padding: 0,
-                                    cursor: 'pointer',
-                                    fontSize: '1rem',
-                                    transition: 'gap 0.2s ease'
-                                }}
-                                    onMouseEnter={(e) => e.currentTarget.style.gap = '1rem'}
-                                    onMouseLeave={(e) => e.currentTarget.style.gap = '0.75rem'}
+                                <Link
+                                    href={`/blog/${blog.id}`}
+                                    style={{
+                                        display: 'inline-flex',
+                                        alignItems: 'center',
+                                        gap: '0.75rem',
+                                        color: 'var(--color-primary)',
+                                        fontWeight: 700,
+                                        textDecoration: 'none',
+                                        fontSize: '1rem',
+                                        transition: 'gap 0.2s ease',
+                                    }}
+                                    onMouseEnter={(e) => (e.currentTarget.style.gap = '1rem')}
+                                    onMouseLeave={(e) => (e.currentTarget.style.gap = '0.75rem')}
                                 >
                                     Read Article <ArrowRight size={18} />
-                                </button>
+                                </Link>
                             </div>
                         </article>
                     ))}
                 </div>
 
                 <div style={{ textAlign: 'center', marginTop: '4rem' }}>
-                    <button style={{
-                        padding: '1rem 2.5rem',
-                        backgroundColor: 'white',
-                        color: '#0F172A',
-                        border: '2px solid #E2E8F0',
-                        borderRadius: '12px',
-                        fontSize: '1rem',
-                        fontWeight: 700,
-                        cursor: 'pointer',
-                        transition: 'all 0.3s ease'
-                    }}
+                    <Link
+                        href="/blog"
+                        style={{
+                            display: 'inline-block',
+                            padding: '1rem 2.5rem',
+                            backgroundColor: 'white',
+                            color: '#0F172A',
+                            border: '2px solid #E2E8F0',
+                            borderRadius: '12px',
+                            fontSize: '1rem',
+                            fontWeight: 700,
+                            textDecoration: 'none',
+                            transition: 'all 0.3s ease'
+                        }}
                         onMouseEnter={(e) => {
                             e.currentTarget.style.borderColor = 'var(--color-primary)';
                             e.currentTarget.style.color = 'var(--color-primary)';
@@ -156,7 +161,7 @@ const BlogSection = () => {
                         }}
                     >
                         View All News & Blogs
-                    </button>
+                    </Link>
                 </div>
             </div>
         </section>

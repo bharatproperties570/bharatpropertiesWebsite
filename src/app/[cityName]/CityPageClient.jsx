@@ -8,6 +8,10 @@ import { useGlobal } from '../../context/GlobalContext';
 import FeaturedDeals from '../../components/FeaturedDeals';
 import FeaturedProjects from '../../components/FeaturedProjects';
 import NewsSection from '../../components/NewsSection';
+import AnswerFirst from '../../components/AnswerFirst';
+import FAQ from '../../components/FAQ';
+import { FAQS } from '../../content/faqs';
+import { buildCityAnswerFirst, citySlug } from '../../lib/seo';
 
 export default function CityPageClient({ cityData, initialNews = null }) {
     const router = useRouter();
@@ -22,6 +26,9 @@ export default function CityPageClient({ cityData, initialNews = null }) {
         if (term) router.push(`/search?q=${encodeURIComponent(term)}`);
     };
 
+    const slug = citySlug(cityName);
+    const cityFaqs = FAQS[slug];
+
     return (
         <>
             <Hero
@@ -31,10 +38,16 @@ export default function CityPageClient({ cityData, initialNews = null }) {
                 image={cityData?.image}
             />
 
+            <AnswerFirst text={buildCityAnswerFirst(cityData)} />
+
             <FeaturedDeals city={cityName} />
             <FeaturedProjects city={cityName} />
             
             <CityShowcase city={cityData} />
+
+            {cityFaqs && (
+                <FAQ faqs={cityFaqs} title={`Frequently Asked Questions - Property in ${cityName}`} />
+            )}
 
             <NewsSection city={cityName} initialNews={initialNews} />
         </>

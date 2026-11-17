@@ -9,7 +9,9 @@ import NewsSection from '../components/NewsSection';
 import { AboutSection, ContactSection } from '../components/Sections';
 import FeaturedDeals from '../components/FeaturedDeals';
 import FeaturedProjects from '../components/FeaturedProjects';
-import { organizationGraph, jsonLd } from '../lib/seo';
+import { organizationGraph, faqPageSchema, jsonLd } from '../lib/seo';
+import FAQ from '../components/FAQ';
+import { FAQS } from '../content/faqs';
 import { fetchFeaturedDeals, fetchFeaturedProjects, fetchGoogleReviews } from '../services/crmService';
 import { fetchRealEstateNews } from '../services/NewsService';
 
@@ -25,9 +27,14 @@ export default async function HomePage() {
         fetchRealEstateNews().catch(() => [])
     ]);
 
+    const faqSchema = faqPageSchema(FAQS.homepage);
+
     return (
         <div id="bp-root-v4-5-definitive-sync">
             <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: jsonLd(organizationGraph()) }} />
+            {faqSchema && (
+                <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: jsonLd(faqSchema) }} />
+            )}
             <HeroSection /> {/* v4.5-FINAL-SYNC */}
             <SearchBarOverlay />
             
@@ -43,6 +50,7 @@ export default async function HomePage() {
             <NewsSection initialNews={newsData} />
             <AboutSection />
             <MarketTrends />
+            <FAQ faqs={FAQS.homepage} />
             <ContactSection />
         </div>
     );

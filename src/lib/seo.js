@@ -5,24 +5,39 @@ export const SITE_URL = (process.env.NEXT_PUBLIC_SITE_URL || 'https://www.bharat
 export const SITE_NAME = 'Bharat Properties';
 export const DEFAULT_OG_IMAGE = '/opengraph-image';
 export const PHONE = '+91-9991333570';
+export const EMAIL = 'info@bharatproperties.co';
+export const RERA_NUMBER = process.env.NEXT_PUBLIC_RERA_NUMBER || '';
 
-// Verified from src/app/locations/page.js. Add postalCode / per-branch phone once confirmed.
+// Official social profiles. Configured via env or left empty for owner to supply.
+export const SOCIAL_PROFILES = [
+    process.env.NEXT_PUBLIC_FACEBOOK_URL,
+    process.env.NEXT_PUBLIC_INSTAGRAM_URL,
+    process.env.NEXT_PUBLIC_TWITTER_URL,
+    process.env.NEXT_PUBLIC_LINKEDIN_URL,
+    process.env.NEXT_PUBLIC_YOUTUBE_URL,
+].filter(Boolean);
+
+// Verified NAP (Name, Address, Phone) from src/app/locations/page.js
 export const BRANCHES = [
     {
         id: 'kurukshetra',
-        name: 'Bharat Properties, Kurukshetra',
-        street: 'Sector 3 Market',
+        name: 'Bharat Properties, Kurukshetra (HQ)',
+        street: 'Shop No 166, Sector 3 Market',
         city: 'Kurukshetra',
         region: 'Haryana',
+        postalCode: '136118',
+        phone: '+91-9991333570',
         geo: { lat: 29.9602037, lng: 76.8899997 },
         placeId: 'ChIJKzFpydBGDjkRbTCco1_G2I4',
     },
     {
         id: 'mohali',
         name: 'Bharat Properties, Mohali',
-        street: 'PR 7, Airport Road',
+        street: 'PR 7, Airport Road, Sector 82 Industrial Area',
         city: 'Mohali',
         region: 'Punjab',
+        postalCode: '', // TODO_OWNER: supply Mohali postal code
+        phone: '+91-9991000570',
         geo: { lat: 30.6327022, lng: 76.7663162 },
     },
 ];
@@ -74,13 +89,15 @@ const branchNode = (b) => ({
     '@type': 'RealEstateAgent',
     '@id': `${SITE_URL}/#branch-${b.id}`,
     name: b.name,
-    url: SITE_URL,
+    url: `${SITE_URL}/locations`,
+    telephone: b.phone || PHONE,
     parentOrganization: { '@id': `${SITE_URL}/#org` },
     address: {
         '@type': 'PostalAddress',
         streetAddress: b.street,
         addressLocality: b.city,
         addressRegion: b.region,
+        postalCode: b.postalCode || undefined,
         addressCountry: 'IN',
     },
     geo: { '@type': 'GeoCoordinates', latitude: b.geo.lat, longitude: b.geo.lng },
@@ -104,15 +121,18 @@ export const organizationGraph = () => ({
             '@id': `${SITE_URL}/#org`,
             name: SITE_NAME,
             url: SITE_URL,
-            logo: { '@type': 'ImageObject', url: absoluteUrl(DEFAULT_OG_IMAGE) },
+            logo: { '@type': 'ImageObject', url: absoluteUrl('/assets/logo.png') },
             image: absoluteUrl(DEFAULT_OG_IMAGE),
             telephone: PHONE,
+            email: EMAIL,
+            sameAs: SOCIAL_PROFILES.length ? SOCIAL_PROFILES : undefined,
             areaServed: AREAS_SERVED.map((name) => ({ '@type': 'City', name })),
             address: {
                 '@type': 'PostalAddress',
                 streetAddress: BRANCHES[0].street,
                 addressLocality: BRANCHES[0].city,
                 addressRegion: BRANCHES[0].region,
+                postalCode: BRANCHES[0].postalCode || undefined,
                 addressCountry: 'IN',
             },
         },
@@ -169,4 +189,96 @@ export const propertySchema = (property, url) => {
             },
         },
     };
+};
+
+export const faqPageSchema = (faqs) => {
+    const validFaqs = (faqs || []).filter((f) => f && f.question && f.answer && !f.answer.includes('TODO_OWNER'));
+    if (!validFaqs.length) return null;
+    return {
+        '@context': 'https://schema.org',
+        '@type': 'FAQPage',
+        mainEntity: validFaqs.map((f) => ({
+            '@type': 'Question',
+            name: f.question,
+            acceptedAnswer: {
+                '@type': 'Answer',
+                text: f.answer,
+            },
+        })),
+    };
+};
+
+const safeIsoDate = (d) => {
+    if (!d) return undefined;
+    try {
+        const date = new Date(d);
+        return isNaN(date.getTime()) ? undefined : date.toISOString();
+    } catch {
+        return undefined;
+    }
+};
+
+export const articleSchema = (article, url) => {
+    const isoDate = safeIsoDate(article.date);
+    return {
+        '@context': 'https://schema.org',
+        '@type': 'Article',
+        '@id': `${url}#article`,
+        headline: cleanText(article.title),
+        description: cleanText(article.excerpt),
+        image: article.image ? absoluteUrl(article.image) : undefined,
+        datePublished: isoDate,
+        dateModified: isoDate,
+        author: {
+            '@type': 'Person',
+            name: article.author || 'Bharat Properties Team',
+        },
+        publisher: {
+            '@id': `${SITE_URL}/#org`,
+        },
+        mainEntityOfPage: {
+            '@type': 'WebPage',
+            '@id': url,
+        },
+    };
+};
+
+export const buildCityAnswerFirst = (city) => {
+    const name = city.name;
+    const state = city.state || (['Kurukshetra', 'Panchkula', 'Karnal', 'Sonepat', 'Panipat', 'Rewari', 'Faridabad', 'Gurgaon'].includes(name) ? 'Haryana' : ['Mohali', 'Zirakpur', 'Kharar', 'New Chandigarh', 'Ludhiana', 'Amritsar', 'Jalandhar'].includes(name) ? 'Punjab' : 'North India');
+    return `${name} is a premier real estate hub in ${state}. Explore verified residential plots, luxury flats, builder floors, and commercial investment opportunities with Bharat Properties. We offer transparent pricing, on-ground site visits, and comprehensive documentation guidance across all key sectors in ${name}.`;
+};
+
+export const buildProjectAnswerFirst = (project) => {
+    const name = cleanText(project.name);
+    const city = project.address?.city || (project.location !== 'Unknown' ? project.location : '');
+    const developer = project.developer?.name || project.developer;
+    const category = project.category || project.type || '';
+    const price = project.pricing?.basePrice?.amount ? `${project.pricing.basePrice.amount} ${project.pricing.basePrice.unit || ''}`.trim() : (project.price && !/contact/i.test(project.price) ? project.price : '');
+    const rera = project.rera ? String(project.rera) : '';
+
+    const parts = [];
+    parts.push(`${name} is a${category ? ` ${category}` : ''} project${city ? ` in ${city}` : ''}${developer ? ` by ${developer}` : ''}.`);
+    if (price) parts.push(`Starting price: ${price}.`);
+    if (rera) parts.push(`RERA: ${rera}.`);
+    parts.push('Schedule an on-ground site visit and access verified layout details through Bharat Properties.');
+    return parts.join(' ');
+};
+
+export const buildPropertyAnswerFirst = (property) => {
+    const title = cleanText(property.title || property.unitName) || 'Property';
+    const city = property.location?.city && property.location.city !== 'Unknown' ? property.location.city : '';
+    const locality = property.location?.locality || property.location?.address || '';
+    const subCategory = property.subCategory || property.category || '';
+    const size = property.sqft ? `${property.sqft} ${property.builtupDetails?.unit || 'Sqft'}` : (property.sizeLabel || '');
+    const price = property.price && !/contact/i.test(property.price) ? property.price : '';
+
+    const parts = [];
+    const locationPart = [locality, city].filter(Boolean).join(', ');
+    parts.push(`${title} is a verified property${locationPart ? ` located in ${locationPart}` : ''}.`);
+    if (subCategory) parts.push(`Category: ${subCategory}.`);
+    if (size) parts.push(`Built-up area: ${size}.`);
+    if (price) parts.push(`Offered price: ${price}.`);
+    parts.push('Consult Bharat Properties for verified ownership records, on-ground site visits, and purchase advisory.');
+    return parts.join(' ');
 };

@@ -11,6 +11,8 @@ import ProjectDeals from './ProjectDeals';
 
 import { fetchProjectBySlug } from '../../services/crmService';
 import SkeletonLoader from '../SkeletonLoader';
+import AnswerFirst from '../AnswerFirst';
+import { buildProjectAnswerFirst } from '../../lib/seo';
 
 const ProjectDetailPage = ({ projectId, initialProject = null, onBookConsultation, onAddToCompare }) => {
     const [project, setProject] = useState(initialProject);
@@ -67,6 +69,8 @@ const ProjectDetailPage = ({ projectId, initialProject = null, onBookConsultatio
                 onBookConsultation={onBookConsultation}
                 onAddToCompare={() => onAddToCompare(project)}
             />
+
+            <AnswerFirst text={buildProjectAnswerFirst(project)} />
 
             <main>
                 {/* Visual Showcase (Gallery) */}

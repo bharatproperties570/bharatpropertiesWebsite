@@ -8,12 +8,12 @@ export const PHONE = '+91-9991333570';
 export const EMAIL = 'info@bharatproperties.co';
 export const RERA_NUMBER = process.env.NEXT_PUBLIC_RERA_NUMBER || '';
 
-// Official social profiles. Configured via env or left empty for owner to supply.
+// Official verified social profiles (with env override support)
 export const SOCIAL_PROFILES = [
-    process.env.NEXT_PUBLIC_FACEBOOK_URL,
-    process.env.NEXT_PUBLIC_INSTAGRAM_URL,
+    process.env.NEXT_PUBLIC_FACEBOOK_URL || 'https://www.facebook.com/bharatproperties570',
+    process.env.NEXT_PUBLIC_INSTAGRAM_URL || 'https://www.instagram.com/bhaaratproperties',
+    process.env.NEXT_PUBLIC_LINKEDIN_URL || 'https://www.linkedin.com/company/42752175/',
     process.env.NEXT_PUBLIC_TWITTER_URL,
-    process.env.NEXT_PUBLIC_LINKEDIN_URL,
     process.env.NEXT_PUBLIC_YOUTUBE_URL,
 ].filter(Boolean);
 
@@ -27,8 +27,9 @@ export const BRANCHES = [
         region: 'Haryana',
         postalCode: '136118',
         phone: '+91-9991333570',
-        geo: { lat: 29.9602037, lng: 76.8899997 },
+        geo: { lat: 29.9608111, lng: 76.8934231 },
         placeId: 'ChIJKzFpydBGDjkRbTCco1_G2I4',
+        mapUrl: 'https://maps.app.goo.gl/Yfr1YSYGP1mrLbNR6',
     },
     {
         id: 'mohali',
@@ -39,6 +40,7 @@ export const BRANCHES = [
         postalCode: '', // TODO_OWNER: supply Mohali postal code
         phone: '+91-9991000570',
         geo: { lat: 30.6327022, lng: 76.7663162 },
+        mapUrl: 'https://maps.app.goo.gl/SrXsJrh5L23qLEtM6',
     },
 ];
 
@@ -101,7 +103,7 @@ const branchNode = (b) => ({
         addressCountry: 'IN',
     },
     geo: { '@type': 'GeoCoordinates', latitude: b.geo.lat, longitude: b.geo.lng },
-    hasMap: b.placeId ? `https://www.google.com/maps/place/?q=place_id:${b.placeId}` : undefined,
+    hasMap: b.mapUrl || (b.placeId ? `https://www.google.com/maps/place/?q=place_id:${b.placeId}` : undefined),
 });
 
 /** Site-wide entity graph for the homepage: WebSite + Organization + branches. */

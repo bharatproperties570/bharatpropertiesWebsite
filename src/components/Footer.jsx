@@ -1,12 +1,13 @@
 /* global process */
 import React from 'react';
-import { Facebook, Instagram, Twitter, Mail, Phone, MapPin } from 'lucide-react';
+import { Facebook, Instagram, Twitter, Linkedin, Mail, Phone, MapPin, ExternalLink } from 'lucide-react';
 import logo from '../assets/logo.png';
 import ReraBadge from './ReraBadge';
 
 const Footer = () => {
-    const fbUrl = process.env.NEXT_PUBLIC_FACEBOOK_URL;
-    const igUrl = process.env.NEXT_PUBLIC_INSTAGRAM_URL;
+    const fbUrl = process.env.NEXT_PUBLIC_FACEBOOK_URL || 'https://www.facebook.com/bharatproperties570';
+    const igUrl = process.env.NEXT_PUBLIC_INSTAGRAM_URL || 'https://www.instagram.com/bhaaratproperties';
+    const liUrl = process.env.NEXT_PUBLIC_LINKEDIN_URL || 'https://www.linkedin.com/company/42752175/';
     const twUrl = process.env.NEXT_PUBLIC_TWITTER_URL;
 
     return (
@@ -23,9 +24,10 @@ const Footer = () => {
                         Elevating your lifestyle with premium real estate solutions. We find homes that match your dreams.
                     </p>
                     <div style={{ display: 'flex', gap: '1rem', alignItems: 'center', marginBottom: '1rem' }}>
-                        {igUrl && <a href={igUrl} target="_blank" rel="noopener noreferrer" aria-label="Visit our Instagram"><Instagram size={20} /></a>}
-                        {fbUrl && <a href={fbUrl} target="_blank" rel="noopener noreferrer" aria-label="Visit our Facebook"><Facebook size={20} /></a>}
-                        {twUrl && <a href={twUrl} target="_blank" rel="noopener noreferrer" aria-label="Visit our Twitter"><Twitter size={20} /></a>}
+                        {igUrl && <a href={igUrl} target="_blank" rel="noopener noreferrer" aria-label="Visit our Instagram" style={{ color: 'white', opacity: 0.85 }}><Instagram size={20} /></a>}
+                        {fbUrl && <a href={fbUrl} target="_blank" rel="noopener noreferrer" aria-label="Visit our Facebook" style={{ color: 'white', opacity: 0.85 }}><Facebook size={20} /></a>}
+                        {liUrl && <a href={liUrl} target="_blank" rel="noopener noreferrer" aria-label="Visit our LinkedIn" style={{ color: 'white', opacity: 0.85 }}><Linkedin size={20} /></a>}
+                        {twUrl && <a href={twUrl} target="_blank" rel="noopener noreferrer" aria-label="Visit our Twitter" style={{ color: 'white', opacity: 0.85 }}><Twitter size={20} /></a>}
                     </div>
                     <ReraBadge />
                 </div>
@@ -43,8 +45,12 @@ const Footer = () => {
                         <a href="/about" style={{ textDecoration: 'none', color: 'inherit' }}>
                             About Us
                         </a>
-                        <a href="#agents">Our Agents</a>
-                        <a href="#blog">Market News</a>
+                        <a href="/blog" style={{ textDecoration: 'none', color: 'inherit' }}>
+                            Blog &amp; Market Insights
+                        </a>
+                        <a href="/locations" style={{ textDecoration: 'none', color: 'inherit' }}>
+                            Our Offices
+                        </a>
                         <a href="/privacy" style={{ textDecoration: 'none', color: 'inherit' }}>
                             Privacy Policy
                         </a>
@@ -59,17 +65,25 @@ const Footer = () => {
                     <h4 style={{ marginBottom: '1.5rem', color: 'white' }}>Contact Us</h4>
                     <div style={{ display: 'flex', flexDirection: 'column', gap: '1rem', opacity: 0.8 }}>
                         <div style={{ display: 'flex', gap: '0.8rem', alignItems: 'flex-start' }}>
-                            <MapPin size={18} style={{ marginTop: '0.2rem' }} />
+                            <MapPin size={18} style={{ marginTop: '0.2rem', color: 'var(--color-gold)' }} />
                             <div>
-                                <strong style={{ color: 'var(--color-gold)', display: 'block', marginBottom: '0.2rem' }}>Kurukshetra Office</strong>
-                                <span style={{ fontSize: '0.9rem' }}>Shop No 166, Sector 3, Huda Market, Kurukshetra<br />Phone: +91 9991333570</span>
+                                <strong style={{ color: 'var(--color-gold)', display: 'block', marginBottom: '0.2rem' }}>Kurukshetra Office (HQ)</strong>
+                                <span style={{ fontSize: '0.9rem' }}>Shop No 166, Sector 3 Market, Kurukshetra<br />Phone: <a href="tel:+919991333570" style={{ color: 'inherit', textDecoration: 'none' }}>+91 9991333570</a></span>
+                                <a href="https://maps.app.goo.gl/Yfr1YSYGP1mrLbNR6" target="_blank" rel="noopener noreferrer" style={{ display: 'inline-flex', alignItems: 'center', gap: '4px', color: 'var(--color-gold)', fontSize: '0.85rem', textDecoration: 'none', marginTop: '0.3rem' }}>
+                                    <span>View on Google Maps</span>
+                                    <ExternalLink size={12} />
+                                </a>
                             </div>
                         </div>
                         <div style={{ display: 'flex', gap: '0.8rem', alignItems: 'flex-start' }}>
-                            <MapPin size={18} style={{ marginTop: '0.2rem' }} />
+                            <MapPin size={18} style={{ marginTop: '0.2rem', color: 'var(--color-gold)' }} />
                             <div>
                                 <strong style={{ color: 'var(--color-gold)', display: 'block', marginBottom: '0.2rem' }}>Mohali Office</strong>
-                                <span style={{ fontSize: '0.9rem' }}>Airport Road, Sector 82 Industrial Area, Mohali<br />Phone: 9991000570, 9996000570</span>
+                                <span style={{ fontSize: '0.9rem' }}>Airport Road, Sector 82 Industrial Area, Mohali<br />Phone: <a href="tel:+919991000570" style={{ color: 'inherit', textDecoration: 'none' }}>+91 9991000570</a>, <a href="tel:+919996000570" style={{ color: 'inherit', textDecoration: 'none' }}>+91 9996000570</a></span>
+                                <a href="https://maps.app.goo.gl/SrXsJrh5L23qLEtM6" target="_blank" rel="noopener noreferrer" style={{ display: 'inline-flex', alignItems: 'center', gap: '4px', color: 'var(--color-gold)', fontSize: '0.85rem', textDecoration: 'none', marginTop: '0.3rem' }}>
+                                    <span>View on Google Maps</span>
+                                    <ExternalLink size={12} />
+                                </a>
                             </div>
                         </div>
                         <div style={{ display: 'flex', gap: '0.8rem', alignItems: 'center' }}>

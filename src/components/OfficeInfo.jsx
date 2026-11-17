@@ -8,7 +8,7 @@ import { MapPin, Phone, Mail, Clock, ExternalLink, Navigation } from 'lucide-rea
 import Script from 'next/script';
 
 const OfficeInfo = () => {
-    const kkrGMapLink = "https://www.google.com/maps/dir//Bharat+Properties,+Sector+3+Market,+Sector+30,+Sector+3,+Kurukshetra,+Haryana+136118,+India/@29.9490011,76.8836256,15z/data=!3m1!4b1!4m8!4m7!1m0!1m5!1m1!1s0x390e46d0c969312b:0x8ed8c65fa39c306d!2m2!1d76.8899997!2d29.9602037";
+    const kkrGMapLink = "https://maps.app.goo.gl/Yfr1YSYGP1mrLbNR6";
     const mohaliGMapLink = "https://maps.app.goo.gl/SrXsJrh5L23qLEtM6";
 
     const GOOGLE_MAPS_API_KEY = process.env.NEXT_PUBLIC_GOOGLE_MAPS_API_KEY || "";

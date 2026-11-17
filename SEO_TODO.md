@@ -14,11 +14,11 @@ Please set the following environment variables in your Vercel / deployment envir
 | `CRM_API_BASE_URL` | CRM upstream endpoint | e.g. `https://crm.bharatproperties.co/api` |
 | `NEXT_PUBLIC_SITE_URL` | Canonical domain | Configured default: `https://www.bharatproperties.co` |
 | `NEXT_PUBLIC_RERA_NUMBER` | Official Haryana/Punjab RERA registration number | Unset. ReraBadge renders in footer & about page once set. |
-| `NEXT_PUBLIC_FACEBOOK_URL` | Official Facebook business page URL | Unset. Generic link removed from footer & schema. |
-| `NEXT_PUBLIC_INSTAGRAM_URL` | Official Instagram business profile URL | Unset. Generic link removed from footer & schema. |
-| `NEXT_PUBLIC_TWITTER_URL` | Official X (Twitter) profile URL | Unset. Generic link removed from footer & schema. |
-| `NEXT_PUBLIC_LINKEDIN_URL` | Official LinkedIn company page URL | Unset. Generic link removed from schema. |
-| `NEXT_PUBLIC_YOUTUBE_URL` | Official YouTube channel URL | Unset. Generic link removed from schema. |
+| `NEXT_PUBLIC_FACEBOOK_URL` | Official Facebook business page URL | **VERIFIED:** `https://www.facebook.com/bharatproperties570` |
+| `NEXT_PUBLIC_INSTAGRAM_URL` | Official Instagram business profile URL | **VERIFIED:** `https://www.instagram.com/bhaaratproperties` |
+| `NEXT_PUBLIC_LINKEDIN_URL` | Official LinkedIn company page URL | **VERIFIED:** `https://www.linkedin.com/company/42752175/` |
+| `NEXT_PUBLIC_TWITTER_URL` | Official X (Twitter) profile URL | Optional / Unset. |
+| `NEXT_PUBLIC_YOUTUBE_URL` | Official YouTube channel URL | Optional / Unset. |
 | `NEXT_PUBLIC_GOOGLE_MAPS_API_KEY` | Google Maps Platform API key | Needed for interactive store locator on `/locations`. |
 
 ---
@@ -39,7 +39,8 @@ The following physical office addresses and phones are configured in `src/lib/se
 - **Address:** Shop No 166, Sector 3 Market, Kurukshetra, Haryana 136118
 - **Primary Phone:** `+91-9991333570`
 - **Email:** `info@bharatproperties.co`
-- **Status:** Verified from website records.
+- **Google Maps:** **VERIFIED:** `https://maps.app.goo.gl/Yfr1YSYGP1mrLbNR6`
+- **Status:** Fully verified and active in footer, OfficeInfo, schemas, and `llms.txt`.
 
 ### Mohali (Regional Branch)
 - **Address:** PR 7, Airport Road, Sector 82 Industrial Area, Mohali, Punjab

@@ -50,7 +50,7 @@ export default function WaActionPage({ params }) {
         try {
             // Determine API URL based on env
             const API_URL = process.env.NEXT_PUBLIC_CRM_API_URL || 'https://api.bharatproperties.co/api/public';
-            const API_KEY = process.env.NEXT_PUBLIC_CRM_API_KEY || 'BP-WEB-INTEGRATION-2026-X7Y9';
+            const API_KEY = process.env.NEXT_PUBLIC_CRM_API_KEY || '';
 
             const response = await fetch(`${API_URL}/wa-site-visit`, {
                 method: 'POST',

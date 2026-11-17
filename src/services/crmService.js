@@ -13,8 +13,7 @@ const isServer = typeof window === 'undefined';
 const API_URL = isServer
     ? (process.env.CRM_API_BASE_URL || (isProd ? 'https://api.bharatproperties.co/api/public' : 'http://localhost:4000/api/public'))
     : (process.env.NEXT_PUBLIC_CRM_API_URL || '/api/public');
-// Fallback provided for local dev and legacy deployments; prefer setting CRM_API_KEY env.
-const API_KEY = process.env.CRM_API_KEY || 'BP-WEB-INTEGRATION-2026-X7Y9';
+const API_KEY = process.env.CRM_API_KEY || '';
 if (isServer && !API_KEY) {
     console.warn('[crmService] CRM_API_KEY is not set - CRM requests will be rejected.');
 }

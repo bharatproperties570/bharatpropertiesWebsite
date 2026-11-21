@@ -39,7 +39,7 @@ const FeaturedProjects = ({ city = '', initialData = [] }) => {
             }
         };
         loadProjects();
-    }, [activeTab, city]);
+    }, [activeTab, city, initialData]);
 
     return (
         <section className="featured-projects-section">

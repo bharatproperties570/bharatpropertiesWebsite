@@ -1,5 +1,5 @@
 import React from 'react';
-import { notFound } from 'next/navigation';
+import { notFound, permanentRedirect } from 'next/navigation';
 import Link from 'next/link';
 import { Calendar, User, ArrowLeft, Clock } from 'lucide-react';
 import { BLOG_DATA } from '../../../data/blogData';
@@ -10,14 +10,16 @@ import {
 export const revalidate = 3600;
 
 export function generateStaticParams() {
-    return BLOG_DATA.map((b) => ({ slug: b.id }));
+    return BLOG_DATA.map((b) => ({ slug: b.slug }));
 }
 
 const findArticle = (slug) => {
     if (!slug) return null;
     const decoded = decodeURIComponent(slug).toLowerCase().trim();
     return BLOG_DATA.find(
-        (b) => b.id.toLowerCase() === decoded || b.title.toLowerCase().replace(/[^a-z0-9]+/g, '-').replace(/(^-|-$)/g, '') === decoded
+        (b) => (b.slug && b.slug.toLowerCase() === decoded) ||
+               b.id.toLowerCase() === decoded ||
+               b.title.toLowerCase().replace(/[^a-z0-9]+/g, '-').replace(/(^-|-$)/g, '') === decoded
     ) || null;
 };
 
@@ -28,7 +30,7 @@ export async function generateMetadata({ params }) {
 
     const title = `${cleanText(article.title)} | Bharat Properties Blog`;
     const description = cleanText(article.excerpt, 158);
-    const path = `/blog/${article.id}`;
+    const path = `/blog/${article.slug || article.id}`;
     const image = absoluteUrl(article.image);
 
     return {
@@ -58,7 +60,12 @@ export default async function BlogArticlePage({ params }) {
     const article = findArticle(slug);
     if (!article) notFound();
 
-    const path = `/blog/${article.id}`;
+    // 308 permanent redirect if accessed via old id parameter
+    if (slug === article.id && article.slug && slug !== article.slug) {
+        permanentRedirect(`/blog/${article.slug}`);
+    }
+
+    const path = `/blog/${article.slug || article.id}`;
     const url = `${SITE_URL}${path}`;
 
     const graph = [

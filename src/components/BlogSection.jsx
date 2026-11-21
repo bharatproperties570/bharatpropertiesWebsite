@@ -99,7 +99,7 @@ const BlogSection = () => {
                                     color: '#1E293B',
                                     lineHeight: 1.4
                                 }}>
-                                    <Link href={`/blog/${blog.id}`} style={{ color: 'inherit', textDecoration: 'none' }}>
+                                    <Link href={`/blog/${blog.slug || blog.id}`} style={{ color: 'inherit', textDecoration: 'none' }}>
                                         {blog.title}
                                     </Link>
                                 </h3>
@@ -115,7 +115,7 @@ const BlogSection = () => {
                                     {blog.excerpt}
                                 </p>
                                 <Link
-                                    href={`/blog/${blog.id}`}
+                                    href={`/blog/${blog.slug || blog.id}`}
                                     style={{
                                         display: 'inline-flex',
                                         alignItems: 'center',

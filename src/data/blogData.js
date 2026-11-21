@@ -1,6 +1,7 @@
 export const BLOG_DATA = [
     {
         id: 'blog-1',
+        slug: 'top-5-investment-locations-in-north-india-for-2026',
         title: 'Top 5 Investment Locations in North India for 2026',
         excerpt: 'Discover the rapidly developing cities with high appreciation potential. From infrastructure growth to new industrial hubs, here is where you should invest.',
         image: 'https://images.unsplash.com/photo-1560518883-ce09059eeffa?w=800&q=80',
@@ -10,6 +11,7 @@ export const BLOG_DATA = [
     },
     {
         id: 'blog-2',
+        slug: 'modern-home-decor-trends-creating-your-luxury-sanctuary',
         title: 'Modern Home Decor Trends: Creating Your Luxury Sanctuary',
         excerpt: 'Transform your space with these premium interior design trends. Explore minimalist aesthetics, smart home integration, and sustainable luxury materials.',
         image: 'https://images.unsplash.com/photo-1618221195710-dd6b41faaea6?w=800&q=80',
@@ -19,6 +21,7 @@ export const BLOG_DATA = [
     },
     {
         id: 'blog-3',
+        slug: 'first-time-home-buyer-guide-everything-you-need-to-know',
         title: 'First-Time Home Buyer Guide: Everything You Need to Know',
         excerpt: 'Navigating the real estate market can be daunting. Our comprehensive guide covers budgeting, location selection, and legal documentation for new buyers.',
         image: 'https://images.unsplash.com/photo-1582408921715-18e7806365c1?w=800&q=80',

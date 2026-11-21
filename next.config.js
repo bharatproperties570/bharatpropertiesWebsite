@@ -12,6 +12,25 @@ export default {
     imageSizes: [16, 32, 48, 64, 96, 128, 256, 384, 512]
   },
   reactStrictMode: true,
+  async redirects() {
+    return [
+      {
+        source: '/blog/blog-1',
+        destination: '/blog/top-5-investment-locations-in-north-india-for-2026',
+        permanent: true,
+      },
+      {
+        source: '/blog/blog-2',
+        destination: '/blog/modern-home-decor-trends-creating-your-luxury-sanctuary',
+        permanent: true,
+      },
+      {
+        source: '/blog/blog-3',
+        destination: '/blog/first-time-home-buyer-guide-everything-you-need-to-know',
+        permanent: true,
+      },
+    ];
+  },
   async headers() {
     return [
       {

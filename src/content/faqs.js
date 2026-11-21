@@ -82,7 +82,7 @@ export const FAQS = {
     panchkula: [
         {
             question: "Which property types does Bharat Properties handle in Panchkula?",
-            answer: "We assist clients with residential plots, builder floors, and apartments across Panchkula, connecting buyers to verified local options."
+            answer: "We assist clients with residential plots, builder floors, and apartments across Panchkula, connecting buyers to local options."
         },
         {
             question: "How do HSVP plot transfers operate in Panchkula?",

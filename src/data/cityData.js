@@ -1,3 +1,19 @@
+export const ALLOWED_CITIES = [
+    'Kurukshetra',
+    'Mohali',
+    'Chandigarh',
+    'Panchkula',
+    'Zirakpur',
+    'Kharar',
+    'New Chandigarh'
+];
+
+export const isAllowedCity = (name) => {
+    if (!name) return false;
+    const norm = name.toLowerCase().trim().replace(/-/g, ' ');
+    return ALLOWED_CITIES.some((c) => c.toLowerCase() === norm);
+};
+
 export const CITY_DATA = [
     {
         name: 'Delhi',

@@ -1,4 +1,4 @@
-import { CITY_DATA } from '../data/cityData';
+import { CITY_DATA, isAllowedCity } from '../data/cityData';
 import { BLOG_DATA } from '../data/blogData';
 import { SITE_URL, citySlug } from '../lib/seo';
 import { fetchProjects, fetchListings } from '../services/crmService';
@@ -31,7 +31,7 @@ export default async function sitemap() {
     return [
         ...STATIC_ROUTES.map(({ path, ...rest }) => ({ url: `${SITE_URL}${path === '/' ? '' : path}` || SITE_URL, ...rest })),
         ...BLOG_DATA.map((b) => ({ url: `${SITE_URL}/blog/${encodeURIComponent(b.slug || b.id)}`, changeFrequency: 'monthly', priority: 0.6 })),
-        ...CITY_DATA.map((c) => ({ url: `${SITE_URL}/${citySlug(c.name)}`, changeFrequency: 'weekly', priority: 0.8 })),
+        ...CITY_DATA.filter((c) => isAllowedCity(c.name)).map((c) => ({ url: `${SITE_URL}/${citySlug(c.name)}`, changeFrequency: 'weekly', priority: 0.8 })),
         ...unique(projects).map((p) => ({ url: `${SITE_URL}/project/${encodeURIComponent(p.slug)}`, changeFrequency: 'weekly', priority: 0.8 })),
         ...unique(listings).map((l) => ({ url: `${SITE_URL}/property/${encodeURIComponent(l.slug)}`, changeFrequency: 'weekly', priority: 0.7 })),
     ];

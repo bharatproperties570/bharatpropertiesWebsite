@@ -1,5 +1,5 @@
 import { notFound } from 'next/navigation';
-import { CITY_DATA } from '../../data/cityData';
+import { CITY_DATA, isAllowedCity } from '../../data/cityData';
 import { SEO_DATA } from '../../data/seoData';
 import { citySlug, cleanText, absoluteUrl, breadcrumbSchema, faqPageSchema, jsonLd } from '../../lib/seo';
 import { FAQS } from '../../content/faqs';
@@ -9,7 +9,9 @@ import CityPageClient from './CityPageClient';
 export const revalidate = 3600;
 
 export function generateStaticParams() {
-    return CITY_DATA.map((c) => ({ cityName: citySlug(c.name) }));
+    return CITY_DATA
+        .filter((c) => isAllowedCity(c.name))
+        .map((c) => ({ cityName: citySlug(c.name) }));
 }
 
 // Accepts "Kurukshetra", "kurukshetra", "new-chandigarh" and "New%20Chandigarh".
@@ -24,6 +26,18 @@ export async function generateMetadata({ params }) {
     const { cityName } = await params;
     const city = findCity(cityName);
     if (!city) return { title: 'Page not found', robots: { index: false, follow: false } };
+
+    // For non-core cities, strictly disallow search engine indexing
+    if (!isAllowedCity(city.name)) {
+        return {
+            title: `Property in ${city.name} | Bharat Properties`,
+            description: cleanText(city.description),
+            robots: {
+                index: false,
+                follow: false,
+            },
+        };
+    }
 
     const seo = SEO_DATA.CITIES?.[city.name];
     const path = `/${citySlug(city.name)}`;
@@ -42,6 +56,10 @@ export async function generateMetadata({ params }) {
         alternates: { canonical: path },
         openGraph: { title: ogTitle, description, url: path, type: 'website', images: image ? [{ url: image, alt: `${city.name} real estate` }] : undefined },
         twitter: { card: 'summary_large_image', title: ogTitle, description, images: image ? [image] : undefined },
+        robots: {
+            index: true,
+            follow: true,
+        },
     };
 }
 

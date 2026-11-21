@@ -10,16 +10,6 @@ export const BLOG_DATA = [
         author: 'Bharat Properties Team'
     },
     {
-        id: 'blog-2',
-        slug: 'modern-home-decor-trends-creating-your-luxury-sanctuary',
-        title: 'Modern Home Decor Trends: Creating Your Luxury Sanctuary',
-        excerpt: 'Transform your space with these premium interior design trends. Explore minimalist aesthetics, smart home integration, and sustainable luxury materials.',
-        image: 'https://images.unsplash.com/photo-1618221195710-dd6b41faaea6?w=800&q=80',
-        date: 'Jan 25, 2026',
-        category: 'Lifestyle',
-        author: 'Design Expert'
-    },
-    {
         id: 'blog-3',
         slug: 'first-time-home-buyer-guide-everything-you-need-to-know',
         title: 'First-Time Home Buyer Guide: Everything You Need to Know',
@@ -27,6 +17,6 @@ export const BLOG_DATA = [
         image: 'https://images.unsplash.com/photo-1582408921715-18e7806365c1?w=800&q=80',
         date: 'Jan 20, 2026',
         category: 'Real Estate Guide',
-        author: 'Bharat Properties Advisor'
+        author: 'Bharat Properties Team'
     }
 ];

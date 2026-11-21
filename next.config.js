@@ -20,11 +20,6 @@ export default {
         permanent: true,
       },
       {
-        source: '/blog/blog-2',
-        destination: '/blog/modern-home-decor-trends-creating-your-luxury-sanctuary',
-        permanent: true,
-      },
-      {
         source: '/blog/blog-3',
         destination: '/blog/first-time-home-buyer-guide-everything-you-need-to-know',
         permanent: true,

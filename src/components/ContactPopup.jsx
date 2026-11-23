@@ -2,6 +2,7 @@ import React, { useState, useEffect } from 'react';
 import { X, Send, User, Mail, Phone, MessageSquare, CheckCircle, Shield, Loader2, AlertCircle } from 'lucide-react';
 import { countryCodes } from '../data/countryCodes';
 import { submitLead } from '../services/crmService';
+import { trackLeadSubmit } from '../lib/analytics';
 
 const ContactPopup = ({ isOpen, onClose }) => {
     const [formData, setFormData] = useState({
@@ -37,6 +38,7 @@ const ContactPopup = ({ isOpen, onClose }) => {
                 activityType: 'Note',
                 reason: 'Contact Request'
             });
+            trackLeadSubmit('contact_popup');
             setIsSubmitted(true);
             setTimeout(() => {
                 setIsSubmitted(false);

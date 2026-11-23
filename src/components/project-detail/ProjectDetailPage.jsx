@@ -1,4 +1,5 @@
 import React, { useEffect, useState } from 'react';
+import Link from 'next/link';
 import ProjectHeader from './ProjectHeader';
 import ProjectOverview from './ProjectOverview';
 import ProjectBlocks from './ProjectBlocks';
@@ -12,9 +13,18 @@ import ProjectDeals from './ProjectDeals';
 import { fetchProjectBySlug } from '../../services/crmService';
 import SkeletonLoader from '../SkeletonLoader';
 import AnswerFirst from '../AnswerFirst';
+import Breadcrumbs from '../Breadcrumbs';
 import { buildProjectAnswerFirst } from '../../lib/seo';
 
-const ProjectDetailPage = ({ projectId, initialProject = null, onBookConsultation, onAddToCompare }) => {
+const ProjectDetailPage = ({
+    projectId,
+    initialProject = null,
+    breadcrumbs = [],
+    moreProjects = [],
+    city = '',
+    onBookConsultation,
+    onAddToCompare
+}) => {
     const [project, setProject] = useState(initialProject);
     const [loading, setLoading] = useState(!initialProject);
 
@@ -70,6 +80,12 @@ const ProjectDetailPage = ({ projectId, initialProject = null, onBookConsultatio
                 onAddToCompare={() => onAddToCompare(project)}
             />
 
+            {breadcrumbs && breadcrumbs.length > 0 && (
+                <div className="container" style={{ paddingTop: '1rem' }}>
+                    <Breadcrumbs items={breadcrumbs} />
+                </div>
+            )}
+
             <AnswerFirst text={buildProjectAnswerFirst(project)} />
 
             <main>
@@ -118,6 +134,36 @@ const ProjectDetailPage = ({ projectId, initialProject = null, onBookConsultatio
                     <SiteVisitForm projectName={project.name} />
                 </div>
             </main>
+
+            {/* More in City Section */}
+            {moreProjects && moreProjects.length > 0 && (
+                <section style={{ padding: '4rem 0', backgroundColor: '#f8fafc', borderTop: '1px solid #e2e8f0' }}>
+                    <div className="container">
+                        <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-end', marginBottom: '2rem', flexWrap: 'wrap', gap: '1rem' }}>
+                            <div>
+                                <span style={{ fontSize: '0.85rem', fontWeight: 700, color: 'var(--color-accent)', textTransform: 'uppercase', letterSpacing: '0.05em' }}>Explore More Developments</span>
+                                <h2 style={{ fontSize: '1.75rem', fontWeight: 800, color: 'var(--color-primary)', margin: '0.25rem 0 0' }}>More Projects in {city || 'this region'}</h2>
+                            </div>
+                            {city && (
+                                <Link href={`/${city.toLowerCase().replace(/\s+/g, '-')}`} style={{ color: 'var(--color-accent)', fontWeight: 700, textDecoration: 'none' }}>
+                                    View all in {city} →
+                                </Link>
+                            )}
+                        </div>
+                        <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(280px, 1fr))', gap: '1.5rem' }}>
+                            {moreProjects.map((p) => (
+                                <Link key={p.id || p.slug} href={`/project/${encodeURIComponent(p.slug || p.id)}`} style={{ textDecoration: 'none', color: 'inherit' }}>
+                                    <div style={{ backgroundColor: '#ffffff', borderRadius: '1rem', padding: '1.25rem', boxShadow: '0 4px 6px -1px rgba(0,0,0,0.05)', border: '1px solid #e2e8f0', transition: 'transform 0.2s' }}>
+                                        <div style={{ fontWeight: 700, fontSize: '1.1rem', color: 'var(--color-primary)', marginBottom: '0.5rem' }}>{p.name}</div>
+                                        <div style={{ fontSize: '0.875rem', color: '#64748b', marginBottom: '0.75rem' }}>{p.developer?.name || p.developer || 'Developer'} • {p.status || 'Active'}</div>
+                                        <div style={{ fontWeight: 800, color: 'var(--color-accent)' }}>{p.price || 'Price on Request'}</div>
+                                    </div>
+                                </Link>
+                            ))}
+                        </div>
+                    </div>
+                </section>
+            )}
 
             {/* Bottom Floating CTA Section */}
             <section style={{

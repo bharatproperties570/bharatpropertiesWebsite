@@ -2,6 +2,7 @@ import React, { useState } from 'react';
 import { X, Send, User, Mail, Phone, MessageSquare, CheckCircle, Loader2, AlertCircle } from 'lucide-react';
 import { countryCodes } from '../data/countryCodes';
 import { submitLead } from '../services/crmService';
+import { trackLeadSubmit } from '../lib/analytics';
 
 const TalkToExpertForm = ({ onClose }) => {
     const [formData, setFormData] = useState({
@@ -28,6 +29,7 @@ const TalkToExpertForm = ({ onClose }) => {
                 activityType: 'Note',
                 reason: 'Expert Consultation'
             });
+            trackLeadSubmit('talk_to_expert_form');
             setIsSubmitted(true);
         } catch (err) {
             console.error('Submission failed:', err);

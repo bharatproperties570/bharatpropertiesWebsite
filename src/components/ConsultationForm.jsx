@@ -1,6 +1,7 @@
 /* global process */
 import React, { useState, useEffect } from 'react';
 import Image from 'next/image';
+import { trackLeadSubmit } from '../lib/analytics';
 import {
     Calendar,
     User,
@@ -141,6 +142,7 @@ const ConsultationForm = ({ onClose }) => {
         setError(null);
         try {
             await submitLead(formData);
+            trackLeadSubmit('consultation_form', { activity_type: formData.activityType });
             setSubmitted(true);
             setTimeout(() => {
                 onClose();

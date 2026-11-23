@@ -43,9 +43,28 @@ export default async function sitemap() {
 
     return [
         ...STATIC_ROUTES.map(({ path, ...rest }) => ({ url: `${SITE_URL}${path === '/' ? '' : path}` || SITE_URL, ...rest })),
-        ...BLOG_DATA.map((b) => ({ url: `${SITE_URL}/blog/${encodeURIComponent(b.slug || b.id)}`, changeFrequency: 'monthly', priority: 0.6 })),
-        ...CITY_DATA.filter((c) => isAllowedCity(c.name)).map((c) => ({ url: `${SITE_URL}/${citySlug(c.name)}`, changeFrequency: 'weekly', priority: 0.8 })),
-        ...unique(projects).map((p) => ({ url: `${SITE_URL}/project/${encodeURIComponent(p.slug)}`, changeFrequency: 'weekly', priority: 0.8 })),
-        ...unique(listings).map((l) => ({ url: `${SITE_URL}/property/${encodeURIComponent(l.slug)}`, changeFrequency: 'weekly', priority: 0.7 })),
+        ...BLOG_DATA.map((b) => ({
+            url: `${SITE_URL}/blog/${encodeURIComponent(b.slug || b.id)}`,
+            changeFrequency: 'monthly',
+            priority: 0.6,
+            ...(b.date ? { lastModified: new Date(b.date) } : {})
+        })),
+        ...CITY_DATA.filter((c) => isAllowedCity(c.name)).map((c) => ({
+            url: `${SITE_URL}/${citySlug(c.name)}`,
+            changeFrequency: 'weekly',
+            priority: 0.8
+        })),
+        ...unique(projects).map((p) => ({
+            url: `${SITE_URL}/project/${encodeURIComponent(p.slug)}`,
+            changeFrequency: 'weekly',
+            priority: 0.8,
+            ...(p.updatedAt ? { lastModified: new Date(p.updatedAt) } : {})
+        })),
+        ...unique(listings).map((l) => ({
+            url: `${SITE_URL}/property/${encodeURIComponent(l.slug)}`,
+            changeFrequency: 'weekly',
+            priority: 0.7,
+            ...(l.updatedAt ? { lastModified: new Date(l.updatedAt) } : {})
+        })),
     ];
 }

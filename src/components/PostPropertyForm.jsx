@@ -2,6 +2,7 @@ import React, { useState, useEffect } from 'react';
 import { X, CheckCircle, IndianRupee, MapPin, User, Building2, Tag, Ruler, Loader2, AlertCircle, Briefcase, Users } from 'lucide-react';
 import { countryCodes } from '../data/countryCodes';
 import { submitListing, fetchProjects, fetchPublicSettings, fetchAvailableUnits } from '../services/crmService';
+import { trackLeadSubmit } from '../lib/analytics';
 
 const PostPropertyForm = ({ onClose }) => {
     const [formData, setFormData] = useState({
@@ -198,6 +199,7 @@ const PostPropertyForm = ({ onClose }) => {
                 associateWith: formData.role
             };
             await submitListing(payload);
+            trackLeadSubmit('post_property_form');
             setSubmitted(true);
             setTimeout(() => onClose(), 3000);
         } catch (err) {

@@ -4,6 +4,7 @@ import { SEO_DATA } from '../../data/seoData';
 import { citySlug, cleanText, absoluteUrl, breadcrumbSchema, faqPageSchema, jsonLd } from '../../lib/seo';
 import { FAQS } from '../../content/faqs';
 import { fetchRealEstateNews } from '../../services/NewsService';
+import { fetchFeaturedProjects, fetchFeaturedDeals } from '../../services/crmService';
 import CityPageClient from './CityPageClient';
 
 export const revalidate = 3600;
@@ -68,17 +69,38 @@ export default async function CityPage({ params }) {
     const city = findCity(cityName);
     if (!city) notFound();
 
-    const [crumbs, initialNews] = await Promise.all([
-        breadcrumbSchema([
-            { name: 'Home', path: '/' },
-            { name: city.name, path: `/${citySlug(city.name)}` },
-        ]),
-        fetchRealEstateNews(city.name).catch(() => [])
+    const breadcrumbs = [
+        { name: 'Home', path: '/' },
+        { name: city.name, path: `/${citySlug(city.name)}` },
+    ];
+
+    const [crumbs, initialNews, cityProjects, cityListings] = await Promise.all([
+        breadcrumbSchema(breadcrumbs),
+        fetchRealEstateNews(city.name).catch(() => []),
+        fetchFeaturedProjects('All', city.name).catch(() => []),
+        fetchFeaturedDeals('latest', city.name).catch(() => [])
     ]);
 
     const slug = citySlug(city.name);
     const cityFaqs = FAQS[slug];
     const faqSchema = cityFaqs ? faqPageSchema(cityFaqs) : null;
+
+    const propertyTypes = [...new Set(cityListings.map(l => l.propertyType || l.category || l.subCategory).filter(Boolean))];
+    const localities = [...new Set(cityListings.map(l => l.location?.locality).filter(Boolean))];
+    const prices = cityListings.map(l => l.rawPrice).filter(p => typeof p === 'number' && p > 0);
+    const priceRange = prices.length > 0 ? { min: Math.min(...prices), max: Math.max(...prices) } : null;
+
+    const citySummary = {
+        projectCount: cityProjects.length,
+        listingCount: cityListings.length,
+        propertyTypes,
+        localities,
+        priceRange
+    };
+
+    const nearbyCities = CITY_DATA
+        .filter((c) => isAllowedCity(c.name) && c.name.toLowerCase() !== city.name.toLowerCase())
+        .map((c) => ({ name: c.name, slug: citySlug(c.name) }));
 
     return (
         <>
@@ -86,7 +108,15 @@ export default async function CityPage({ params }) {
             {faqSchema && (
                 <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: jsonLd(faqSchema) }} />
             )}
-            <CityPageClient cityData={city} initialNews={initialNews} />
+            <CityPageClient
+                cityData={city}
+                initialNews={initialNews}
+                breadcrumbs={breadcrumbs}
+                citySummary={citySummary}
+                nearbyCities={nearbyCities}
+                initialProjects={cityProjects}
+                initialListings={cityListings}
+            />
         </>
     );
 }

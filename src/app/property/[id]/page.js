@@ -1,5 +1,6 @@
 import { notFound } from 'next/navigation';
 import { getListing } from '../../../lib/data';
+import { fetchFeaturedDeals } from '../../../services/crmService';
 import {
     SITE_URL, cleanText, absoluteUrl, firstImage, propertySchema, breadcrumbSchema, jsonLd,
 } from '../../../lib/seo';
@@ -50,21 +51,36 @@ export default async function PropertyPage({ params }) {
     const path = `/property/${property.slug || id}`;
     const url = `${SITE_URL}${path}`;
     const city = property.location?.city && property.location.city !== 'Unknown' ? property.location.city : '';
-    const graph = [
-        propertySchema(property, url),
-        breadcrumbSchema([
-            { name: 'Home', path: '/' },
-            ...(city ? [{ name: city, path: `/${city.toLowerCase().replace(/\s+/g, '-')}` }] : []),
-            { name: nameOf(property), path },
-        ]),
+
+    const breadcrumbs = [
+        { name: 'Home', path: '/' },
+        ...(city ? [{ name: city, path: `/${city.toLowerCase().replace(/\s+/g, '-')}` }] : []),
+        { name: nameOf(property), path },
     ];
+
+    const [graph, moreListings] = await Promise.all([
+        Promise.resolve([
+            propertySchema(property, url),
+            breadcrumbSchema(breadcrumbs),
+        ]),
+        city
+            ? fetchFeaturedDeals('latest', city)
+                .then((list) => list.filter((l) => l.slug !== property.slug && l.id !== property.id).slice(0, 4))
+                .catch(() => [])
+            : Promise.resolve([])
+    ]);
 
     return (
         <>
             {graph.map((item, i) => (
                 <script key={i} type="application/ld+json" dangerouslySetInnerHTML={{ __html: jsonLd(item) }} />
             ))}
-            <PropertyPageClient initialProperty={property} />
+            <PropertyPageClient
+                initialProperty={property}
+                breadcrumbs={breadcrumbs}
+                moreListings={moreListings}
+                city={city}
+            />
         </>
     );
 }

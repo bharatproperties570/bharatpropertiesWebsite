@@ -369,7 +369,8 @@ const mapDealToProperty = (deal) => {
             description: deal.websiteMetadata?.metaDescription,
             tags: deal.websiteMetadata?.tags || []
         },
-        siteVisitCount: deal.siteVisitCount
+        siteVisitCount: deal.siteVisitCount,
+        updatedAt: deal.updatedAt || deal.createdAt || null
     };
 };
 
@@ -436,7 +437,8 @@ const mapProjectToWebProject = (project) => {
             title: project.websiteMetadata?.metaTitle,
             description: project.websiteMetadata?.metaDescription,
             tags: project.websiteMetadata?.tags || []
-        }
+        },
+        updatedAt: project.updatedAt || project.createdAt || null
     };
 };
 

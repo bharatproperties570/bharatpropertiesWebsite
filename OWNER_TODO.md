@@ -36,7 +36,29 @@ This document tracks every specific fact, credential, asset, and architectural s
 
 ---
 
-## 4. Analytics, Webmaster & Third-Party Keys
+## 4. Production Environment Variables Required for Vercel
+
+The following variables must be configured in Vercel (**Project Settings** -> **Environment Variables** -> **Production**):
+
+- [ ] **`CRM_API_KEY` (CRITICAL / BLOCKER):**
+  - **Required:** YES.
+  - **Behavior:** The production build (`node scripts/build.mjs`) performs a 3-attempt authenticated check against `/projects?limit=1`. If missing or invalid (HTTP 401/403), the build **aborts immediately with exit code 1**. Mock data is strictly disabled on Vercel.
+- [ ] **`CRM_API_BASE_URL`:**
+  - **Optional:** Defaults to `https://api.bharatproperties.co/api/public`.
+- [ ] **`GEMINI_API_KEY`:**
+  - **Required:** YES, for the website AI chatbot (`/api/webhooks/website-chat`).
+- [ ] **`NEXT_PUBLIC_SITE_URL`:**
+  - **Required:** YES (`https://www.bharatproperties.co`).
+- [ ] **`NEXT_PUBLIC_GOOGLE_MAPS_API_KEY`:**
+  - **Required:** YES, for Google Maps Store Locator and office map embeds.
+- [ ] **`NEXT_PUBLIC_GA_ID`:**
+  - **Optional:** Google Analytics 4 Measurement ID (`G-XXXXXXXXXX`).
+- [ ] **`NEXT_PUBLIC_GSC_VERIFICATION`:**
+  - **Optional:** Google Search Console site verification token.
+
+---
+
+## 5. Analytics, Webmaster & Legal Review
 
 - [ ] **Google Analytics 4 (GA4):**
   - **Variable:** `NEXT_PUBLIC_GA_ID` (Format: `G-XXXXXXXXXX`).

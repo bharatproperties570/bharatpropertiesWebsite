@@ -38,22 +38,31 @@ Enterprise-grade real estate web platform for Bharat Properties (`https://www.bh
 
 ---
 
-## 2. Environment Variables
+## 2. Environment Variables & Vercel Deployment
 
 All secrets must remain server-side and never be prefixed with `NEXT_PUBLIC_`.
 
-| Variable | Scope | Required | Default / Description |
+### Required Variables for Vercel Production
+
+| Variable | Scope | Required in Prod | Default / Description |
 | :--- | :--- | :--- | :--- |
-| `NEXT_PUBLIC_SITE_URL` | Client & Server | Yes | `https://www.bharatproperties.co` (Canonical URL) |
-| `CRM_API_BASE_URL` | Server-Only | Yes | Upstream CRM base URL (e.g. `https://api.bharatproperties.co/api/public`) |
-| `CRM_API_KEY` | Server-Only | Yes | Authenticates server requests to upstream CRM API |
-| `GEMINI_API_KEY` | Server-Only | Optional | Powers AI chatbot assistant (`/api/webhooks/website-chat`) |
-| `NEXT_PUBLIC_GA_ID` | Client | Optional | Google Analytics 4 Measurement ID (`G-XXXXXXXXXX`) |
-| `NEXT_PUBLIC_GSC_VERIFICATION` | Client | Optional | Google Search Console site verification token |
-| `NEXT_PUBLIC_DEFAULT_CITY` | Client | Optional | Fallback city for general listings (default: `Kurukshetra`) |
-| `NEXT_PUBLIC_PHONE` | Client | Optional | Primary contact telephone number |
-| `NEXT_PUBLIC_WHATSAPP` | Client | Optional | Primary WhatsApp contact number |
-| `PORT` | Local runtime | Optional | Server port (default: `3000`) |
+| `CRM_API_KEY` | Server-Only | **YES** | Authenticates server requests to upstream CRM API. Build fails if missing or invalid. |
+| `CRM_API_BASE_URL` | Server-Only | Optional | Upstream CRM base URL (defaults to `https://api.bharatproperties.co/api/public`). |
+| `GEMINI_API_KEY` | Server-Only | **YES** | Powers AI chatbot assistant (`/api/webhooks/website-chat`). |
+| `NEXT_PUBLIC_SITE_URL` | Client & Server | **YES** | Canonical site URL: `https://www.bharatproperties.co`. |
+| `NEXT_PUBLIC_GOOGLE_MAPS_API_KEY` | Client | **YES** | Google Maps API key for Store Locator and office map embeds. |
+| `NEXT_PUBLIC_GA_ID` | Client | Optional | Google Analytics 4 Measurement ID (`G-XXXXXXXXXX`). |
+| `NEXT_PUBLIC_GSC_VERIFICATION` | Client | Optional | Google Search Console site verification token. |
+| `NEXT_PUBLIC_DEFAULT_CITY` | Client | Optional | Fallback city for general listings (default: `Kurukshetra`). |
+| `NEXT_PUBLIC_PHONE` | Client | Optional | Primary contact telephone number. |
+| `NEXT_PUBLIC_WHATSAPP` | Client | Optional | Primary WhatsApp contact number. |
+| `USE_MOCK_CRM` | Local / CI | Test Only | Set `USE_MOCK_CRM=1` for isolated CI/local testing. **Ignored on Vercel**. |
+
+### Production Build Invariants & Failure Behavior
+- **Zero Mock Data in Real Builds:** Mock CRM is used **only** when `USE_MOCK_CRM=1` is set explicitly. It will never activate automatically as a fallback.
+- **Vercel Enforcement:** If `VERCEL` or `VERCEL_ENV` is detected, `USE_MOCK_CRM` is completely ignored and live CRM authentication is enforced.
+- **Pre-Build Health Check:** Any production build without `USE_MOCK_CRM=1` performs an authenticated 3-attempt health check (5s timeout per attempt) against `${CRM_API_BASE_URL}/projects?limit=1`.
+- **Immediate Build Abort:** If the CRM is unreachable (connection refused, timeout) or returns HTTP 401/403, the build immediately aborts with exit code 1 to protect production from deploying broken or blank static pages.
 
 ---
 

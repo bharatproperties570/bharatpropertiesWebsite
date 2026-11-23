@@ -1,4 +1,5 @@
 import React, { useState } from 'react';
+import Image from 'next/image';
 import { X, Check, Minus, Plus, ChevronDown, MapPin, Building2, Wallet, Zap, ShieldCheck, Ruler, Compass, MoveUpRight } from 'lucide-react';
 import { INDIVIDUAL_PROPERTIES } from '../data/individualProperties';
 
@@ -143,11 +144,16 @@ const PropertyComparison = ({ properties, onClose, onRemoveProperty, onAddProper
                                             >
                                                 <X size={14} />
                                             </button>
-                                            <img
-                                                src={property.image}
-                                                style={{ width: '100%', height: '120px', objectFit: 'cover', borderRadius: '16px', boxShadow: '0 4px 12px rgba(0,0,0,0.1)' }}
-                                                alt={property.unitName}
-                                            />
+                                            <div style={{ position: 'relative', width: '100%', height: '120px', borderRadius: '16px', overflow: 'hidden', boxShadow: '0 4px 12px rgba(0,0,0,0.1)' }}>
+                                                <Image
+                                                    src={property.image}
+                                                    fill
+                                                    sizes="320px"
+                                                    style={{ objectFit: 'cover' }}
+                                                    alt={property.unitName || 'Comparison property'}
+                                                    loading="lazy"
+                                                />
+                                            </div>
                                             <div>
                                                 <div style={{ fontWeight: 800, fontSize: '1.1rem', color: '#0F172A' }}>{property.unitName}</div>
                                                 <div style={{ fontSize: '0.8rem', color: '#64748b', display: 'flex', alignItems: 'center', justifyContent: 'center', gap: '4px' }}>

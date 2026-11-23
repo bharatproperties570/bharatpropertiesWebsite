@@ -1,5 +1,6 @@
 /* global process */
 import React from 'react';
+import Image from 'next/image';
 import { Facebook, Instagram, Twitter, Linkedin, Mail, Phone, MapPin, ExternalLink } from 'lucide-react';
 import logo from '../assets/logo.png';
 import ReraBadge from './ReraBadge';
@@ -17,7 +18,7 @@ const Footer = () => {
                 {/* Brand */}
                 <div>
                     <div style={{ display: 'flex', alignItems: 'center', gap: '0.75rem', marginBottom: '1rem' }}>
-                        <img src={logo.src} alt="Bharat Properties" style={{ height: '50px', width: 'auto' }} />
+                        <Image src={logo} alt="Bharat Properties" width={160} height={50} style={{ height: '50px', width: 'auto' }} />
                         <h3 style={{ fontSize: '1.5rem', color: 'var(--color-gold)', margin: 0 }}>Bharat Properties</h3>
                     </div>
                     <p style={{ color: 'var(--color-text-light)', opacity: 0.8, marginBottom: '1.5rem' }}>

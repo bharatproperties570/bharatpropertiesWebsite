@@ -1,4 +1,5 @@
 import React from 'react';
+import Image from 'next/image';
 import { MapPin, CheckCircle, Target, MessageSquare, Quote, Globe, Building2, Briefcase, Zap, Shield } from 'lucide-react';
 import ReraBadge from './ReraBadge';
 
@@ -83,10 +84,13 @@ const AboutPage = ({ onBookConsultation, onTalkToExpert }) => {
                             </ul>
                         </div>
                         <div style={{ position: 'relative' }}>
-                            <img
+                            <Image
                                 src="https://images.unsplash.com/photo-1486406146926-c627a92ad1ab?ixlib=rb-4.0.3&auto=format&fit=crop&w=1000&q=80"
-                                alt="Modern Office"
-                                style={{ width: '100%', borderRadius: '24px', boxShadow: '0 25px 50px -12px rgba(0,0,0,0.15)' }}
+                                alt="Bharat Properties corporate office and consulting workspace"
+                                width={800}
+                                height={533}
+                                style={{ width: '100%', height: 'auto', borderRadius: '24px', boxShadow: '0 25px 50px -12px rgba(0,0,0,0.15)' }}
+                                loading="lazy"
                             />
                             <div style={{ position: 'absolute', bottom: '-20px', left: '-20px', backgroundColor: 'var(--color-primary)', color: 'white', padding: '1.5rem', borderRadius: '16px', boxShadow: '0 10px 20px rgba(0,0,0,0.1)' }}>
                                 <Briefcase size={32} />

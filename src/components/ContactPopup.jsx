@@ -148,18 +148,22 @@ const ContactPopup = ({ isOpen, onClose }) => {
 
                         <form onSubmit={handleSubmit} style={{ padding: '2rem 2.5rem 2.5rem' }}>
                             {error && (
-                                <div style={{ 
-                                    padding: '0.75rem', 
-                                    backgroundColor: '#fef2f2', 
-                                    border: '1px solid #fee2e2', 
-                                    borderRadius: '12px', 
-                                    color: '#dc2626', 
-                                    fontSize: '0.85rem', 
-                                    display: 'flex', 
-                                    alignItems: 'center', 
-                                    gap: '0.5rem', 
-                                    marginBottom: '1rem' 
-                                }}>
+                                <div
+                                    role="alert"
+                                    aria-live="assertive"
+                                    style={{ 
+                                        padding: '0.75rem', 
+                                        backgroundColor: '#fef2f2', 
+                                        border: '1px solid #fee2e2', 
+                                        borderRadius: '12px', 
+                                        color: '#dc2626', 
+                                        fontSize: '0.85rem', 
+                                        display: 'flex', 
+                                        alignItems: 'center', 
+                                        gap: '0.5rem', 
+                                        marginBottom: '1rem' 
+                                    }}
+                                >
                                     <AlertCircle size={16} />
                                     <span>{error}</span>
                                 </div>

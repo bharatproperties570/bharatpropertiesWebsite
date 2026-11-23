@@ -155,17 +155,21 @@ const TalkToExpertForm = ({ onClose }) => {
                 <div style={{ padding: '2rem', backgroundColor: theme.surface }}>
                     <form onSubmit={handleSubmit} style={{ display: 'flex', flexDirection: 'column', gap: '1.25rem' }}>
                         {error && (
-                            <div style={{ 
-                                padding: '1rem', 
-                                backgroundColor: '#fef2f2', 
-                                border: '1px solid #fee2e2', 
-                                borderRadius: '12px', 
-                                color: '#dc2626', 
-                                fontSize: '0.9rem', 
-                                display: 'flex', 
-                                alignItems: 'center', 
-                                gap: '0.75rem' 
-                            }}>
+                            <div
+                                role="alert"
+                                aria-live="assertive"
+                                style={{ 
+                                    padding: '1rem', 
+                                    backgroundColor: '#fef2f2', 
+                                    border: '1px solid #fee2e2', 
+                                    borderRadius: '12px', 
+                                    color: '#dc2626', 
+                                    fontSize: '0.9rem', 
+                                    display: 'flex', 
+                                    alignItems: 'center', 
+                                    gap: '0.75rem' 
+                                }}
+                            >
                                 <AlertCircle size={18} />
                                 <span>{error}</span>
                             </div>

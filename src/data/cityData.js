@@ -17,7 +17,7 @@ export const isAllowedCity = (name) => {
 export const CITY_DATA = [
     {
         name: 'Delhi',
-        image: '/images/delhi_drone.png', // Iconic India Gate Drone View
+        image: '/images/delhi_drone.webp', // Iconic India Gate Drone View
         videos: [
             'https://cdn.pixabay.com/video/2024/01/20/197466-904874311_large.mp4', // Majestic Rajpath Vibe
             'https://cdn.pixabay.com/video/2024/04/10/207558_large.mp4',
@@ -27,7 +27,7 @@ export const CITY_DATA = [
     },
     {
         name: 'Gurgaon',
-        image: '/images/gurgaon_drone.png', // Iconic Cyber City Drone View
+        image: '/images/gurgaon_drone.webp', // Iconic Cyber City Drone View
         videos: [
             'https://cdn.pixabay.com/video/2023/12/04/191989-890786523_large.mp4', // Futuristic Cyber City Vibe
             'https://cdn.pixabay.com/video/2023/11/05/187889-881512451_large.mp4',
@@ -37,7 +37,7 @@ export const CITY_DATA = [
     },
     {
         name: 'Noida',
-        image: '/images/noida_drone.png', // Iconic Noida Expressway Drone View
+        image: '/images/noida_drone.webp', // Iconic Noida Expressway Drone View
         videos: [
             'https://cdn.pixabay.com/video/2022/02/25/108990-682544251_large.mp4', // Noida Expressway Vibe
             'https://cdn.pixabay.com/video/2023/12/30/194888-900542311_large.mp4',
@@ -47,7 +47,7 @@ export const CITY_DATA = [
     },
     {
         name: 'Chandigarh',
-        image: '/images/chandigarh_drone.png', // Iconic Open Hand Monument Drone View
+        image: '/images/chandigarh_drone.webp', // Iconic Open Hand Monument Drone View
         videos: [
             'https://cdn.pixabay.com/video/2024/02/20/201242-914942311_large.mp4',
             'https://cdn.pixabay.com/video/2021/04/10/70562-536962451_large.mp4',
@@ -58,7 +58,7 @@ export const CITY_DATA = [
     },
     {
         name: 'Kurukshetra',
-        image: '/images/kurukshetra_drone.png', // Iconic Brahma Sarovar Landmark Drone View
+        image: '/images/kurukshetra_drone.webp', // Iconic Brahma Sarovar Landmark Drone View
         videos: [
             'https://cdn.pixabay.com/video/2024/01/15/196882-903542311_large.mp4',
             'https://cdn.pixabay.com/video/2024/03/12/203442-920442451_large.mp4',
@@ -69,7 +69,7 @@ export const CITY_DATA = [
     },
     {
         name: 'Mohali',
-        image: '/images/mohali_drone.png', // Iconic Aerocity Drone View
+        image: '/images/mohali_drone.webp', // Iconic Aerocity Drone View
         videos: [
             'https://cdn.pixabay.com/video/2021/04/10/70562-536962451_large.mp4', // Modern City Highway (Mohali vibe)
             'https://cdn.pixabay.com/video/2024/02/20/201242-914942311_large.mp4', // High-speed Flyover
@@ -80,7 +80,7 @@ export const CITY_DATA = [
     },
     {
         name: 'Panchkula',
-        image: '/images/panchkula_drone.png', // Iconic Morni Hills Drone View
+        image: '/images/panchkula_drone.webp', // Iconic Morni Hills Drone View
         videos: [
             'https://cdn.pixabay.com/video/2023/10/24/186358-877712165_large.mp4', // Peaceful Residential Vibe
             'https://cdn.pixabay.com/video/2024/04/20/208884_large.mp4',
@@ -101,7 +101,7 @@ export const CITY_DATA = [
     },
     {
         name: 'Sonepat',
-        image: '/images/sonepat_drone.png', // Modern Residential Drone View
+        image: '/images/sonepat_drone.webp', // Modern Residential Drone View
         videos: [
             'https://cdn.pixabay.com/video/2024/05/01/210158_large.mp4',
             'https://cdn.pixabay.com/video/2024/03/15/204258_large.mp4',
@@ -112,7 +112,7 @@ export const CITY_DATA = [
     },
     {
         name: 'Karnal',
-        image: '/images/karnal_drone.png', // Iconic Karn Lake Landmark Drone View
+        image: '/images/karnal_drone.webp', // Iconic Karn Lake Landmark Drone View
         videos: [
             'https://cdn.pixabay.com/video/2024/07/15/221558_large.mp4',
             'https://cdn.pixabay.com/video/2024/04/10/207558_large.mp4',

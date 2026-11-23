@@ -1,6 +1,7 @@
 'use client';
 
 import React, { useState } from 'react';
+import Image from 'next/image';
 import PropertyListItem from './PropertyListItem';
 import PropertyMapView from './PropertyMapView';
 import { Filter, Map, List, Maximize2, Minimize2, MapPin } from 'lucide-react';
@@ -194,8 +195,15 @@ const SearchResults = ({ properties, searchTerm, onPropertySelect }) => {
                                             onMouseEnter={(e) => e.currentTarget.style.backgroundColor = '#f8fafc'}
                                             onMouseLeave={(e) => e.currentTarget.style.backgroundColor = 'transparent'}
                                         >
-                                            <div style={{ width: '100px', height: '100px', flexShrink: 0, borderRadius: '12px', overflow: 'hidden' }}>
-                                                <img src={p.image} alt="" style={{ width: '100%', height: '100%', objectFit: 'cover' }} />
+                                            <div style={{ width: '100px', height: '100px', flexShrink: 0, borderRadius: '12px', overflow: 'hidden', position: 'relative' }}>
+                                                <Image
+                                                    src={p.image}
+                                                    alt={`${p.title || 'Property'} in ${typeof p.location === 'object' ? p.location.city : p.location || 'North India'}`}
+                                                    fill
+                                                    sizes="100px"
+                                                    style={{ objectFit: 'cover' }}
+                                                    loading="lazy"
+                                                />
                                             </div>
                                             <div style={{ flex: 1 }}>
                                                 <h4 style={{ fontSize: '0.95rem', fontWeight: 700, margin: '0 0 0.4rem', color: '#1e293b' }}>{p.title}</h4>

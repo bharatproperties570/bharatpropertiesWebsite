@@ -1,19 +1,22 @@
 'use client';
 
 import React from 'react';
+import dynamic from 'next/dynamic';
 import { useRouter } from 'next/navigation';
 import { useGlobal } from '../context/GlobalContext';
-import PostPropertyForm from './PostPropertyForm';
-import FeedbackForm from './FeedbackForm';
-import ConsultationForm from './ConsultationForm';
-import TalkToExpertForm from './TalkToExpertForm';
-import WishlistPanel from './WishlistPanel';
-import ContactPopup from './ContactPopup';
-import ProjectComparison from './ProjectComparison';
-import PropertyComparison from './PropertyComparison';
-import PropertyMapView from './PropertyMapView';
-import Chatbot from './Chatbot';
-import { Heart, MessageCircle } from 'lucide-react'; // MapPin not used in floating buttons directly? Checked App.jsx
+
+const PostPropertyForm = dynamic(() => import('./PostPropertyForm'), { ssr: false });
+const FeedbackForm = dynamic(() => import('./FeedbackForm'), { ssr: false });
+const ConsultationForm = dynamic(() => import('./ConsultationForm'), { ssr: false });
+const TalkToExpertForm = dynamic(() => import('./TalkToExpertForm'), { ssr: false });
+const WishlistPanel = dynamic(() => import('./WishlistPanel'), { ssr: false });
+const ContactPopup = dynamic(() => import('./ContactPopup'), { ssr: false });
+const ProjectComparison = dynamic(() => import('./ProjectComparison'), { ssr: false });
+const PropertyComparison = dynamic(() => import('./PropertyComparison'), { ssr: false });
+const PropertyMapView = dynamic(() => import('./PropertyMapView'), { ssr: false });
+const Chatbot = dynamic(() => import('./Chatbot'), { ssr: false });
+
+import { Heart, MessageCircle } from 'lucide-react';
 import { PROPERTY_DATA } from '../data/propertyData';
 
 export default function ClientUI() {

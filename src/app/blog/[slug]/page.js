@@ -1,6 +1,7 @@
 import React from 'react';
 import { notFound, permanentRedirect } from 'next/navigation';
 import Link from 'next/link';
+import Image from 'next/image';
 import { Calendar, User, ArrowLeft, Clock } from 'lucide-react';
 import { BLOG_DATA } from '../../../data/blogData';
 import {
@@ -186,9 +187,12 @@ export default async function BlogArticlePage({ params }) {
                             boxShadow: '0 10px 25px -5px rgba(0,0,0,0.08)',
                         }}
                     >
-                        <img
+                        <Image
                             src={article.image}
                             alt={article.title}
+                            width={1200}
+                            height={600}
+                            priority
                             style={{
                                 width: '100%',
                                 maxHeight: '480px',

@@ -1,4 +1,5 @@
 import React from 'react';
+import Image from 'next/image';
 import { Heart, X, ArrowRight, Trash2 } from 'lucide-react';
 
 const WishlistPanel = ({ isOpen, onClose, items, onRemove }) => {
@@ -63,7 +64,14 @@ const WishlistPanel = ({ isOpen, onClose, items, onRemove }) => {
                                     border: '1px solid #f1f5f9',
                                     position: 'relative'
                                 }}>
-                                    <img src={item.image} style={{ width: '80px', height: '80px', borderRadius: 'var(--radius-sm)', objectFit: 'cover' }} alt={item.title} />
+                                    <Image
+                                        src={item.image}
+                                        width={80}
+                                        height={80}
+                                        style={{ width: '80px', height: '80px', borderRadius: 'var(--radius-sm)', objectFit: 'cover' }}
+                                        alt={item.title || 'Saved property'}
+                                        loading="lazy"
+                                    />
                                     <div style={{ flex: 1 }}>
                                         <h4 style={{ fontSize: '1rem', fontWeight: 600, marginBottom: '0.25rem' }}>{item.title}</h4>
                                         <p style={{ fontSize: '0.85rem', color: 'var(--color-text-muted)', marginBottom: '0.5rem' }}>{item.location}</p>

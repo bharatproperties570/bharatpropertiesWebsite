@@ -57,6 +57,16 @@ html {
     scroll-behavior: smooth;
 }
 
+/* Accessible Focus States */
+a:focus-visible,
+button:focus-visible,
+input:focus-visible,
+select:focus-visible,
+textarea:focus-visible {
+    outline: 3px solid var(--color-accent, #c2410c);
+    outline-offset: 2px;
+}
+
 /* Glass Utility */
 .glass {
     background: var(--glass-bg);

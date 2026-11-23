@@ -1,6 +1,7 @@
 'use client';
 
 import React from 'react';
+import Image from 'next/image';
 import { Search } from 'lucide-react';
 import PropertyTypeSelector from './PropertyTypeSelector';
 
@@ -16,11 +17,12 @@ const Hero = ({ onSearch, city, videos, image }) => {
     React.useEffect(() => {
         if (typeof window === 'undefined') return;
         const prefersReducedMotion = window.matchMedia && window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+        const isDesktop = window.innerWidth >= 1024 && !window.matchMedia('(pointer: coarse)').matches;
         const nav = typeof navigator !== 'undefined' ? navigator : null;
         const conn = nav?.connection || nav?.mozConnection || nav?.webkitConnection;
-        const isSlow = conn && (conn.saveData || /2g/i.test(conn.effectiveType));
+        const isSlow = conn && (conn.saveData || /2g|3g/i.test(conn.effectiveType));
 
-        if (!prefersReducedMotion && !isSlow) {
+        if (isDesktop && !prefersReducedMotion && !isSlow) {
             setCanPlayVideo(true);
         }
     }, []);
@@ -61,12 +63,12 @@ const Hero = ({ onSearch, city, videos, image }) => {
                     key={`${city}-${videoIndex}`}
                     autoPlay
                     muted
-                    preload="metadata"
+                    preload="none"
                     onEnded={handleVideoEnd}
                     onError={handleVideoError}
                     playsInline
                     aria-hidden="true"
-                    poster={image}
+                    poster={image || '/images/kurukshetra_drone.webp'}
                     style={{
                         position: 'absolute',
                         top: '50%',
@@ -82,18 +84,15 @@ const Hero = ({ onSearch, city, videos, image }) => {
                 >
                     <source src={currentVideos[videoIndex]} type="video/mp4" />
                 </video>
-            ) : image && (
-                <div style={{
-                    position: 'absolute',
-                    top: 0,
-                    left: 0,
-                    width: '100%',
-                    height: '100%',
-                    backgroundImage: `url(${image})`,
-                    backgroundSize: 'cover',
-                    backgroundPosition: 'center',
-                    zIndex: 0
-                }}></div>
+            ) : (
+                <Image
+                    src={image || '/images/kurukshetra_drone.webp'}
+                    alt={`${city || 'Bharat Properties'} showcase banner`}
+                    fill
+                    priority
+                    sizes="100vw"
+                    style={{ objectFit: 'cover', zIndex: 0 }}
+                />
             )}
 
             {/* Overlay */}

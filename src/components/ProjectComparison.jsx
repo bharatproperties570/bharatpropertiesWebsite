@@ -1,4 +1,5 @@
 import React, { useState } from 'react';
+import Image from 'next/image';
 import { X, Check, Minus, Plus, ChevronDown, MapPin, Building2, Wallet, Zap, ShieldCheck, IndianRupee } from 'lucide-react';
 import { SAMPLE_PROJECTS } from '../data/sampleProjects';
 
@@ -145,11 +146,20 @@ const ProjectComparison = ({ projects, onClose, onRemoveProject, onAddProject })
                                             >
                                                 <X size={14} />
                                             </button>
-                                            <img
-                                                src={project.images[0]}
-                                                style={{ width: '100%', height: '120px', objectFit: 'cover', borderRadius: '16px', boxShadow: '0 4px 12px rgba(0,0,0,0.1)' }}
-                                                alt={project.name}
-                                            />
+                                            <div style={{ position: 'relative', width: '100%', height: '120px', borderRadius: '16px', overflow: 'hidden', boxShadow: '0 4px 12px rgba(0,0,0,0.1)' }}>
+                                                {project.images?.[0] ? (
+                                                    <Image
+                                                        src={project.images[0]}
+                                                        fill
+                                                        sizes="320px"
+                                                        style={{ objectFit: 'cover' }}
+                                                        alt={project.name || 'Comparison project'}
+                                                        loading="lazy"
+                                                    />
+                                                ) : (
+                                                    <div style={{ width: '100%', height: '100%', backgroundColor: '#e2e8f0' }} />
+                                                )}
+                                            </div>
                                             <div>
                                                 <div style={{ fontWeight: 800, fontSize: '1.1rem', color: '#0F172A' }}>{project.name}</div>
                                                 <div style={{ fontSize: '0.8rem', color: '#64748b', display: 'flex', alignItems: 'center', justifyContent: 'center', gap: '4px' }}>

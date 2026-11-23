@@ -17,11 +17,12 @@ const HeroSection = ({ onExplore }) => {
     React.useEffect(() => {
         if (typeof window === 'undefined') return;
         const prefersReducedMotion = window.matchMedia && window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+        const isDesktop = window.innerWidth >= 1024 && !window.matchMedia('(pointer: coarse)').matches;
         const nav = typeof navigator !== 'undefined' ? navigator : null;
         const conn = nav?.connection || nav?.mozConnection || nav?.webkitConnection;
-        const isSlow = conn && (conn.saveData || /2g/i.test(conn.effectiveType));
+        const isSlowConnection = Boolean(conn && (conn.saveData || /2g|3g/i.test(conn.effectiveType)));
 
-        if (!prefersReducedMotion && !isSlow) {
+        if (isDesktop && !prefersReducedMotion && !isSlowConnection) {
             setCanPlayVideo(true);
         }
     }, []);
@@ -55,7 +56,7 @@ const HeroSection = ({ onExplore }) => {
                     autoPlay
                     muted
                     loop={false}
-                    preload="metadata"
+                    preload="none"
                     poster={posterUrl}
                     onEnded={handleVideoEnd}
                     onCanPlay={() => setIsLoaded(true)}

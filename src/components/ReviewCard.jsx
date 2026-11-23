@@ -1,4 +1,5 @@
 import React from 'react';
+import Image from 'next/image';
 import { Star, StarHalf } from 'lucide-react';
 
 const PLATFORM_ICONS = {
@@ -132,7 +133,14 @@ const ReviewCard = ({ review }) => {
                         fontSize: '1.2rem'
                     }}>
                         {review.photo ? (
-                            <img src={review.photo} alt={review.name} style={{ width: '100%', height: '100%', borderRadius: '50%', objectFit: 'cover' }} />
+                            <Image
+                                src={review.photo}
+                                alt={review.name ? `${review.name}'s profile avatar` : 'Client review avatar'}
+                                width={48}
+                                height={48}
+                                style={{ width: '100%', height: '100%', borderRadius: '50%', objectFit: 'cover' }}
+                                loading="lazy"
+                            />
                         ) : (
                             review.name.charAt(0).toUpperCase()
                         )}

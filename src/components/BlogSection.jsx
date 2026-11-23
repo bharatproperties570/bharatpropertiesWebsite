@@ -1,6 +1,7 @@
 'use client';
 import React from 'react';
 import Link from 'next/link';
+import Image from 'next/image';
 import { BLOG_DATA } from '../data/blogData';
 import { ArrowRight, Calendar, User } from 'lucide-react';
 
@@ -54,15 +55,16 @@ const BlogSection = () => {
                             }}
                         >
                             <div style={{ position: 'relative', height: '240px', overflow: 'hidden' }}>
-                                <img
+                                <Image
                                     src={blog.image}
                                     alt={blog.title}
+                                    fill
+                                    sizes="(max-width: 768px) 100vw, 33vw"
                                     style={{
-                                        width: '100%',
-                                        height: '100%',
                                         objectFit: 'cover',
                                         transition: 'transform 0.5s ease'
                                     }}
+                                    loading="lazy"
                                 />
                                 <div style={{
                                     position: 'absolute',

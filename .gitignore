@@ -34,3 +34,4 @@ build/
 *.sw?
 .vercel
 crop_icons.*
+archive/

@@ -1,0 +1,53 @@
+name: CI Quality Gate
+
+on:
+  push:
+    branches:
+      - main
+      - 'seo/**'
+  pull_request:
+    branches:
+      - main
+      - 'seo/**'
+
+jobs:
+  verify:
+    name: Lint, Audit, Scan & SEO Check
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
+      - name: Setup Node.js 20
+        uses: actions/setup-node@v4
+        with:
+          node-version: 20
+          cache: 'npm'
+
+      - name: Install dependencies
+        run: npm ci
+
+      - name: Production Dependency Security Audit
+        run: npm audit --omit=dev --audit-level=high
+
+      - name: Secret Scan (Gitleaks)
+        uses: gitleaks/gitleaks-action@v2
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        continue-on-error: false
+
+      - name: Run ESLint
+        run: npm run lint
+
+      - name: Production Next.js Build
+        run: npm run build
+        env:
+          NEXT_PUBLIC_SITE_URL: https://www.bharatproperties.co
+          CRM_API_BASE_URL: https://api.bharatproperties.co/api/public
+          CRM_API_KEY: mock-build-crm-key
+
+      - name: SEO & SSR Quality Gate Check
+        run: npm run seo:check

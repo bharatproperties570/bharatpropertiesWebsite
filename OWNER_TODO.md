@@ -1,0 +1,78 @@
+# Bharat Properties - Owner Action Items & Verification Decisions (OWNER_TODO.md)
+
+This document tracks every specific fact, credential, asset, and architectural setting required from the business owner and legal team. No marketing claims, RERA certificates, or credentials have been invented.
+
+---
+
+## 1. Compliance & Business Identifiers
+
+- [ ] **Official RERA Registration Number:**
+  - **Context:** `src/components/ReraBadge.jsx` currently displays the verified fact that Bharat Properties is a registered real estate consultancy without claiming an unsubstantiated registration number.
+  - **Action Required:** Provide official Punjab & Haryana RERA license/registration numbers (e.g., `HRERA-PKL-...` or `PBRERA-...`). Once provided, add to `ReraBadge.jsx` and JSON-LD schema metadata.
+- [ ] **Mohali Office Postal Code:**
+  - **Context:** Office listing metadata references postal code `160055`.
+  - **Action Required:** Confirm exact official postal code for the Sector 82 / Mohali office branch.
+- [ ] **Official Mailbox Destinations:**
+  - **Context:** Lead forms forward inquiries via CRM API.
+  - **Action Required:** Confirm official administrative notification email (`info@bharatproperties.co` / `contact@bharatproperties.co`) and verify SPF, DKIM, and DMARC DNS records for transactional notifications.
+
+---
+
+## 2. Marketing Claims & FAQ Verification
+
+- [ ] **FAQ Content Sign-Off:**
+  - **Context:** In `src/content/faqs.js`, speculative appreciation rates, "verified GMADA-approved" builder claims, "documentation desk" claims, and Chandigarh leasehold assertions have been removed or made neutral.
+  - **Action Required:** Review the current FAQ answers in `src/content/faqs.js`. If you wish to re-introduce specific service offerings, supply documented proof.
+- [ ] **About Us History & Metrics:**
+  - **Context:** Any quantitative figures (e.g. years of experience, customer counts, transaction volume) must reflect authentic company milestones.
+  - **Action Required:** Review `src/components/AboutPage.jsx` and confirm exact metrics.
+
+---
+
+## 3. Media Assets & Self-Hosting
+
+- [ ] **Hero Video Asset Self-Hosting:**
+  - **Context:** The homepage hero video now checks for desktop screen, high-bandwidth connection, and `prefers-reduced-motion: no-preference`. It uses an optimized WebP poster image and lazy-loads video. However, the video stream currently references an external source.
+  - **Action Required:** Provide an official branded MP4/WebM drone walkthrough of Tricity/Kurukshetra to self-host on the Bharat Properties CDN (`https://api.bharatproperties.co` or Cloudflare/Vercel Blob), removing external third-party media dependencies.
+
+---
+
+## 4. Analytics, Webmaster & Third-Party Keys
+
+- [ ] **Google Analytics 4 (GA4):**
+  - **Variable:** `NEXT_PUBLIC_GA_ID` (Format: `G-XXXXXXXXXX`).
+  - **Action Required:** Provide the GA4 measurement ID and add it to Vercel Environment Variables. The codebase has custom event listeners wired for `lead_form_submit`, `phone_click`, `whatsapp_click`, and `direction_click`.
+- [ ] **Google Search Console (GSC):**
+  - **Variable:** `NEXT_PUBLIC_GSC_VERIFICATION`.
+  - **Action Required:** Provide the GSC verification meta tag string and add to Vercel Environment Variables.
+- [ ] **Privacy Policy Legal Review:**
+  - **Context:** `src/components/PrivacyPolicy.jsx` describes data collection and analytics tracking.
+  - **Action Required:** Have legal counsel review cookie disclosures once GA4 is activated in production.
+
+---
+
+## 5. Repository Protection & GitHub Settings
+
+- [ ] **Branch Protection Rules (`main` branch):**
+  - Navigate to **Settings** -> **Branches** in the GitHub repository.
+  - Check **Require a pull request before merging**.
+  - Check **Require status checks to pass before merging**:
+    - Require `verify` (CI Quality Gate: lint, build, security audit, gitleaks, seo-check).
+  - Check **Require branches to be up to date before merging**.
+  - Check **Require linear history**.
+  - Ensure **Do not allow force pushes** is checked.
+- [ ] **Dependabot Alerts & PR Review:**
+  - Verify that weekly Dependabot security PRs (configured in `.github/dependabot.yml`) are assigned to `@bharatproperties`.
+
+---
+
+## 6. Vercel Platform & Infrastructure Hardening
+
+- [ ] **Transition Content Security Policy (CSP) from Report-Only to Enforced:**
+  - **Context:** `next.config.js` currently serves `Content-Security-Policy-Report-Only` to collect telemetry without risking UI breakage across Google Maps, Google Fonts, and CRM image CDNs.
+  - **Action Required:** After 7–14 days of monitoring production reports, rename `Content-Security-Policy-Report-Only` to `Content-Security-Policy` in `next.config.js`.
+- [ ] **Distributed Rate Limiting Adapter (Upstash / Vercel KV):**
+  - **Context:** `src/lib/rateLimit.js` provides an in-memory token bucket limiter with an adapter interface for Upstash Redis / Vercel KV. In-memory rate limiting is best-effort on ephemeral serverless instances.
+  - **Action Required:** When monthly lead submission traffic scales, provision Upstash Redis or Vercel KV in the Vercel Marketplace and supply `UPSTASH_REDIS_REST_URL` and `UPSTASH_REDIS_REST_TOKEN`.
+- [ ] **Vercel WAF & DDoS Rules:**
+  - In Vercel Project Settings -> **Security**, verify WAF is active and Attack Mode is ready if traffic spikes abnormally.

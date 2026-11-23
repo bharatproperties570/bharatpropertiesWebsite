@@ -8,6 +8,7 @@ import { fetchFeaturedProjects, fetchFeaturedDeals } from '../../services/crmSer
 import CityPageClient from './CityPageClient';
 
 export const revalidate = 3600;
+export const dynamicParams = false;
 
 export function generateStaticParams() {
     return CITY_DATA
@@ -26,19 +27,7 @@ const findCity = (param) => {
 export async function generateMetadata({ params }) {
     const { cityName } = await params;
     const city = findCity(cityName);
-    if (!city) return { title: 'Page not found', robots: { index: false, follow: false } };
-
-    // For non-core cities, strictly disallow search engine indexing
-    if (!isAllowedCity(city.name)) {
-        return {
-            title: `Property in ${city.name} | Bharat Properties`,
-            description: cleanText(city.description),
-            robots: {
-                index: false,
-                follow: false,
-            },
-        };
-    }
+    if (!city || !isAllowedCity(city.name)) notFound();
 
     const seo = SEO_DATA.CITIES?.[city.name];
     const path = `/${citySlug(city.name)}`;
@@ -67,7 +56,7 @@ export async function generateMetadata({ params }) {
 export default async function CityPage({ params }) {
     const { cityName } = await params;
     const city = findCity(cityName);
-    if (!city) notFound();
+    if (!city || !isAllowedCity(city.name)) notFound();
 
     const breadcrumbs = [
         { name: 'Home', path: '/' },

@@ -7,7 +7,12 @@
     "dev": "NODE_NO_WARNINGS=1 next dev",
     "build": "NODE_NO_WARNINGS=1 next build",
     "start": "NODE_NO_WARNINGS=1 next start",
-    "lint": "next lint"
+    "lint": "next lint",
+    "format:check": "prettier --check .",
+    "seo:check": "node scripts/seo-check.mjs"
+  },
+  "engines": {
+    "node": ">=20.0.0"
   },
   "dependencies": {
     "axios": "^1.13.6",
@@ -24,8 +29,10 @@
     "@types/react": "^19.2.5",
     "@types/react-dom": "^19.2.3",
     "eslint": "^9.39.1",
+    "eslint-config-next": "^15.5.29",
     "eslint-plugin-react-hooks": "^7.0.1",
     "eslint-plugin-react-refresh": "^0.4.24",
-    "globals": "^16.5.0"
+    "globals": "^16.5.0",
+    "prettier": "^3.10.1"
   }
 }

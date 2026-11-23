@@ -2,6 +2,7 @@
 
 import React, { useState, useEffect } from 'react';
 import Image from 'next/image';
+import Link from 'next/link';
 import { Menu, X, Phone, Calendar } from 'lucide-react';
 import logo from '../assets/logo.png';
 
@@ -64,7 +65,7 @@ const Header = ({ onLogoClick, selectedCity, onSelectCity, onPostProperty, onBoo
             `}</style>
             <div className="container" style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
                 {/* Logo */}
-                <a
+                <Link
                     href="/"
                     onClick={(e) => {
                         if (onLogoClick) {
@@ -76,7 +77,7 @@ const Header = ({ onLogoClick, selectedCity, onSelectCity, onPostProperty, onBoo
                     style={{ fontFamily: 'var(--font-heading)', fontSize: '1.5rem', fontWeight: 700, display: 'flex', alignItems: 'center', gap: '0.75rem', cursor: 'pointer', textDecoration: 'none', color: 'inherit' }}>
                     <Image src={logo} alt="Bharat Properties Logo" height={70} width={200} style={{ width: 'auto', height: '70px' }} priority />
                     <span>Bharat Properties</span>
-                </a>
+                </Link>
 
                 {/* Desktop Nav */}
                 <nav style={{ display: 'none', gap: '2rem', alignItems: 'center' }} className="desktop-nav">
@@ -251,7 +252,7 @@ const Header = ({ onLogoClick, selectedCity, onSelectCity, onPostProperty, onBoo
                             </div>
                         </div>
                     )}
-                    <a
+                    <Link
                         href="/about"
                         style={navLinkStyles}
                         className="nav-link"
@@ -263,21 +264,21 @@ const Header = ({ onLogoClick, selectedCity, onSelectCity, onPostProperty, onBoo
                         }}
                     >
                         About
-                    </a>
-                    <a
+                    </Link>
+                    <Link
                         href="/blog"
                         className="nav-link"
                         style={navLinkStyles}
                     >
                         Blog
-                    </a>
-                    <a
+                    </Link>
+                    <Link
                         href="/#contact"
                         className="nav-link"
                         style={navLinkStyles}
                     >
                         Contact
-                    </a>
+                    </Link>
                     <button
                         onClick={onBookConsultation}
                         className="btn-calendar"
@@ -367,8 +368,8 @@ const Header = ({ onLogoClick, selectedCity, onSelectCity, onPostProperty, onBoo
                     flexDirection: 'column',
                     gap: '1rem'
                 }}>
-                    <a href="/#featured" onClick={() => setIsMobileMenuOpen(false)}>Properties</a>
-                    <a
+                    <Link href="/#featured" onClick={() => setIsMobileMenuOpen(false)}>Properties</Link>
+                    <Link
                         href="/about"
                         onClick={(e) => {
                             if (onAboutClick) {
@@ -379,9 +380,9 @@ const Header = ({ onLogoClick, selectedCity, onSelectCity, onPostProperty, onBoo
                         }}
                     >
                         About
-                    </a>
-                    <a href="/blog" onClick={() => setIsMobileMenuOpen(false)}>Blog</a>
-                    <a href="/#contact" onClick={() => setIsMobileMenuOpen(false)}>Contact</a>
+                    </Link>
+                    <Link href="/blog" onClick={() => setIsMobileMenuOpen(false)}>Blog</Link>
+                    <Link href="/#contact" onClick={() => setIsMobileMenuOpen(false)}>Contact</Link>
                 </div>
             )}
 

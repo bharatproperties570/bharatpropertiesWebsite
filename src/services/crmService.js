@@ -238,9 +238,21 @@ const mapDealToProperty = (deal) => {
     ];
 
     const intent = deal.intent || 'Sell';
-    const rawCategory = deal.category || '';
+    const rawCategory = typeof deal.category === 'object' && deal.category !== null
+        ? (deal.category.lookup_value || deal.category.name || '')
+        : (deal.category || '');
     const category = /^[0-9a-fA-F]{24}$/.test(rawCategory) ? '' : rawCategory;
-    const subCat = /^[0-9a-fA-F]{24}$/.test(deal.subCategory) ? '' : (deal.subCategory || '');
+
+    const rawSubCat = typeof deal.subCategory === 'object' && deal.subCategory !== null
+        ? (deal.subCategory.lookup_value || deal.subCategory.name || '')
+        : (deal.subCategory || '');
+    const subCat = /^[0-9a-fA-F]{24}$/.test(rawSubCat) ? '' : rawSubCat;
+
+    const rawPropType = typeof deal.propertyType === 'object' && deal.propertyType !== null
+        ? (deal.propertyType.lookup_value || deal.propertyType.name || '')
+        : (deal.propertyType || '');
+    const propertyType = /^[0-9a-fA-F]{24}$/.test(rawPropType) ? '' : (rawPropType || 'Residential');
+
     const rawSizeLabel = deal.sizeLabel || deal.unitSpecification?.sizeLabel || '';
     const sizeLabel = /^[0-9a-fA-F]{24}$/.test(rawSizeLabel) ? '' : rawSizeLabel;
     
@@ -319,9 +331,9 @@ const mapDealToProperty = (deal) => {
         images: resolvedImages,
         media: media,
         status: deal.status || 'Available',
-        type: deal.propertyType || 'Residential',
-        propertyType: deal.propertyType || 'Residential',
-        category: category || deal.category?.lookup_value || deal.category || 'Residential',
+        type: propertyType,
+        propertyType: propertyType,
+        category: category || 'Residential',
         subCategory: subCat,
         sizeLabel: sizeLabel || flattenMeasurement(deal.size, deal.sizeUnit || 'Sq.Ft') || 'Area on Request',
         unitType: deal.unitType?.lookup_value || deal.unitType || deal.inventoryId?.unitType?.lookup_value || deal.inventoryId?.unitType || 'Ordinary',

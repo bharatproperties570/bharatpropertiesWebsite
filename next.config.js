@@ -15,7 +15,9 @@ const cspReportOnly = [
   "frame-src 'self' https://www.google.com https://maps.google.com",
   "object-src 'none'",
   "base-uri 'self'",
-  "form-action 'self'"
+  "form-action 'self'",
+  "report-uri /api/csp-report",
+  "report-to csp-endpoint"
 ].join('; ');
 
 export default {
@@ -61,6 +63,7 @@ export default {
           { key: 'X-Content-Type-Options', value: 'nosniff' },
           { key: 'Referrer-Policy', value: 'strict-origin-when-cross-origin' },
           { key: 'X-Frame-Options', value: 'SAMEORIGIN' },
+          { key: 'Reporting-Endpoints', value: 'csp-endpoint="/api/csp-report"' },
           { key: 'Content-Security-Policy-Report-Only', value: cspReportOnly },
         ],
       },

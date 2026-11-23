@@ -66,7 +66,6 @@ export default async function PropertyPage({ params }) {
         city
             ? fetchFeaturedDeals('latest', city)
                 .then((list) => list.filter((l) => l.slug !== property.slug && l.id !== property.id).slice(0, 4))
-                .catch(() => [])
             : Promise.resolve([])
     ]);
 

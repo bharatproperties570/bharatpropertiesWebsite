@@ -281,6 +281,32 @@ async function run() {
       '/robots.txt links to canonical sitemap'
     );
 
+    // Test /api/csp-report
+    console.log('\n--- Testing CSP Reporting Endpoint [/api/csp-report] ---');
+    const cspPostRes = await fetch(`${baseUrl}/api/csp-report`, {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/csp-report' },
+      body: JSON.stringify({
+        'csp-report': {
+          'document-uri': 'https://www.bharatproperties.co/',
+          'violated-directive': 'img-src',
+          'blocked-uri': 'http://evil.com/fake.png',
+        },
+      }),
+    });
+    assert(
+      cspPostRes.status === 204,
+      '/api/csp-report returns HTTP 204 on valid report POST',
+      `Got ${cspPostRes.status}`
+    );
+
+    const cspGetRes = await fetch(`${baseUrl}/api/csp-report`, { method: 'GET' });
+    assert(
+      cspGetRes.status === 405,
+      '/api/csp-report rejects GET with HTTP 405 Method Not Allowed',
+      `Got ${cspGetRes.status}`
+    );
+
     console.log('\n======================================================');
     console.log(`Quality Gate Summary: ${passes} Passed, ${failures} Failed`);
     console.log('======================================================\n');

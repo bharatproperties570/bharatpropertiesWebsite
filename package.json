@@ -5,9 +5,9 @@
   "type": "module",
   "scripts": {
     "dev": "NODE_NO_WARNINGS=1 next dev",
-    "build": "NODE_NO_WARNINGS=1 next build",
+    "build": "node scripts/build.mjs",
     "start": "NODE_NO_WARNINGS=1 next start",
-    "lint": "next lint",
+    "lint": "eslint .",
     "format:check": "prettier --check .",
     "seo:check": "node scripts/seo-check.mjs"
   },

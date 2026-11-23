@@ -31,10 +31,10 @@ const MarketTrends = dynamic(() => import('../components/MarketTrends'), {
 export const revalidate = 300;
 
 export default async function HomePage() {
-    // Parallel fetching on server
+    // Parallel fetching on server: featured deals/projects throw on outage so ISR serves stale page
     const [hotDeals, allProjects, googleReviews, newsData] = await Promise.all([
-        fetchFeaturedDeals('hot').catch(() => []),
-        fetchFeaturedProjects('All').catch(() => []),
+        fetchFeaturedDeals('hot'),
+        fetchFeaturedProjects('All'),
         fetchGoogleReviews().catch(() => ({ reviews: [], rating: 5, totalReviews: 0 })),
         fetchRealEstateNews().catch(() => [])
     ]);

@@ -135,19 +135,19 @@ const ReviewCard = ({ review }) => {
                         {review.photo ? (
                             <Image
                                 src={review.photo}
-                                alt={review.name ? `${review.name}'s profile avatar` : 'Client review avatar'}
+                                alt={review.name || review.author ? `${review.name || review.author}'s profile avatar` : 'Client review avatar'}
                                 width={48}
                                 height={48}
                                 style={{ width: '100%', height: '100%', borderRadius: '50%', objectFit: 'cover' }}
                                 loading="lazy"
                             />
                         ) : (
-                            review.name.charAt(0).toUpperCase()
+                            (review.name || review.author || 'B').charAt(0).toUpperCase()
                         )}
                     </div>
                     <div>
                         <h4 style={{ fontWeight: 600, color: 'var(--color-text-main)', marginBottom: '0.25rem' }}>
-                            {review.name}
+                            {review.name || review.author || 'Client'}
                         </h4>
                         <div style={{ fontSize: '0.75rem', color: 'var(--color-text-muted)' }}>
                             {formatDate(review.date)}

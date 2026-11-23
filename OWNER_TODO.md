@@ -9,9 +9,8 @@ This document tracks every specific fact, credential, asset, and architectural s
 - [ ] **Official RERA Registration Number:**
   - **Context:** `src/components/ReraBadge.jsx` currently displays the verified fact that Bharat Properties is a registered real estate consultancy without claiming an unsubstantiated registration number.
   - **Action Required:** Provide official Punjab & Haryana RERA license/registration numbers (e.g., `HRERA-PKL-...` or `PBRERA-...`). Once provided, add to `ReraBadge.jsx` and JSON-LD schema metadata.
-- [ ] **Mohali Office Postal Code:**
-  - **Context:** Office listing metadata references postal code `160055`.
-  - **Action Required:** Confirm exact official postal code for the Sector 82 / Mohali office branch.
+- [x] **Mohali Office Postal Code:**
+  - **Status:** Verified and updated to `140306` (PR 7, Airport Road, Sector 82 Industrial Area, Mohali, Punjab). Confirmed across JSON-LD schemas and UI pages.
 - [ ] **Official Mailbox Destinations:**
   - **Context:** Lead forms forward inquiries via CRM API.
   - **Action Required:** Confirm official administrative notification email (`info@bharatproperties.co` / `contact@bharatproperties.co`) and verify SPF, DKIM, and DMARC DNS records for transactional notifications.

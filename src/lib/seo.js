@@ -37,7 +37,7 @@ export const BRANCHES = [
         street: 'PR 7, Airport Road, Sector 82 Industrial Area',
         city: 'Mohali',
         region: 'Punjab',
-        postalCode: '', // TODO_OWNER: supply Mohali postal code
+        postalCode: '140306',
         phone: '+91-9991000570',
         geo: { lat: 30.6327022, lng: 76.7663162 },
         mapUrl: 'https://maps.app.goo.gl/SrXsJrh5L23qLEtM6',

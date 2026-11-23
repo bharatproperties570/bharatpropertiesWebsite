@@ -31,9 +31,10 @@ Enterprise-grade real estate web platform for Bharat Properties (`https://www.bh
 
 ### Key Highlights
 - **Framework:** Next.js 15 (App Router), React 19.
-- **Security:** CSP Report-Only, strict HSTS (`max-age=63072000; includeSubDomains`), Permissions-Policy, COOP, same-origin validation on POST proxy requests, body size enforcement (`<= 100KB`), and rate limiting.
+- **Security:** CSP Report-Only with `/api/csp-report` telemetry collector, strict HSTS (`max-age=63072000; includeSubDomains`), Permissions-Policy, COOP, same-origin validation on POST proxy requests, body size enforcement (`<= 100KB`), and rate limiting.
 - **Data Resilience:** CRM layer with automatic retry, timeout limits, and failure boundaries that preserve cached ISR content during upstream outages rather than generating blank pages.
 - **SEO & A11y:** Canonical domain enforcement (`www.bharatproperties.co`), automated breadcrumbs, dynamic JSON-LD schemas (`RealEstateAgent`, `Place`, `Article`, `BreadcrumbList`, `FAQPage`), and accessible focus states.
+- **Drone Assets:** Verified local WebP assets in `public/images/` for Chandigarh, Kurukshetra, Mohali, Panchkula, Karnal, Sonepat, Delhi, Gurgaon, and Noida, with graceful local fallbacks for Kharar, Zirakpur, and New Chandigarh.
 
 ---
 

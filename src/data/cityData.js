@@ -163,7 +163,8 @@ export const CITY_DATA = [
     },
     {
         name: 'Zirakpur',
-        image: 'https://images.unsplash.com/photo-1542314831-068cd1dbfeeb?auto=format&fit=crop&q=80&w=1600', // Professional high-rise skyline
+        image: '/images/mohali_drone.webp', // Graceful Tricity gateway fallback (local verified asset)
+        fallbackImage: '/images/chandigarh_drone.webp',
         videos: [
             'https://cdn.pixabay.com/video/2021/04/10/70562-536962451_large.mp4', // Modern City Vibe
             'https://cdn.pixabay.com/video/2023/12/30/194888-900542311_large.mp4',
@@ -173,7 +174,8 @@ export const CITY_DATA = [
     },
     {
         name: 'Kharar',
-        image: 'https://images.unsplash.com/photo-1531260796395-23527e779bb0?auto=format&fit=crop&q=80&w=1600', // Modern infrastructure & Highway
+        image: '/images/mohali_drone.webp', // Graceful Greater Mohali fallback (local verified asset)
+        fallbackImage: '/images/chandigarh_drone.webp',
         videos: [
             'https://cdn.pixabay.com/video/2023/10/24/186358-877712165_large.mp4', // Peaceful Green Living
             'https://cdn.pixabay.com/video/2024/01/24/197942-906226451_large.mp4',
@@ -183,7 +185,8 @@ export const CITY_DATA = [
     },
     {
         name: 'New Chandigarh',
-        image: 'https://images.unsplash.com/photo-1486406146926-c627a92ad1ab?auto=format&fit=crop&q=80&w=1600', // Ultra-Modern Smart City Architecture
+        image: '/images/chandigarh_drone.webp', // Graceful Chandigarh expansion fallback (local verified asset)
+        fallbackImage: '/images/mohali_drone.webp',
         videos: [
             'https://cdn.pixabay.com/video/2023/12/04/191989-890786523_large.mp4', // Futuristic Urban Vibe
             'https://cdn.pixabay.com/video/2025/05/27/282084_large.mp4',
@@ -192,3 +195,16 @@ export const CITY_DATA = [
         description: 'The Smart City Expansion'
     }
 ];
+
+export const CITY_FALLBACK_IMAGES = {
+    'Kharar': '/images/mohali_drone.webp',
+    'Zirakpur': '/images/mohali_drone.webp',
+    'New Chandigarh': '/images/chandigarh_drone.webp',
+};
+
+export const getCityImage = (cityName, rawImage = '') => {
+    if (rawImage && rawImage.startsWith('/images/')) return rawImage;
+    if (cityName && CITY_FALLBACK_IMAGES[cityName]) return CITY_FALLBACK_IMAGES[cityName];
+    if (rawImage) return rawImage;
+    return '/images/kurukshetra_drone.webp';
+};

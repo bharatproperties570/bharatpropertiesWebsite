@@ -87,7 +87,7 @@ export const mockListings = [
       locality: 'Sector 82',
       state: 'Punjab',
       country: 'India',
-      zip: '160055',
+      zip: '140306',
     },
     intent: 'Sell',
     status: 'Available',
@@ -195,10 +195,12 @@ export function createMockCrmServer() {
           totalReviews: 120,
           reviews: [
             {
+              name: 'Rajesh Sharma',
               author: 'Rajesh Sharma',
               rating: 5,
               text: 'Very professional real estate consultancy in Tricity and Kurukshetra.',
               time: '1 month ago',
+              date: '2025-01-10T10:00:00.000Z',
             },
           ],
         },

@@ -66,8 +66,8 @@ export default async function CityPage({ params }) {
     const [crumbs, initialNews, cityProjects, cityListings] = await Promise.all([
         breadcrumbSchema(breadcrumbs),
         fetchRealEstateNews(city.name).catch(() => []),
-        fetchFeaturedProjects('All', city.name).catch(() => []),
-        fetchFeaturedDeals('latest', city.name).catch(() => [])
+        fetchFeaturedProjects('All', city.name),
+        fetchFeaturedDeals('latest', city.name)
     ]);
 
     const slug = citySlug(city.name);

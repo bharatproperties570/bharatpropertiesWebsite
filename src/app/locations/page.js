@@ -10,7 +10,7 @@ export default function LocationsPage() {
 
     const configuration = useMemo(() => ({
         "locations": [
-            { "title": "Bharat Properties", "address1": "PR 7, Airport Road", "address2": "Mohali, Punjab, India", "coords": { "lat": 30.6327022, "lng": 76.7663162 } },
+            { "title": "Bharat Properties", "address1": "PR 7, Airport Road", "address2": "Mohali, Punjab 140306, India", "coords": { "lat": 30.6327022, "lng": 76.7663162 } },
             { "title": "Bharat Properties", "address1": "Sector 3 Market", "address2": "Kurukshetra, Haryana, India", "coords": { "lat": 29.9602037, "lng": 76.8899997 }, "placeId": "ChIJKzFpydBGDjkRbTCco1_G2I4" }
         ],
         "mapOptions": { "center": { "lat": 30.3, "lng": 76.8 }, "fullscreenControl": true, "mapTypeControl": false, "streetViewControl": false, "zoom": 8, "zoomControl": true, "maxZoom": 17, "mapId": "" },

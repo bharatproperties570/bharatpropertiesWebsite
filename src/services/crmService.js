@@ -533,13 +533,17 @@ export const fetchFeaturedDeals = async (type = 'latest', city = '') => {
         let url = `/listings?type=${type}&limit=8`;
         if (city) url += `&city=${encodeURIComponent(city)}`;
         
-        const response = await crmApi.get(url);
-        const deals = response.data.data || [];
+        const response = await getWithRetry(url);
+        const deals = response.data?.data || [];
         return deals.map(mapDealToProperty);
-    } catch {
+    } catch (error) {
+        console.error('Error fetching featured deals from CRM:', error?.message || error);
+        if (isServer) {
+            throw new Error(`CRM outage: Failed to fetch featured deals - ${error?.message || 'service unreachable'}`);
+        }
         return [];
     }
-}
+};
 
 export const fetchFeaturedProjects = async (status = '', city = '') => {
     // Cache check
@@ -551,8 +555,8 @@ export const fetchFeaturedProjects = async (status = '', city = '') => {
         let url = `/projects?limit=8`;
         if (status && status !== 'All') url += `&status=${encodeURIComponent(status)}`;
         if (city) url += `&city=${encodeURIComponent(city)}`;
-        const response = await crmApi.get(url);
-        const projects = response.data.data || [];
+        const response = await getWithRetry(url);
+        const projects = response.data?.data || [];
         const result = projects.map(p => ({
             id: p._id,
             slug: p.websiteMetadata?.slug || p._id,
@@ -566,10 +570,13 @@ export const fetchFeaturedProjects = async (status = '', city = '') => {
         cache.featuredProjects = { data: result, expiry: now + CACHE_TTL_MS };
         return result;
     } catch (error) {
-        console.error('Error fetching featured projects:', error);
+        console.error('Error fetching featured projects from CRM:', error?.message || error);
+        if (isServer) {
+            throw new Error(`CRM outage: Failed to fetch featured projects - ${error?.message || 'service unreachable'}`);
+        }
         return [];
     }
-};
+};;
 
 export const fetchPublicSettings = async () => {
     try {

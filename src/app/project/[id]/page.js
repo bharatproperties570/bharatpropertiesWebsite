@@ -64,7 +64,6 @@ export default async function ProjectPage({ params }) {
         city
             ? fetchFeaturedProjects('All', city)
                 .then((list) => list.filter((p) => p.slug !== project.slug && p.id !== project.id).slice(0, 4))
-                .catch(() => [])
             : Promise.resolve([])
     ]);
 

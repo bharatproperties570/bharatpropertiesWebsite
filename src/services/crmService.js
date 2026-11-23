@@ -20,11 +20,27 @@ if (isServer && !API_KEY) {
 
 const crmApi = axios.create({
     baseURL: API_URL,
+    timeout: 8000,
     headers: {
         'Content-Type': 'application/json',
         ...(API_KEY ? { 'X-API-KEY': API_KEY } : {})
     }
 });
+
+// Helper for retry on transient network or 5xx errors with 1s backoff
+async function getWithRetry(url, config = {}) {
+    try {
+        return await crmApi.get(url, config);
+    } catch (err) {
+        const status = err?.response?.status;
+        const isRetryable = !status || status >= 500 || err.code === 'ECONNABORTED' || err.code === 'ECONNREFUSED';
+        if (isRetryable) {
+            await new Promise(r => setTimeout(r, 1000));
+            return await crmApi.get(url, config);
+        }
+        throw err;
+    }
+}
 
 // Cache-busting request interceptor for real-time live CRM synchronization
 crmApi.interceptors.request.use(config => {
@@ -426,49 +442,55 @@ const mapProjectToWebProject = (project) => {
 
 export const fetchListings = async () => {
     try {
-        const response = await crmApi.get('/listings');
-        const deals = response.data.data || [];
+        const response = await getWithRetry('/listings');
+        const deals = response.data?.data || [];
         return deals.map(mapDealToProperty);
     } catch (error) {
-        console.error('Error fetching listings from CRM:', error);
+        console.error('Error fetching listings from CRM:', error?.message || error);
+        if (isServer) {
+            throw new Error(`CRM outage: Failed to fetch listings - ${error?.message || 'service unreachable'}`);
+        }
         return [];
     }
 };
 
 export const fetchProjects = async () => {
     try {
-        const response = await crmApi.get('/projects');
-        const projects = response.data.data || [];
+        const response = await getWithRetry('/projects');
+        const projects = response.data?.data || [];
         return projects.map(mapProjectToWebProject);
     } catch (error) {
-        console.error('Error fetching projects from CRM:', error);
+        console.error('Error fetching projects from CRM:', error?.message || error);
+        if (isServer) {
+            throw new Error(`CRM outage: Failed to fetch projects - ${error?.message || 'service unreachable'}`);
+        }
         return [];
     }
 };
 
 export const fetchProjectBySlug = async (slug) => {
     try {
-        const response = await crmApi.get(`/projects/${encodeURIComponent(slug)}`);
-        return response.data.data ? mapProjectToWebProject(response.data.data) : null;
+        const response = await getWithRetry(`/projects/${encodeURIComponent(slug)}`);
+        return response.data?.data ? mapProjectToWebProject(response.data.data) : null;
     } catch (error) {
         const status = error?.response?.status;
         if (status && status >= 400 && status < 500) return null; // genuinely missing
         console.error(`Error fetching project with slug ${slug}:`, error?.message || error);
         // Network / 5xx: surface a clean error (never report an outage as "not found").
-        throw new Error(`CRM request failed for ${slug}: ${error?.message || 'unknown error'}`);
+        throw new Error(`CRM request failed for project ${slug}: ${error?.message || 'unknown error'}`);
     }
 };
 
 export const fetchListingBySlug = async (slug) => {
     try {
-        const response = await crmApi.get(`/listings/${encodeURIComponent(slug)}`);
-        return response.data.data ? mapDealToProperty(response.data.data) : null;
+        const response = await getWithRetry(`/listings/${encodeURIComponent(slug)}`);
+        return response.data?.data ? mapDealToProperty(response.data.data) : null;
     } catch (error) {
         const status = error?.response?.status;
         if (status && status >= 400 && status < 500) return null; // genuinely missing
         console.error(`Error fetching listing with slug ${slug}:`, error?.message || error);
         // Network / 5xx: surface a clean error (never report an outage as "not found").
-        throw new Error(`CRM request failed for ${slug}: ${error?.message || 'unknown error'}`);
+        throw new Error(`CRM request failed for listing ${slug}: ${error?.message || 'unknown error'}`);
     }
 };
 

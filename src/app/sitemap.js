@@ -26,7 +26,20 @@ const unique = (items) => {
 };
 
 export default async function sitemap() {
-    const [projects, listings] = await Promise.all([fetchProjects(), fetchListings()]);
+    let projects = [];
+    let listings = [];
+
+    try {
+        projects = await fetchProjects();
+    } catch (err) {
+        console.warn('[Sitemap] CRM fetchProjects failed during sitemap generation; retaining static and city routes:', err.message);
+    }
+
+    try {
+        listings = await fetchListings();
+    } catch (err) {
+        console.warn('[Sitemap] CRM fetchListings failed during sitemap generation; retaining static and city routes:', err.message);
+    }
 
     return [
         ...STATIC_ROUTES.map(({ path, ...rest }) => ({ url: `${SITE_URL}${path === '/' ? '' : path}` || SITE_URL, ...rest })),

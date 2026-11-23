@@ -33,3 +33,4 @@ build/
 *.sln
 *.sw?
 .vercel
+crop_icons.*

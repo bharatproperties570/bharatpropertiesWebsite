@@ -1,3 +1,9 @@
+import path from 'path';
+import { fileURLToPath } from 'url';
+
+const __filename = fileURLToPath(import.meta.url);
+const __dirname = path.dirname(__filename);
+
 const cspReportOnly = [
   "default-src 'self'",
   "script-src 'self' 'unsafe-eval' 'unsafe-inline' https://maps.googleapis.com https://maps.gstatic.com https://www.googletagmanager.com",
@@ -13,6 +19,7 @@ const cspReportOnly = [
 ].join('; ');
 
 export default {
+  outputFileTracingRoot: __dirname,
   poweredByHeader: false,
   images: {
     remotePatterns: [

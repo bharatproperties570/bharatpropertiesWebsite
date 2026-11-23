@@ -10,6 +10,11 @@ export default async function handler(req, res) {
     return res.status(400).json({ error: 'Missing required fields: message' });
   }
 
+  const apiKey = process.env.GEMINI_API_KEY;
+  if (!apiKey) {
+    return res.status(500).json({ error: 'Server configuration error: GEMINI_API_KEY is not configured' });
+  }
+
   try {
     // Basic hardcoded logic fallback if no API key or to save tokens
     const msgLower = message.toLowerCase();
@@ -33,10 +38,7 @@ export default async function handler(req, res) {
         reply = "Hello! Welcome to Bharat Properties. Are you looking to buy or sell a property?";
     }
 
-    // Attempt to call Gemini API if key is available
-    const apiKey = process.env.GEMINI_API_KEY || "AIzaSyAP3lm7rcTm2lSrfflrjBLkKEeVyKSoY9M";
-    
-    if (apiKey && !message.includes('User provided contact info')) {
+    if (!message.includes('User provided contact info')) {
       const geminiUrl = `https://generativelanguage.googleapis.com/v1beta/models/gemini-1.5-flash:generateContent?key=${apiKey}`;
       const prompt = `You are a professional real estate AI assistant for Bharat Properties in India (Kurukshetra, Mohali, etc.).
 The user says: "${message}". 

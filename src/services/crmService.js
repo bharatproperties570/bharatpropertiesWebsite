@@ -104,7 +104,9 @@ const formatPrice = (amount) => {
 };
 
 // Mapper for CRM Deal to Website Property
-const mapDealToProperty = (deal) => {
+export const mapDealToProperty = (deal) => {
+    if (!deal || typeof deal !== 'object') return null;
+
     // Curate images and videos from all possible fields returned by public API
     let rawImagesList = [];
     
@@ -113,24 +115,38 @@ const mapDealToProperty = (deal) => {
         rawImagesList.push(deal.websiteMetadata.featuredImage);
     }
     
-    // 2. Add other deal/inventory images
+    // 2. Add other deal/inventory images defensively
     if (Array.isArray(deal.propertyImages) && deal.propertyImages.length > 0) {
-        deal.propertyImages.forEach(img => rawImagesList.push(typeof img === 'object' ? img.url : img));
+        deal.propertyImages.forEach(img => {
+            if (img) rawImagesList.push(typeof img === 'object' ? img?.url : img);
+        });
     } else if (Array.isArray(deal.imagesDetail) && deal.imagesDetail.length > 0) {
-        deal.imagesDetail.forEach(img => rawImagesList.push(typeof img === 'object' ? img.url : img));
+        deal.imagesDetail.forEach(img => {
+            if (img) rawImagesList.push(typeof img === 'object' ? img?.url : img);
+        });
     } else if (Array.isArray(deal.images) && deal.images.length > 0) {
-        deal.images.forEach(img => rawImagesList.push(typeof img === 'object' ? img.url : img));
+        deal.images.forEach(img => {
+            if (img) rawImagesList.push(typeof img === 'object' ? img?.url : img);
+        });
     } else if (Array.isArray(deal.inventoryImages) && deal.inventoryImages.length > 0) {
-        deal.inventoryImages.forEach(img => rawImagesList.push(typeof img === 'object' ? img.url : img));
-    } else if (deal.inventoryId?.inventoryImages && deal.inventoryId.inventoryImages.length > 0) {
-        deal.inventoryId.inventoryImages.forEach(img => rawImagesList.push(typeof img === 'object' ? img.url : img));
+        deal.inventoryImages.forEach(img => {
+            if (img) rawImagesList.push(typeof img === 'object' ? img?.url : img);
+        });
+    } else if (deal.inventoryId?.inventoryImages && Array.isArray(deal.inventoryId.inventoryImages) && deal.inventoryId.inventoryImages.length > 0) {
+        deal.inventoryId.inventoryImages.forEach(img => {
+            if (img) rawImagesList.push(typeof img === 'object' ? img?.url : img);
+        });
+    } else if (deal.inventoryInfo?.inventoryImages && Array.isArray(deal.inventoryInfo.inventoryImages) && deal.inventoryInfo.inventoryImages.length > 0) {
+        deal.inventoryInfo.inventoryImages.forEach(img => {
+            if (img) rawImagesList.push(typeof img === 'object' ? img?.url : img);
+        });
     }
     
     // 3. Add images from builtup details
-    const rawBuiltupDetails = deal.builtupDetails || deal.inventoryId?.builtupDetails || [];
+    const rawBuiltupDetails = deal.builtupDetails || deal.inventoryId?.builtupDetails || deal.inventoryInfo?.builtupDetails || [];
     if (Array.isArray(rawBuiltupDetails)) {
         rawBuiltupDetails.forEach(row => {
-            if (row.imageUrl) {
+            if (row && row.imageUrl) {
                 rawImagesList.push(row.imageUrl);
             }
         });
@@ -140,6 +156,7 @@ const mapDealToProperty = (deal) => {
     let resolvedImages = [];
     const seenImages = new Set();
     rawImagesList.forEach(img => {
+        if (!img) return;
         const fixed = fixDriveUrl(img);
         if (fixed && !seenImages.has(fixed)) {
             seenImages.add(fixed);
@@ -147,10 +164,11 @@ const mapDealToProperty = (deal) => {
         }
     });
 
-    // If still empty, check the documents
-    if (resolvedImages.length === 0) {
-        const docImages = (deal.documents || [])
-            .filter(doc => (doc.type === 'Image' || doc.url?.match(/\.(jpg|jpeg|png|webp|gif)$/i)))
+    // If still empty, check the documents safely
+    const safeDocuments = Array.isArray(deal.documents) ? deal.documents : [];
+    if (resolvedImages.length === 0 && safeDocuments.length > 0) {
+        const docImages = safeDocuments
+            .filter(doc => doc && (doc.type === 'Image' || (typeof doc.url === 'string' && doc.url.match(/\.(jpg|jpeg|png|webp|gif)$/i))))
             .map(doc => fixDriveUrl(doc.url))
             .filter(url => url) || [];
         docImages.forEach(img => {
@@ -164,20 +182,34 @@ const mapDealToProperty = (deal) => {
     // Now for videos
     let rawVideosList = [];
     if (Array.isArray(deal.propertyVideos) && deal.propertyVideos.length > 0) {
-        deal.propertyVideos.forEach(vid => rawVideosList.push(typeof vid === 'object' ? vid.url : vid));
+        deal.propertyVideos.forEach(vid => {
+            if (vid) rawVideosList.push(typeof vid === 'object' ? vid?.url : vid);
+        });
     } else if (Array.isArray(deal.videosDetail) && deal.videosDetail.length > 0) {
-        deal.videosDetail.forEach(vid => rawVideosList.push(typeof vid === 'object' ? vid.url : vid));
+        deal.videosDetail.forEach(vid => {
+            if (vid) rawVideosList.push(typeof vid === 'object' ? vid?.url : vid);
+        });
     } else if (Array.isArray(deal.videos) && deal.videos.length > 0) {
-        deal.videos.forEach(vid => rawVideosList.push(typeof vid === 'object' ? vid.url : vid));
+        deal.videos.forEach(vid => {
+            if (vid) rawVideosList.push(typeof vid === 'object' ? vid?.url : vid);
+        });
     } else if (Array.isArray(deal.inventoryVideos) && deal.inventoryVideos.length > 0) {
-        deal.inventoryVideos.forEach(vid => rawVideosList.push(typeof vid === 'object' ? vid.url : vid));
-    } else if (deal.inventoryId?.inventoryVideos && deal.inventoryId.inventoryVideos.length > 0) {
-        deal.inventoryId.inventoryVideos.forEach(vid => rawVideosList.push(typeof vid === 'object' ? vid.url : vid));
+        deal.inventoryVideos.forEach(vid => {
+            if (vid) rawVideosList.push(typeof vid === 'object' ? vid?.url : vid);
+        });
+    } else if (deal.inventoryId?.inventoryVideos && Array.isArray(deal.inventoryId.inventoryVideos) && deal.inventoryId.inventoryVideos.length > 0) {
+        deal.inventoryId.inventoryVideos.forEach(vid => {
+            if (vid) rawVideosList.push(typeof vid === 'object' ? vid?.url : vid);
+        });
+    } else if (deal.inventoryInfo?.inventoryVideos && Array.isArray(deal.inventoryInfo.inventoryVideos) && deal.inventoryInfo.inventoryVideos.length > 0) {
+        deal.inventoryInfo.inventoryVideos.forEach(vid => {
+            if (vid) rawVideosList.push(typeof vid === 'object' ? vid?.url : vid);
+        });
     }
 
     if (Array.isArray(rawBuiltupDetails)) {
         rawBuiltupDetails.forEach(row => {
-            if (row.videoUrl) {
+            if (row && row.videoUrl) {
                 rawVideosList.push(row.videoUrl);
             }
         });
@@ -186,6 +218,7 @@ const mapDealToProperty = (deal) => {
     let resolvedVideos = [];
     const seenVideos = new Set();
     rawVideosList.forEach(vid => {
+        if (!vid) return;
         const fixed = fixDriveUrl(vid);
         if (fixed && !seenVideos.has(fixed)) {
             seenVideos.add(fixed);
@@ -194,9 +227,9 @@ const mapDealToProperty = (deal) => {
     });
 
     // If still empty, check the documents for videos
-    if (resolvedVideos.length === 0) {
-        const docVideos = (deal.documents || [])
-            .filter(doc => (doc.type === 'Video' || doc.url?.match(/\.(mp4|webm|ogg|mov)$/i)))
+    if (resolvedVideos.length === 0 && safeDocuments.length > 0) {
+        const docVideos = safeDocuments
+            .filter(doc => doc && (doc.type === 'Video' || (typeof doc.url === 'string' && doc.url.match(/\.(mp4|webm|ogg|mov)$/i))))
             .map(doc => fixDriveUrl(doc.url))
             .filter(url => url) || [];
         docVideos.forEach(vid => {
@@ -293,16 +326,41 @@ const mapDealToProperty = (deal) => {
     }
     const builtupType = builtupTypeVal;
 
+    const rawFurnishedItems = deal.furnishedItems || deal.inventoryId?.furnishedItems || deal.inventoryInfo?.furnishedItems;
     const furnishingObj = {
-        furnishing: deal.furnishType || deal.propertyDetails?.furnishing || deal.inventoryId?.furnishType || 'Unfurnished',
-        furnishingDetails: (deal.furnishedItems || (deal.inventoryId && deal.inventoryId.furnishedItems)) 
-            ? (deal.furnishedItems || deal.inventoryId.furnishedItems).split(',').map(s => s.trim()) 
-            : [],
-        occupationDate: (deal.occupationDate || (deal.inventoryId && deal.inventoryId.occupationDate)) 
-            ? new Date(deal.occupationDate || deal.inventoryId.occupationDate).toLocaleDateString('en-GB') 
+        furnishing: deal.furnishType || deal.propertyDetails?.furnishing || deal.inventoryId?.furnishType || deal.inventoryInfo?.furnishType || 'Unfurnished',
+        furnishingDetails: (typeof rawFurnishedItems === 'string' && rawFurnishedItems) 
+            ? rawFurnishedItems.split(',').map(s => s.trim()) 
+            : (Array.isArray(rawFurnishedItems) ? rawFurnishedItems : []),
+        occupationDate: (deal.occupationDate || deal.inventoryId?.occupationDate || deal.inventoryInfo?.occupationDate) 
+            ? new Date(deal.occupationDate || deal.inventoryId?.occupationDate || deal.inventoryInfo?.occupationDate).toLocaleDateString('en-GB') 
             : 'TBD',
-        age: deal.ageOfConstruction || deal.inventoryId?.ageOfConstruction || 'New'
+        age: deal.ageOfConstruction || deal.inventoryId?.ageOfConstruction || deal.inventoryInfo?.ageOfConstruction || 'New'
     };
+
+    const rawCollectorRate = Number(deal.collectorRate);
+    const collectorRate = (deal.collectorRate !== undefined && deal.collectorRate !== null && !isNaN(rawCollectorRate) && rawCollectorRate > 0)
+        ? rawCollectorRate
+        : null;
+
+    const rawCollectorValue = Number(deal.collectorValue);
+    const collectorValue = (deal.collectorValue !== undefined && deal.collectorValue !== null && !isNaN(rawCollectorValue) && rawCollectorValue > 0)
+        ? rawCollectorValue
+        : null;
+
+    const collectorRateUnit = (collectorRate || collectorValue) ? (deal.collectorRateUnit || 'Sq Yard') : null;
+
+    const rawFlexible = Number(deal.flexiblePercentage);
+    const flexiblePercentage = (deal.flexiblePercentage !== undefined && deal.flexiblePercentage !== null && !isNaN(rawFlexible) && rawFlexible > 0)
+        ? rawFlexible
+        : null;
+
+    const rawSiteVisit = Number(deal.siteVisitCount);
+    const siteVisitCount = (deal.siteVisitCount !== undefined && deal.siteVisitCount !== null && !isNaN(rawSiteVisit) && rawSiteVisit > 0)
+        ? rawSiteVisit
+        : null;
+
+    const safeRemarks = typeof deal.remarks === 'string' ? deal.remarks.trim() : '';
 
     return {
         id: deal._id,
@@ -336,16 +394,16 @@ const mapDealToProperty = (deal) => {
         category: category || 'Residential',
         subCategory: subCat,
         sizeLabel: sizeLabel || flattenMeasurement(deal.size, deal.sizeUnit || 'Sq.Ft') || 'Area on Request',
-        unitType: deal.unitType?.lookup_value || deal.unitType || deal.inventoryId?.unitType?.lookup_value || deal.inventoryId?.unitType || 'Ordinary',
-        width: deal.width || deal.inventoryId?.width || deal.inventoryId?.frontage || '',
-        length: deal.length || deal.inventoryId?.length || deal.inventoryId?.depth || '',
+        unitType: deal.unitType?.lookup_value || deal.unitType || deal.inventoryId?.unitType?.lookup_value || deal.inventoryId?.unitType || deal.inventoryInfo?.unitType?.lookup_value || deal.inventoryInfo?.unitType || 'Ordinary',
+        width: deal.width || deal.inventoryId?.width || deal.inventoryId?.frontage || deal.inventoryInfo?.width || deal.inventoryInfo?.frontage || '',
+        length: deal.length || deal.inventoryId?.length || deal.inventoryId?.depth || deal.inventoryInfo?.length || deal.inventoryInfo?.depth || '',
         intent: intent,
         availableString: availableString,
         description: (deal.websiteMetadata?.description && 
                        deal.websiteMetadata.description !== 'Check out this new property listing at Bharat Properties.' && 
                        deal.websiteMetadata.description !== 'Check out this updated property listing at Bharat Properties.')
                        ? deal.websiteMetadata.description 
-                       : (deal.description || deal.websiteMetadata?.description || deal.remarks || ''),
+                       : (deal.description || safeRemarks || deal.websiteMetadata?.description || ''),
         builtupDetails: {
             type: builtupType,
             area: String(deal.size || '0'),
@@ -365,23 +423,25 @@ const mapDealToProperty = (deal) => {
             maintenance: deal.priceDetails?.maintenanceCharges || 'N/A'
         },
         // Old field mappings for compatibility
-        unitNo: deal.unitNo || deal.inventoryId?.unitNo || 'N/A',
+        unitNo: deal.unitNo || deal.inventoryId?.unitNo || deal.inventoryInfo?.unitNo || 'N/A',
         
         ownership: deal.propertyDetails?.ownership || 'Freehold',
         stage: deal.status || 'Available',
         rawPrice: deal.price || deal.quotePrice || 0,
         transactionType: deal.transactionType || 'Full White',
-        flexiblePercentage: deal.flexiblePercentage !== undefined ? deal.flexiblePercentage : 100,
-        collectorRate: deal.collectorRate || 0,
-        collectorRateUnit: deal.collectorRateUnit || 'Sq Yard',
-        collectorValue: deal.collectorValue || 0,
+        flexiblePercentage: flexiblePercentage,
+        collectorRate: collectorRate,
+        collectorRateUnit: collectorRateUnit,
+        collectorValue: collectorValue,
         pricingNature: deal.pricingNature || { negotiable: false, fixed: false },
         seo: {
             title: deal.websiteMetadata?.metaTitle,
             description: deal.websiteMetadata?.metaDescription,
             tags: deal.websiteMetadata?.tags || []
         },
-        siteVisitCount: deal.siteVisitCount,
+        siteVisitCount: siteVisitCount,
+        remarks: safeRemarks || null,
+        documents: safeDocuments,
         updatedAt: deal.updatedAt || deal.createdAt || null
     };
 };

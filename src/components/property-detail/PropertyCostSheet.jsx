@@ -11,16 +11,20 @@ const formatCurrency = (val) => {
 };
 
 const PropertyCostSheet = ({ property }) => {
+    const rawPrice = property?.rawPrice || 0;
+    const flexiblePercentage = (property?.flexiblePercentage && property.flexiblePercentage > 0) ? property.flexiblePercentage : null;
+    const collectorRate = (property?.collectorRate && property.collectorRate > 0) ? property.collectorRate : null;
+    const collectorRateUnit = property?.collectorRateUnit || 'Sq Yard';
+    const collectorValue = (property?.collectorValue && property.collectorValue > 0) ? property.collectorValue : null;
+    const hasCollectorInfo = Boolean(collectorRate || collectorValue);
+
+    const initialTxType = (property?.transactionType === 'Collector Rate' && !hasCollectorInfo)
+        ? 'Full White'
+        : (property?.transactionType || 'Full White');
+    const [selectedTxType, setSelectedTxType] = useState(initialTxType);
     const [gender, setGender] = useState('male');
-    const [selectedTxType, setSelectedTxType] = useState(property.transactionType || 'Full White');
 
     if (!property || !property.rawPrice) return null;
-
-    const rawPrice = property.rawPrice;
-    const flexiblePercentage = property.flexiblePercentage || 100;
-    const collectorRate = property.collectorRate || 0;
-    const collectorRateUnit = property.collectorRateUnit || 'Sq Yard';
-    const collectorValue = property.collectorValue || 0;
 
     // Dynamic Stamp Duty Percentage based on Gender Selection
     let stampDutyPercent = 7;
@@ -81,7 +85,7 @@ const PropertyCostSheet = ({ property }) => {
                     }}>
                         <ShieldCheck size={14} style={{ color: selectedTxType === 'Full White' ? '#4ade80' : '#fb923c' }} />
                         <span style={{ fontSize: '0.7rem', fontWeight: 800, color: selectedTxType === 'Full White' ? '#4ade80' : '#fb923c', textTransform: 'uppercase', letterSpacing: '0.5px' }}>
-                            Active: {selectedTxType} {selectedTxType === 'Flexible' && `(${flexiblePercentage}%)`}
+                            Active: {selectedTxType} {selectedTxType === 'Flexible' && flexiblePercentage ? `(${flexiblePercentage}%)` : ''}
                         </span>
                     </div>
                 </div>
@@ -100,17 +104,19 @@ const PropertyCostSheet = ({ property }) => {
                             <span>📄</span>
                             <span>Full White</span>
                         </button>
-                        <button
-                            onClick={() => setSelectedTxType('Collector Rate')}
-                            className="cost-switcher-btn"
-                            style={{
-                                backgroundColor: selectedTxType === 'Collector Rate' ? '#0F172A' : 'transparent',
-                                color: selectedTxType === 'Collector Rate' ? '#fff' : '#64748b'
-                            }}
-                        >
-                            <span>🏛️</span>
-                            <span>Collector Rate</span>
-                        </button>
+                        {hasCollectorInfo && (
+                            <button
+                                onClick={() => setSelectedTxType('Collector Rate')}
+                                className="cost-switcher-btn"
+                                style={{
+                                    backgroundColor: selectedTxType === 'Collector Rate' ? '#0F172A' : 'transparent',
+                                    color: selectedTxType === 'Collector Rate' ? '#fff' : '#64748b'
+                                }}
+                            >
+                                <span>🏛️</span>
+                                <span>Collector Rate</span>
+                            </button>
+                        )}
                         {property.transactionType === 'Flexible' && (
                             <button
                                 onClick={() => setSelectedTxType('Flexible')}
@@ -121,13 +127,13 @@ const PropertyCostSheet = ({ property }) => {
                                 }}
                             >
                                 <span>⚖️</span>
-                                <span>Flexible ({flexiblePercentage}%)</span>
+                                <span>Flexible {flexiblePercentage ? `(${flexiblePercentage}%)` : ''}</span>
                             </button>
                         )}
                     </div>
 
                     {/* Official Collector Rate Card (No Mock Data, Fetched Live from DB) */}
-                    {selectedTxType === 'Collector Rate' && (
+                    {selectedTxType === 'Collector Rate' && hasCollectorInfo && (
                         <div style={{ 
                             padding: '18px 22px', 
                             backgroundColor: '#fffbeb', 
@@ -147,15 +153,19 @@ const PropertyCostSheet = ({ property }) => {
                                 </div>
                                 <div>
                                     <div style={{ fontSize: '0.85rem', fontWeight: 800, color: '#78350f' }}>Official Circle Rate Details</div>
-                                    <div style={{ fontSize: '0.75rem', color: '#b45309', fontWeight: 600 }}>
-                                        State Assessed Rate: <span style={{ fontWeight: 800 }}>{formatCurrency(collectorRate)} per {collectorRateUnit}</span>
-                                    </div>
+                                    {collectorRate && (
+                                        <div style={{ fontSize: '0.75rem', color: '#b45309', fontWeight: 600 }}>
+                                            State Assessed Rate: <span style={{ fontWeight: 800 }}>{formatCurrency(collectorRate)} per {collectorRateUnit}</span>
+                                        </div>
+                                    )}
                                 </div>
                             </div>
-                            <div style={{ textAlign: 'right' }}>
-                                <div style={{ fontSize: '0.75rem', fontWeight: 700, color: '#b45309', textTransform: 'uppercase' }}>Registry Base Value</div>
-                                <div style={{ fontSize: '1.1rem', fontWeight: 900, color: '#78350f' }}>{formatCurrency(collectorValue)}</div>
-                            </div>
+                            {collectorValue && (
+                                <div style={{ textAlign: 'right' }}>
+                                    <div style={{ fontSize: '0.75rem', fontWeight: 700, color: '#b45309', textTransform: 'uppercase' }}>Registry Base Value</div>
+                                    <div style={{ fontSize: '1.1rem', fontWeight: 900, color: '#78350f' }}>{formatCurrency(collectorValue)}</div>
+                                </div>
+                            )}
                         </div>
                     )}
 
@@ -200,16 +210,18 @@ const PropertyCostSheet = ({ property }) => {
                             </div>
 
                             {/* Registry / Assessed value breakdown in premium layout */}
-                            {selectedTxType !== 'Full White' && (
+                            {selectedTxType !== 'Full White' && (selectedTxType === 'Flexible' || hasCollectorInfo) && stampDutyBase > 0 && (
                                 <div style={{ borderTop: '1px dashed #cbd5e1', paddingTop: '12px', display: 'flex', flexDirection: 'column', gap: '8px' }}>
                                     <div style={{ display: 'flex', justifyContent: 'space-between', fontSize: '0.8rem' }}>
                                         <span style={{ color: '#64748b', fontWeight: 600 }}>Assessed Circle Rate Base:</span>
                                         <span style={{ color: '#0F172A', fontWeight: 700 }}>{formatCurrency(stampDutyBase)}</span>
                                     </div>
-                                    <div style={{ display: 'flex', justifyContent: 'space-between', fontSize: '0.8rem' }}>
-                                        <span style={{ color: '#64748b', fontWeight: 600 }}>Agreement Balance Component:</span>
-                                        <span style={{ color: '#e11d48', fontWeight: 700 }}>{formatCurrency(rawPrice - stampDutyBase)}</span>
-                                    </div>
+                                    {rawPrice - stampDutyBase > 0 && (
+                                        <div style={{ display: 'flex', justifyContent: 'space-between', fontSize: '0.8rem' }}>
+                                            <span style={{ color: '#64748b', fontWeight: 600 }}>Agreement Balance Component:</span>
+                                            <span style={{ color: '#e11d48', fontWeight: 700 }}>{formatCurrency(rawPrice - stampDutyBase)}</span>
+                                        </div>
+                                    )}
                                 </div>
                             )}
                         </div>

@@ -212,8 +212,15 @@ async function run() {
     // Test Project Page
     await assertPage('/project/mock-project-1', 1, 'Project Detail Page');
 
-    // Test Property Page
+    // Test Property Page (Standard)
     await assertPage('/property/mock-prop-1', 1, 'Property Detail Page');
+
+    // Test Property Page (Sparse / Missing Optional Fields)
+    await assertPage(
+      '/property/mock-prop-sparse',
+      1,
+      'Sparse Property Detail Page (Degraded Optional Fields)'
+    );
 
     // Test Blog Page
     await assertPage(

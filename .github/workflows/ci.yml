@@ -42,6 +42,9 @@ jobs:
       - name: Run ESLint
         run: npm run lint
 
+      - name: Run Unit Tests
+        run: npm test
+
       - name: Verify build fails without mock CRM when upstream is unreachable
         run: |
           set +e

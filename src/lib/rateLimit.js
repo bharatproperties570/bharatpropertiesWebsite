@@ -10,6 +10,8 @@
  * an Upstash Redis or Vercel KV adapter via `createKvRateLimiter()`.
  */
 
+import { getValidatedClientIp } from './ipUtils';
+
 export class InMemoryRateLimitStore {
   constructor() {
     this.hits = new Map();
@@ -79,12 +81,7 @@ export class RateLimiter {
   }
 
   getClientIp(req) {
-    const forwarded = req.headers['x-forwarded-for'];
-    if (forwarded) {
-      const first = typeof forwarded === 'string' ? forwarded.split(',')[0] : forwarded[0];
-      return first.trim();
-    }
-    return req.headers['x-real-ip'] || req.socket?.remoteAddress || '127.0.0.1';
+    return getValidatedClientIp(req) || req.socket?.remoteAddress || '127.0.0.1';
   }
 
   async check(req, customKey = '') {

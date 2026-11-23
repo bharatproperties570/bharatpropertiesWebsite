@@ -100,6 +100,47 @@ export const mockListings = [
     updatedAt: '2025-01-20T12:00:00.000Z',
     createdAt: '2025-01-05T12:00:00.000Z',
   },
+  {
+    _id: '6501b1b2c3d4e5f678909999',
+    websiteMetadata: {
+      slug: 'mock-prop-sparse',
+      title: 'Residential Plot in Mohali Sector 70',
+      metaTitle: 'Residential Plot in Mohali Sector 70 | Bharat Properties',
+      metaDescription: 'Prime residential plot available in Sector 70, Mohali.',
+      description: 'Prime residential plot in Sector 70 Mohali with clear title and prime location.',
+    },
+    propertyDetails: {
+      bhk: 0,
+      bathrooms: 0,
+      ownership: 'Freehold',
+    },
+    propertyType: 'Residential Plot',
+    category: { lookup_value: 'Residential' },
+    price: 4500000,
+    quotePrice: 4500000,
+    locationDetails: {
+      city: { lookup_value: 'Mohali' },
+      locality: { lookup_value: 'Sector 70' },
+      state: { lookup_value: 'Punjab' },
+    },
+    address: {
+      address: 'Sector 70, Mohali, Punjab',
+      city: 'Mohali',
+      locality: 'Sector 70',
+      state: 'Punjab',
+      country: 'India',
+      zip: '140306',
+    },
+    intent: 'Sell',
+    status: 'Available',
+    size: 150,
+    sizeUnit: 'Sq.Yd',
+    // Deliberately omitted optional fields:
+    // documents, propertyImages, propertyVideos, collectorRate, collectorRateUnit,
+    // collectorValue, flexiblePercentage, inventoryInfo, siteVisitCount, remarks
+    updatedAt: '2025-01-22T10:00:00.000Z',
+    createdAt: '2025-01-10T10:00:00.000Z',
+  },
 ];
 
 export function createMockCrmServer() {

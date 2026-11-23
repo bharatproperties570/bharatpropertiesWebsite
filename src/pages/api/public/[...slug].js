@@ -1,6 +1,7 @@
 /* global process */
 import { getSiteUrl, IS_PRODUCTION } from '../../../lib/env';
 import { leadSubmissionLimiter, publicApiLimiter } from '../../../lib/rateLimit';
+import { getValidatedClientIp } from '../../../lib/ipUtils';
 import {
   validateLeadPayload,
   validatePropertyPayload,
@@ -165,10 +166,13 @@ export default async function handler(req, res) {
   const queryString = req.url.includes('?') ? req.url.substring(req.url.indexOf('?')) : '';
   const apiUrl = `${apiBaseUrl}${slugPath}${queryString}`;
 
+  const clientIp = getValidatedClientIp(req);
+
   const forwardHeaders = {
     'Content-Type': 'application/json',
     'Accept': 'application/json',
-    ...(apiKey ? { Authorization: `Bearer ${apiKey}`, 'X-API-KEY': apiKey } : {})
+    ...(apiKey ? { Authorization: `Bearer ${apiKey}`, 'X-API-KEY': apiKey } : {}),
+    ...(clientIp ? { 'X-Client-IP': clientIp } : {})
   };
 
   const controller = new AbortController();

@@ -182,7 +182,7 @@ const PropertyCard = ({ property, onClick }) => {
                     }}>
                         🌱 A+ Eco
                     </div>
-                    {property.siteVisitCount !== undefined && (
+                    {Boolean(property.siteVisitCount && property.siteVisitCount > 0) && (
                         <div style={{
                             backgroundColor: 'rgba(255, 255, 255, 0.9)',
                             color: 'var(--color-primary)',

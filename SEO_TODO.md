@@ -13,7 +13,7 @@ Please set the following environment variables in your Vercel / deployment envir
 | `CRM_API_KEY` | Server-side CRM API access key | Required for production CRM proxy. **Rotate old key in CRM!** |
 | `CRM_API_BASE_URL` | CRM upstream endpoint | e.g. `https://crm.bharatproperties.co/api` |
 | `NEXT_PUBLIC_SITE_URL` | Canonical domain | Configured default: `https://www.bharatproperties.co` |
-| `NEXT_PUBLIC_RERA_NUMBER` | Official Haryana/Punjab RERA registration number | Unset. ReraBadge renders in footer & about page once set. |
+| `NEXT_PUBLIC_RERA_NUMBER` | Official Haryana/Punjab RERA registration number | **SET:** `PBRERA-HRY06-0050`. ReraBadge renders in footer & about page. |
 | `NEXT_PUBLIC_FACEBOOK_URL` | Official Facebook business page URL | **VERIFIED:** `https://www.facebook.com/bharatproperties570` |
 | `NEXT_PUBLIC_INSTAGRAM_URL` | Official Instagram business profile URL | **VERIFIED:** `https://www.instagram.com/bhaaratproperties` |
 | `NEXT_PUBLIC_LINKEDIN_URL` | Official LinkedIn company page URL | **VERIFIED:** `https://www.linkedin.com/company/42752175/` |

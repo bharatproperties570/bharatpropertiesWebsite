@@ -3,7 +3,7 @@ import React from 'react';
 import { ShieldCheck } from 'lucide-react';
 
 export default function ReraBadge({ style = {} }) {
-    const reraNumber = process.env.NEXT_PUBLIC_RERA_NUMBER;
+    const reraNumber = process.env.NEXT_PUBLIC_RERA_NUMBER || 'PBRERA-HRY06-0050';
     if (!reraNumber || typeof reraNumber !== 'string' || !reraNumber.trim()) {
         return null;
     }

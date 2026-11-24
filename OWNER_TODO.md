@@ -6,9 +6,8 @@ This document tracks every specific fact, credential, asset, and architectural s
 
 ## 1. Compliance & Business Identifiers
 
-- [ ] **Official RERA Registration Number:**
-  - **Context:** `src/components/ReraBadge.jsx` currently displays the verified fact that Bharat Properties is a registered real estate consultancy without claiming an unsubstantiated registration number.
-  - **Action Required:** Provide official Punjab & Haryana RERA license/registration numbers (e.g., `HRERA-PKL-...` or `PBRERA-...`). Once provided, add to `ReraBadge.jsx` and JSON-LD schema metadata.
+- [x] **Official RERA Registration Number:**
+  - **Status:** Verified and updated to `PBRERA-HRY06-0050`. Configured as active default and rendered via `ReraBadge.jsx` (Footer & About Page) and Schema.org `RealEstateAgent` organization graph metadata.
 - [x] **Mohali Office Postal Code:**
   - **Status:** Verified and updated to `140306` (PR 7, Airport Road, Sector 82 Industrial Area, Mohali, Punjab). Confirmed across JSON-LD schemas and UI pages.
 - [ ] **Official Mailbox Destinations:**

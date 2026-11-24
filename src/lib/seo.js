@@ -6,7 +6,7 @@ export const SITE_NAME = 'Bharat Properties';
 export const DEFAULT_OG_IMAGE = '/opengraph-image';
 export const PHONE = '+91-9991333570';
 export const EMAIL = 'info@bharatproperties.co';
-export const RERA_NUMBER = process.env.NEXT_PUBLIC_RERA_NUMBER || '';
+export const RERA_NUMBER = process.env.NEXT_PUBLIC_RERA_NUMBER || 'PBRERA-HRY06-0050';
 
 // Official verified social profiles (with env override support)
 export const SOCIAL_PROFILES = [
@@ -129,6 +129,7 @@ export const organizationGraph = () => ({
             email: EMAIL,
             sameAs: SOCIAL_PROFILES.length ? SOCIAL_PROFILES : undefined,
             areaServed: AREAS_SERVED.map((name) => ({ '@type': 'City', name })),
+            ...(RERA_NUMBER ? { license: RERA_NUMBER } : {}),
             address: {
                 '@type': 'PostalAddress',
                 streetAddress: BRANCHES[0].street,

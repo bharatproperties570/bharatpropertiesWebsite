@@ -1,8 +1,10 @@
 import React from 'react';
-import { notFound } from 'next/navigation';
+import { notFound, permanentRedirect } from 'next/navigation';
 import Link from 'next/link';
-import { Calendar, User, ArrowLeft, Clock } from 'lucide-react';
+import Image from 'next/image';
+import { Calendar, User, ArrowLeft, Clock, MapPin } from 'lucide-react';
 import { BLOG_DATA } from '../../../data/blogData';
+import Breadcrumbs from '../../../components/Breadcrumbs';
 import {
     SITE_URL, cleanText, absoluteUrl, articleSchema, breadcrumbSchema, jsonLd,
 } from '../../../lib/seo';
@@ -10,14 +12,16 @@ import {
 export const revalidate = 3600;
 
 export function generateStaticParams() {
-    return BLOG_DATA.map((b) => ({ slug: b.id }));
+    return BLOG_DATA.map((b) => ({ slug: b.slug }));
 }
 
 const findArticle = (slug) => {
     if (!slug) return null;
     const decoded = decodeURIComponent(slug).toLowerCase().trim();
     return BLOG_DATA.find(
-        (b) => b.id.toLowerCase() === decoded || b.title.toLowerCase().replace(/[^a-z0-9]+/g, '-').replace(/(^-|-$)/g, '') === decoded
+        (b) => (b.slug && b.slug.toLowerCase() === decoded) ||
+               b.id.toLowerCase() === decoded ||
+               b.title.toLowerCase().replace(/[^a-z0-9]+/g, '-').replace(/(^-|-$)/g, '') === decoded
     ) || null;
 };
 
@@ -28,7 +32,7 @@ export async function generateMetadata({ params }) {
 
     const title = `${cleanText(article.title)} | Bharat Properties Blog`;
     const description = cleanText(article.excerpt, 158);
-    const path = `/blog/${article.id}`;
+    const path = `/blog/${article.slug || article.id}`;
     const image = absoluteUrl(article.image);
 
     return {
@@ -58,7 +62,12 @@ export default async function BlogArticlePage({ params }) {
     const article = findArticle(slug);
     if (!article) notFound();
 
-    const path = `/blog/${article.id}`;
+    // 308 permanent redirect if accessed via old id parameter
+    if (slug === article.id && article.slug && slug !== article.slug) {
+        permanentRedirect(`/blog/${article.slug}`);
+    }
+
+    const path = `/blog/${article.slug || article.id}`;
     const url = `${SITE_URL}${path}`;
 
     const graph = [
@@ -78,21 +87,13 @@ export default async function BlogArticlePage({ params }) {
 
             <div className="container" style={{ maxWidth: '840px', margin: '0 auto', padding: '0 1.5rem' }}>
                 {/* Breadcrumb Navigation */}
-                <nav aria-label="Breadcrumb" style={{ marginBottom: '2rem', fontSize: '0.9rem', color: '#64748B' }}>
-                    <ol style={{ listStyle: 'none', padding: 0, margin: 0, display: 'flex', flexWrap: 'wrap', gap: '0.5rem', alignItems: 'center' }}>
-                        <li>
-                            <Link href="/" style={{ color: '#64748B', textDecoration: 'none' }}>Home</Link>
-                        </li>
-                        <li aria-hidden="true">/</li>
-                        <li>
-                            <Link href="/blog" style={{ color: '#64748B', textDecoration: 'none' }}>Blog</Link>
-                        </li>
-                        <li aria-hidden="true">/</li>
-                        <li aria-current="page" style={{ color: '#0F172A', fontWeight: 600 }}>
-                            {article.title}
-                        </li>
-                    </ol>
-                </nav>
+                <Breadcrumbs
+                    items={[
+                        { name: 'Home', path: '/' },
+                        { name: 'Blog', path: '/blog' },
+                        { name: article.title, path: `/blog/${article.slug}` },
+                    ]}
+                />
 
                 <div style={{ marginBottom: '1.5rem' }}>
                     <Link
@@ -179,9 +180,12 @@ export default async function BlogArticlePage({ params }) {
                             boxShadow: '0 10px 25px -5px rgba(0,0,0,0.08)',
                         }}
                     >
-                        <img
+                        <Image
                             src={article.image}
                             alt={article.title}
+                            width={1200}
+                            height={600}
+                            priority
                             style={{
                                 width: '100%',
                                 maxHeight: '480px',
@@ -274,6 +278,41 @@ export default async function BlogArticlePage({ params }) {
                         >
                             Speak to an Advisor
                         </Link>
+                    </div>
+
+                    {/* Internal Linking: Core Markets */}
+                    <div style={{ marginTop: '3.5rem', borderTop: '1px solid #E2E8F0', paddingTop: '2.5rem' }}>
+                        <h4 style={{ fontSize: '1.15rem', fontWeight: 800, color: '#0F172A', marginBottom: '1rem', display: 'flex', alignItems: 'center', gap: '0.5rem' }}>
+                            <MapPin size={18} color="var(--color-accent)" /> Explore Properties in Covered Regions
+                        </h4>
+                        <div style={{ display: 'flex', flexWrap: 'wrap', gap: '0.6rem' }}>
+                            {[
+                                { name: 'Kurukshetra', href: '/kurukshetra' },
+                                { name: 'Mohali', href: '/mohali' },
+                                { name: 'Chandigarh', href: '/chandigarh' },
+                                { name: 'Panchkula', href: '/panchkula' },
+                                { name: 'Zirakpur', href: '/zirakpur' },
+                                { name: 'New Chandigarh', href: '/new-chandigarh' },
+                                { name: 'Kharar', href: '/kharar' }
+                            ].map((c) => (
+                                <Link
+                                    key={c.href}
+                                    href={c.href}
+                                    style={{
+                                        padding: '0.45rem 0.9rem',
+                                        backgroundColor: '#F1F5F9',
+                                        color: '#0F172A',
+                                        borderRadius: '8px',
+                                        fontSize: '0.875rem',
+                                        fontWeight: 600,
+                                        textDecoration: 'none',
+                                        transition: 'background-color 0.2s'
+                                    }}
+                                >
+                                    Property in {c.name}
+                                </Link>
+                            ))}
+                        </div>
                     </div>
                 </div>
             </div>

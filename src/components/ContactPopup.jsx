@@ -2,6 +2,7 @@ import React, { useState, useEffect } from 'react';
 import { X, Send, User, Mail, Phone, MessageSquare, CheckCircle, Shield, Loader2, AlertCircle } from 'lucide-react';
 import { countryCodes } from '../data/countryCodes';
 import { submitLead } from '../services/crmService';
+import { trackLeadSubmit } from '../lib/analytics';
 
 const ContactPopup = ({ isOpen, onClose }) => {
     const [formData, setFormData] = useState({
@@ -37,6 +38,7 @@ const ContactPopup = ({ isOpen, onClose }) => {
                 activityType: 'Note',
                 reason: 'Contact Request'
             });
+            trackLeadSubmit('contact_popup');
             setIsSubmitted(true);
             setTimeout(() => {
                 setIsSubmitted(false);
@@ -148,18 +150,22 @@ const ContactPopup = ({ isOpen, onClose }) => {
 
                         <form onSubmit={handleSubmit} style={{ padding: '2rem 2.5rem 2.5rem' }}>
                             {error && (
-                                <div style={{ 
-                                    padding: '0.75rem', 
-                                    backgroundColor: '#fef2f2', 
-                                    border: '1px solid #fee2e2', 
-                                    borderRadius: '12px', 
-                                    color: '#dc2626', 
-                                    fontSize: '0.85rem', 
-                                    display: 'flex', 
-                                    alignItems: 'center', 
-                                    gap: '0.5rem', 
-                                    marginBottom: '1rem' 
-                                }}>
+                                <div
+                                    role="alert"
+                                    aria-live="assertive"
+                                    style={{ 
+                                        padding: '0.75rem', 
+                                        backgroundColor: '#fef2f2', 
+                                        border: '1px solid #fee2e2', 
+                                        borderRadius: '12px', 
+                                        color: '#dc2626', 
+                                        fontSize: '0.85rem', 
+                                        display: 'flex', 
+                                        alignItems: 'center', 
+                                        gap: '0.5rem', 
+                                        marginBottom: '1rem' 
+                                    }}
+                                >
                                     <AlertCircle size={16} />
                                     <span>{error}</span>
                                 </div>

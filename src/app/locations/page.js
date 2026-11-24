@@ -10,7 +10,7 @@ export default function LocationsPage() {
 
     const configuration = useMemo(() => ({
         "locations": [
-            { "title": "Bharat Properties", "address1": "PR 7, Airport Road", "address2": "Mohali, Punjab, India", "coords": { "lat": 30.6327022, "lng": 76.7663162 } },
+            { "title": "Bharat Properties", "address1": "PR 7, Airport Road", "address2": "Mohali, Punjab 140306, India", "coords": { "lat": 30.6327022, "lng": 76.7663162 } },
             { "title": "Bharat Properties", "address1": "Sector 3 Market", "address2": "Kurukshetra, Haryana, India", "coords": { "lat": 29.9602037, "lng": 76.8899997 }, "placeId": "ChIJKzFpydBGDjkRbTCco1_G2I4" }
         ],
         "mapOptions": { "center": { "lat": 30.3, "lng": 76.8 }, "fullscreenControl": true, "mapTypeControl": false, "streetViewControl": false, "zoom": 8, "zoomControl": true, "maxZoom": 17, "mapId": "" },
@@ -45,6 +45,19 @@ export default function LocationsPage() {
 
     return (
         <div style={{ height: 'calc(100vh - 80px)', width: '100%', position: 'relative', marginTop: '80px', backgroundColor: '#f8fafc' }}>
+            <h1 style={{
+                position: 'absolute',
+                width: '1px',
+                height: '1px',
+                padding: 0,
+                margin: '-1px',
+                overflow: 'hidden',
+                clip: 'rect(0, 0, 0, 0)',
+                whiteSpace: 'nowrap',
+                border: 0
+            }}>
+                Our Offices - Kurukshetra &amp; Mohali Locations
+            </h1>
             <Script
                 src="https://ajax.googleapis.com/ajax/libs/@googlemaps/extended-component-library/0.6.11/index.min.js"
                 type="module"

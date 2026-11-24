@@ -1,0 +1,10 @@
+.next
+node_modules
+dist
+out
+build
+coverage
+archive
+public
+package-lock.json
+*.log

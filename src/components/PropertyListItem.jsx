@@ -1,4 +1,5 @@
 import React from 'react';
+import Image from 'next/image';
 import { Heart, Phone, MapPin, MessageCircle, Plus } from 'lucide-react';
 
 const PropertyListItem = ({ property, onClick }) => {
@@ -26,14 +27,15 @@ const PropertyListItem = ({ property, onClick }) => {
                 position: 'relative',
                 minHeight: '100%'
             }}>
-                <img
+                <Image
                     src={property.image}
-                    alt={property.title}
+                    alt={property.title || 'Property listing'}
+                    fill
+                    sizes="(max-width: 768px) 100vw, 35vw"
                     style={{
-                        width: '100%',
-                        height: '100%',
                         objectFit: 'cover'
                     }}
+                    loading="lazy"
                 />
 
 

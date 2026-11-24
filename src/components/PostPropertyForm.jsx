@@ -2,6 +2,7 @@ import React, { useState, useEffect } from 'react';
 import { X, CheckCircle, IndianRupee, MapPin, User, Building2, Tag, Ruler, Loader2, AlertCircle, Briefcase, Users } from 'lucide-react';
 import { countryCodes } from '../data/countryCodes';
 import { submitListing, fetchProjects, fetchPublicSettings, fetchAvailableUnits } from '../services/crmService';
+import { trackLeadSubmit } from '../lib/analytics';
 
 const PostPropertyForm = ({ onClose }) => {
     const [formData, setFormData] = useState({
@@ -198,6 +199,7 @@ const PostPropertyForm = ({ onClose }) => {
                 associateWith: formData.role
             };
             await submitListing(payload);
+            trackLeadSubmit('post_property_form');
             setSubmitted(true);
             setTimeout(() => onClose(), 3000);
         } catch (err) {
@@ -435,7 +437,7 @@ const PostPropertyForm = ({ onClose }) => {
                         {loading ? <Loader2 className="animate-spin" size={20} /> : 'Submit Professional Appraisal'}
                     </button>
                 </div>
-                {error && <div style={{ padding: '0.75rem 2.5rem', backgroundColor: '#fef2f2', color: '#dc2626', fontSize: '0.875rem', textAlign: 'center' }}>{error}</div>}
+                {error && <div role="alert" aria-live="assertive" style={{ padding: '0.75rem 2.5rem', backgroundColor: '#fef2f2', color: '#dc2626', fontSize: '0.875rem', textAlign: 'center' }}>{error}</div>}
             </div>
         </div>
     );

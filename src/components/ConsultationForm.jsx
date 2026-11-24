@@ -1,5 +1,7 @@
 /* global process */
 import React, { useState, useEffect } from 'react';
+import Image from 'next/image';
+import { trackLeadSubmit } from '../lib/analytics';
 import {
     Calendar,
     User,
@@ -140,6 +142,7 @@ const ConsultationForm = ({ onClose }) => {
         setError(null);
         try {
             await submitLead(formData);
+            trackLeadSubmit('consultation_form', { activity_type: formData.activityType });
             setSubmitted(true);
             setTimeout(() => {
                 onClose();
@@ -325,18 +328,22 @@ const ConsultationForm = ({ onClose }) => {
 
                 <form onSubmit={handleSubmit} style={{ padding: '0 3rem 2rem' }}>
                     {error && (
-                        <div style={{ 
-                            padding: '1rem', 
-                            backgroundColor: '#fef2f2', 
-                            border: '1px solid #fee2e2', 
-                            borderRadius: '12px', 
-                            color: '#dc2626', 
-                            fontSize: '0.9rem', 
-                            display: 'flex', 
-                            alignItems: 'center', 
-                            gap: '0.75rem', 
-                            marginBottom: '1rem' 
-                        }}>
+                        <div
+                            role="alert"
+                            aria-live="assertive"
+                            style={{ 
+                                padding: '1rem', 
+                                backgroundColor: '#fef2f2', 
+                                border: '1px solid #fee2e2', 
+                                borderRadius: '12px', 
+                                color: '#dc2626', 
+                                fontSize: '0.9rem', 
+                                display: 'flex', 
+                                alignItems: 'center', 
+                                gap: '0.75rem', 
+                                marginBottom: '1rem' 
+                            }}
+                        >
                             <AlertCircle size={18} />
                             <span>{error}</span>
                         </div>
@@ -449,10 +456,13 @@ const ConsultationForm = ({ onClose }) => {
                                         </div>
                                     ) : (
                                         <>
-                                            <img
+                                            <Image
                                                 src={`https://maps.googleapis.com/maps/api/staticmap?center=30.00,76.85&zoom=13&size=800x200&sensor=false&key=${process.env.NEXT_PUBLIC_GOOGLE_MAPS_API_KEY || 'AIzaSyBd2gdMJVt5C_tgYqWoRbBiatzmevYdB9U'}`}
-                                                alt="Map Preview"
-                                                style={{ width: '100%', height: '100%', objectFit: 'cover', opacity: 0.6 }}
+                                                alt="Bharat Properties office location map preview"
+                                                fill
+                                                sizes="(max-width: 768px) 100vw, 800px"
+                                                style={{ objectFit: 'cover', opacity: 0.6 }}
+                                                loading="lazy"
                                             />
                                             <div style={{
                                                 position: 'absolute',

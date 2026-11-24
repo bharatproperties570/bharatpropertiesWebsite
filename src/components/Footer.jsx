@@ -1,5 +1,7 @@
 /* global process */
 import React from 'react';
+import Image from 'next/image';
+import Link from 'next/link';
 import { Facebook, Instagram, Twitter, Linkedin, Mail, Phone, MapPin, ExternalLink } from 'lucide-react';
 import logo from '../assets/logo.png';
 import ReraBadge from './ReraBadge';
@@ -17,7 +19,7 @@ const Footer = () => {
                 {/* Brand */}
                 <div>
                     <div style={{ display: 'flex', alignItems: 'center', gap: '0.75rem', marginBottom: '1rem' }}>
-                        <img src={logo.src} alt="Bharat Properties" style={{ height: '50px', width: 'auto' }} />
+                        <Image src={logo} alt="Bharat Properties" width={160} height={50} style={{ height: '50px', width: 'auto' }} />
                         <h3 style={{ fontSize: '1.5rem', color: 'var(--color-gold)', margin: 0 }}>Bharat Properties</h3>
                     </div>
                     <p style={{ color: 'var(--color-text-light)', opacity: 0.8, marginBottom: '1.5rem' }}>
@@ -36,27 +38,27 @@ const Footer = () => {
                 <div>
                     <h4 style={{ marginBottom: '1.5rem', color: 'white' }}>Quick Links</h4>
                     <div style={{ display: 'flex', flexDirection: 'column', gap: '0.8rem', opacity: 0.8 }}>
-                        <a href="/">Home</a>
-                        <a href="/calculator" style={{ textDecoration: 'none', color: 'inherit' }}>
+                        <Link href="/">Home</Link>
+                        <Link href="/calculator" style={{ textDecoration: 'none', color: 'inherit' }}>
                             EMI Calculator
-                        </a>
+                        </Link>
                         <a href="#featured">Featured Properties</a>
-                        <a href="/maps" style={{ textDecoration: 'none', color: 'inherit' }}>Map Downloads</a>
-                        <a href="/about" style={{ textDecoration: 'none', color: 'inherit' }}>
+                        <Link href="/maps" style={{ textDecoration: 'none', color: 'inherit' }}>Map Downloads</Link>
+                        <Link href="/about" style={{ textDecoration: 'none', color: 'inherit' }}>
                             About Us
-                        </a>
-                        <a href="/blog" style={{ textDecoration: 'none', color: 'inherit' }}>
+                        </Link>
+                        <Link href="/blog" style={{ textDecoration: 'none', color: 'inherit' }}>
                             Blog &amp; Market Insights
-                        </a>
-                        <a href="/locations" style={{ textDecoration: 'none', color: 'inherit' }}>
+                        </Link>
+                        <Link href="/locations" style={{ textDecoration: 'none', color: 'inherit' }}>
                             Our Offices
-                        </a>
-                        <a href="/privacy" style={{ textDecoration: 'none', color: 'inherit' }}>
+                        </Link>
+                        <Link href="/privacy" style={{ textDecoration: 'none', color: 'inherit' }}>
                             Privacy Policy
-                        </a>
-                        <a href="/terms" style={{ textDecoration: 'none', color: 'inherit' }}>
+                        </Link>
+                        <Link href="/terms" style={{ textDecoration: 'none', color: 'inherit' }}>
                             Terms & Conditions
-                        </a>
+                        </Link>
                     </div>
                 </div>
 

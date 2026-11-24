@@ -1,4 +1,3 @@
-/* global process */
 'use client';
 
 import React, { useState, useEffect } from 'react';
@@ -48,15 +47,10 @@ export default function WaActionPage({ params }) {
         setSubmitting(true);
 
         try {
-            // Determine API URL based on env
-            const API_URL = process.env.NEXT_PUBLIC_CRM_API_URL || 'https://api.bharatproperties.co/api/public';
-            const API_KEY = process.env.NEXT_PUBLIC_CRM_API_KEY || '';
-
-            const response = await fetch(`${API_URL}/wa-site-visit`, {
+            const response = await fetch('/api/public/wa-site-visit', {
                 method: 'POST',
                 headers: {
-                    'Content-Type': 'application/json',
-                    'X-API-KEY': API_KEY
+                    'Content-Type': 'application/json'
                 },
                 body: JSON.stringify({
                     token: token,

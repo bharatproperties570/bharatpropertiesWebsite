@@ -2,6 +2,7 @@ import React, { useState } from 'react';
 import { X, Send, User, Mail, Phone, MessageSquare, CheckCircle, Loader2, AlertCircle } from 'lucide-react';
 import { countryCodes } from '../data/countryCodes';
 import { submitLead } from '../services/crmService';
+import { trackLeadSubmit } from '../lib/analytics';
 
 const TalkToExpertForm = ({ onClose }) => {
     const [formData, setFormData] = useState({
@@ -28,6 +29,7 @@ const TalkToExpertForm = ({ onClose }) => {
                 activityType: 'Note',
                 reason: 'Expert Consultation'
             });
+            trackLeadSubmit('talk_to_expert_form');
             setIsSubmitted(true);
         } catch (err) {
             console.error('Submission failed:', err);
@@ -155,17 +157,21 @@ const TalkToExpertForm = ({ onClose }) => {
                 <div style={{ padding: '2rem', backgroundColor: theme.surface }}>
                     <form onSubmit={handleSubmit} style={{ display: 'flex', flexDirection: 'column', gap: '1.25rem' }}>
                         {error && (
-                            <div style={{ 
-                                padding: '1rem', 
-                                backgroundColor: '#fef2f2', 
-                                border: '1px solid #fee2e2', 
-                                borderRadius: '12px', 
-                                color: '#dc2626', 
-                                fontSize: '0.9rem', 
-                                display: 'flex', 
-                                alignItems: 'center', 
-                                gap: '0.75rem' 
-                            }}>
+                            <div
+                                role="alert"
+                                aria-live="assertive"
+                                style={{ 
+                                    padding: '1rem', 
+                                    backgroundColor: '#fef2f2', 
+                                    border: '1px solid #fee2e2', 
+                                    borderRadius: '12px', 
+                                    color: '#dc2626', 
+                                    fontSize: '0.9rem', 
+                                    display: 'flex', 
+                                    alignItems: 'center', 
+                                    gap: '0.75rem' 
+                                }}
+                            >
                                 <AlertCircle size={18} />
                                 <span>{error}</span>
                             </div>

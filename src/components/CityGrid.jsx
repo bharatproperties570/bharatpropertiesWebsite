@@ -1,5 +1,6 @@
 'use client';
 import React from 'react';
+import Image from 'next/image';
 import { useGlobal } from '../context/GlobalContext';
 import { CITY_DATA } from '../data/cityData';
 import { ArrowRight } from 'lucide-react';
@@ -24,7 +25,14 @@ const CityGrid = ({ onSelectCity }) => {
                     }
                 }}
             >
-                <img src={city.image} alt={`${city.name} property deals - Bharat Properties`} loading="lazy" />
+                <Image
+                    src={city.image}
+                    alt={`${city.name} property deals - Bharat Properties`}
+                    fill
+                    sizes="300px"
+                    style={{ objectFit: 'cover' }}
+                    loading="lazy"
+                />
                 <div className="city-card-overlay">
                     <h3>{city.name}</h3>
                     <p style={{ display: 'flex', alignItems: 'center', gap: '8px' }}>

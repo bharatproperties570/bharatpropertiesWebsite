@@ -1,6 +1,7 @@
 'use client';
 
 import React, { useState } from 'react';
+import Image from 'next/image';
 import { Camera, Play, ChevronLeft, ChevronRight } from 'lucide-react';
 
 const getYouTubeId = (url) => {
@@ -69,11 +70,13 @@ const PropertyMedia = ({ media }) => {
                         style={{ width: '100%', height: '100%', objectFit: 'contain', backgroundColor: '#000' }}
                     />
                 ) : (
-                    <img
+                    <Image
                         src={currentMedia?.url}
-                        style={{ width: '100%', height: '100%', objectFit: 'cover', transition: 'all 0.6s cubic-bezier(0.4, 0, 0.2, 1)' }}
-                        alt={currentMedia?.description || 'Property Image'}
-                        referrerPolicy="no-referrer"
+                        fill
+                        sizes="(max-width: 1200px) 100vw, 1200px"
+                        style={{ objectFit: 'cover', transition: 'all 0.6s cubic-bezier(0.4, 0, 0.2, 1)' }}
+                        alt={currentMedia?.description || 'Property showcase photograph'}
+                        priority={selectedImg === 0}
                     />
                 )}
 
@@ -213,10 +216,13 @@ const PropertyMedia = ({ media }) => {
                         >
                             {thumbYtId ? (
                                 <>
-                                    <img 
+                                    <Image 
                                         src={`https://img.youtube.com/vi/${thumbYtId}/hqdefault.jpg`} 
-                                        style={{ width: '100%', height: '100%', objectFit: 'cover' }} 
-                                        alt="YouTube Thumb" 
+                                        fill
+                                        sizes="120px"
+                                        style={{ objectFit: 'cover' }} 
+                                        alt="YouTube video preview thumbnail" 
+                                        loading="lazy"
                                     />
                                     <div style={{
                                         position: 'absolute',
@@ -225,7 +231,8 @@ const PropertyMedia = ({ media }) => {
                                         display: 'flex',
                                         alignItems: 'center',
                                         justifyContent: 'center',
-                                        color: 'white'
+                                        color: 'white',
+                                        zIndex: 2
                                     }}>
                                         <Play size={24} fill="white" />
                                     </div>
@@ -246,7 +253,14 @@ const PropertyMedia = ({ media }) => {
                                     </div>
                                 </>
                             ) : (
-                                <img src={img.url} style={{ width: '100%', height: '100%', objectFit: 'cover' }} alt="Thumb" referrerPolicy="no-referrer" />
+                                <Image
+                                    src={img.url}
+                                    fill
+                                    sizes="120px"
+                                    style={{ objectFit: 'cover' }}
+                                    alt={img.description || `Property thumbnail ${idx + 1}`}
+                                    loading="lazy"
+                                />
                             )}
                         </div>
                     );

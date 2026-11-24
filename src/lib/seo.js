@@ -6,7 +6,12 @@ export const SITE_NAME = 'Bharat Properties';
 export const DEFAULT_OG_IMAGE = '/opengraph-image';
 export const PHONE = '+91-9991333570';
 export const EMAIL = 'info@bharatproperties.co';
-export const RERA_NUMBER = process.env.NEXT_PUBLIC_RERA_NUMBER || '';
+import { getReraRegistrations, getLicenses } from './rera.js';
+
+export { getReraRegistrations, getLicenses };
+export const RERA_NUMBER_HARYANA = (process.env.NEXT_PUBLIC_RERA_NUMBER_HARYANA || '').trim() || undefined;
+export const RERA_NUMBER_PUNJAB = (process.env.NEXT_PUBLIC_RERA_NUMBER_PUNJAB || '').trim() || undefined;
+export const RERA_NUMBER = (process.env.NEXT_PUBLIC_RERA_NUMBER || '').trim() || undefined;
 
 // Official verified social profiles (with env override support)
 export const SOCIAL_PROFILES = [
@@ -37,7 +42,7 @@ export const BRANCHES = [
         street: 'PR 7, Airport Road, Sector 82 Industrial Area',
         city: 'Mohali',
         region: 'Punjab',
-        postalCode: '', // TODO_OWNER: supply Mohali postal code
+        postalCode: '140306',
         phone: '+91-9991000570',
         geo: { lat: 30.6327022, lng: 76.7663162 },
         mapUrl: 'https://maps.app.goo.gl/SrXsJrh5L23qLEtM6',
@@ -87,60 +92,68 @@ export const breadcrumbSchema = (items) => ({
     })),
 });
 
-const branchNode = (b) => ({
-    '@type': 'RealEstateAgent',
-    '@id': `${SITE_URL}/#branch-${b.id}`,
-    name: b.name,
-    url: `${SITE_URL}/locations`,
-    telephone: b.phone || PHONE,
-    parentOrganization: { '@id': `${SITE_URL}/#org` },
-    address: {
-        '@type': 'PostalAddress',
-        streetAddress: b.street,
-        addressLocality: b.city,
-        addressRegion: b.region,
-        postalCode: b.postalCode || undefined,
-        addressCountry: 'IN',
-    },
-    geo: { '@type': 'GeoCoordinates', latitude: b.geo.lat, longitude: b.geo.lng },
-    hasMap: b.mapUrl || (b.placeId ? `https://www.google.com/maps/place/?q=place_id:${b.placeId}` : undefined),
-});
+const branchNode = (b) => {
+    const branchLicense = b.id === 'kurukshetra' ? RERA_NUMBER_HARYANA : b.id === 'mohali' ? RERA_NUMBER_PUNJAB : undefined;
+    return {
+        '@type': 'RealEstateAgent',
+        '@id': `${SITE_URL}/#branch-${b.id}`,
+        name: b.name,
+        url: `${SITE_URL}/locations`,
+        telephone: b.phone || PHONE,
+        parentOrganization: { '@id': `${SITE_URL}/#org` },
+        ...(branchLicense ? { license: branchLicense } : {}),
+        address: {
+            '@type': 'PostalAddress',
+            streetAddress: b.street,
+            addressLocality: b.city,
+            addressRegion: b.region,
+            postalCode: b.postalCode || undefined,
+            addressCountry: 'IN',
+        },
+        geo: { '@type': 'GeoCoordinates', latitude: b.geo.lat, longitude: b.geo.lng },
+        hasMap: b.mapUrl || (b.placeId ? `https://www.google.com/maps/place/?q=place_id:${b.placeId}` : undefined),
+    };
+};
 
 /** Site-wide entity graph for the homepage: WebSite + Organization + branches. */
-export const organizationGraph = () => ({
-    '@context': 'https://schema.org',
-    '@graph': [
-        {
-            '@type': 'WebSite',
-            '@id': `${SITE_URL}/#website`,
-            url: SITE_URL,
-            name: SITE_NAME,
-            inLanguage: 'en-IN',
-            publisher: { '@id': `${SITE_URL}/#org` },
-        },
-        {
-            '@type': 'RealEstateAgent',
-            '@id': `${SITE_URL}/#org`,
-            name: SITE_NAME,
-            url: SITE_URL,
-            logo: { '@type': 'ImageObject', url: absoluteUrl('/assets/logo.png') },
-            image: absoluteUrl(DEFAULT_OG_IMAGE),
-            telephone: PHONE,
-            email: EMAIL,
-            sameAs: SOCIAL_PROFILES.length ? SOCIAL_PROFILES : undefined,
-            areaServed: AREAS_SERVED.map((name) => ({ '@type': 'City', name })),
-            address: {
-                '@type': 'PostalAddress',
-                streetAddress: BRANCHES[0].street,
-                addressLocality: BRANCHES[0].city,
-                addressRegion: BRANCHES[0].region,
-                postalCode: BRANCHES[0].postalCode || undefined,
-                addressCountry: 'IN',
+export const organizationGraph = () => {
+    const licenses = getLicenses();
+    return {
+        '@context': 'https://schema.org',
+        '@graph': [
+            {
+                '@type': 'WebSite',
+                '@id': `${SITE_URL}/#website`,
+                url: SITE_URL,
+                name: SITE_NAME,
+                inLanguage: 'en-IN',
+                publisher: { '@id': `${SITE_URL}/#org` },
             },
-        },
-        ...BRANCHES.map(branchNode),
-    ],
-});
+            {
+                '@type': 'RealEstateAgent',
+                '@id': `${SITE_URL}/#org`,
+                name: SITE_NAME,
+                url: SITE_URL,
+                logo: { '@type': 'ImageObject', url: absoluteUrl('/assets/logo.png') },
+                image: absoluteUrl(DEFAULT_OG_IMAGE),
+                telephone: PHONE,
+                email: EMAIL,
+                sameAs: SOCIAL_PROFILES.length ? SOCIAL_PROFILES : undefined,
+                areaServed: AREAS_SERVED.map((name) => ({ '@type': 'City', name })),
+                ...(licenses ? { license: licenses } : {}),
+                address: {
+                    '@type': 'PostalAddress',
+                    streetAddress: BRANCHES[0].street,
+                    addressLocality: BRANCHES[0].city,
+                    addressRegion: BRANCHES[0].region,
+                    postalCode: BRANCHES[0].postalCode || undefined,
+                    addressCountry: 'IN',
+                },
+            },
+            ...BRANCHES.map(branchNode),
+        ],
+    };
+};
 
 export const projectSchema = (project, url) => {
     const images = (project.images || []).map((i) => (typeof i === 'string' ? i : i?.url)).filter(Boolean).slice(0, 6);

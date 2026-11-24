@@ -1,4 +1,5 @@
 import React, { useEffect, useState } from 'react';
+import Link from 'next/link';
 import PropertyHeader from './PropertyHeader';
 import PropertyOverview from './PropertyOverview';
 import PropertyBuiltup from './PropertyBuiltup';
@@ -7,13 +8,22 @@ import PropertyLocation from './PropertyLocation';
 import PropertyMedia from './PropertyMedia';
 import SiteVisitForm from '../project-detail/SiteVisitForm';
 import NewsSection from '../NewsSection';
+import Breadcrumbs from '../Breadcrumbs';
 // No static imports anymore
 import { fetchListingBySlug } from '../../services/crmService';
 import SkeletonLoader from '../SkeletonLoader';
 import AnswerFirst from '../AnswerFirst';
 import { buildPropertyAnswerFirst } from '../../lib/seo';
 
-const PropertyDetailPage = ({ propertyId, initialProperty = null, onAddToCompare, onBookConsultation }) => {
+const PropertyDetailPage = ({
+    propertyId,
+    initialProperty = null,
+    breadcrumbs = [],
+    moreListings = [],
+    city = '',
+    onAddToCompare,
+    onBookConsultation
+}) => {
     const [property, setProperty] = useState(initialProperty);
     const [loading, setLoading] = useState(!initialProperty);
 
@@ -67,6 +77,12 @@ const PropertyDetailPage = ({ propertyId, initialProperty = null, onAddToCompare
                 onAddToCompare={onAddToCompare}
                 onBookConsultation={onBookConsultation}
             />
+
+            {breadcrumbs && breadcrumbs.length > 0 && (
+                <div className="container" style={{ paddingTop: '1rem' }}>
+                    <Breadcrumbs items={breadcrumbs} />
+                </div>
+            )}
 
             <AnswerFirst text={buildPropertyAnswerFirst(property)} />
 
@@ -168,6 +184,36 @@ const PropertyDetailPage = ({ propertyId, initialProperty = null, onAddToCompare
                     />
                 </div>
             </main>
+
+            {/* More in City Section */}
+            {moreListings && moreListings.length > 0 && (
+                <section style={{ padding: '4rem 0', backgroundColor: '#f8fafc', borderTop: '1px solid #e2e8f0' }}>
+                    <div className="container">
+                        <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-end', marginBottom: '2rem', flexWrap: 'wrap', gap: '1rem' }}>
+                            <div>
+                                <span style={{ fontSize: '0.85rem', fontWeight: 700, color: 'var(--color-accent)', textTransform: 'uppercase', letterSpacing: '0.05em' }}>Explore More Options</span>
+                                <h2 style={{ fontSize: '1.75rem', fontWeight: 800, color: 'var(--color-primary)', margin: '0.25rem 0 0' }}>More Properties in {city || 'this area'}</h2>
+                            </div>
+                            {city && (
+                                <Link href={`/${city.toLowerCase().replace(/\s+/g, '-')}`} style={{ color: 'var(--color-accent)', fontWeight: 700, textDecoration: 'none' }}>
+                                    View all in {city} →
+                                </Link>
+                            )}
+                        </div>
+                        <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(280px, 1fr))', gap: '1.5rem' }}>
+                            {moreListings.map((l) => (
+                                <Link key={l.id || l.slug} href={`/property/${encodeURIComponent(l.slug || l.id)}`} style={{ textDecoration: 'none', color: 'inherit' }}>
+                                    <div style={{ backgroundColor: '#ffffff', borderRadius: '1rem', padding: '1.25rem', boxShadow: '0 4px 6px -1px rgba(0,0,0,0.05)', border: '1px solid #e2e8f0', transition: 'transform 0.2s' }}>
+                                        <div style={{ fontWeight: 700, fontSize: '1.05rem', color: 'var(--color-primary)', marginBottom: '0.5rem' }}>{l.title || l.unitName}</div>
+                                        <div style={{ fontSize: '0.875rem', color: '#64748b', marginBottom: '0.75rem' }}>{l.sqft || 'Area on Request'} • {l.propertyType || l.type || 'Residential'}</div>
+                                        <div style={{ fontWeight: 800, color: 'var(--color-accent)' }}>{l.price || 'Contact for Price'}</div>
+                                    </div>
+                                </Link>
+                            ))}
+                        </div>
+                    </div>
+                </section>
+            )}
 
             <NewsSection city={property.location?.city} />
         </div>

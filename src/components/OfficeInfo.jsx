@@ -25,7 +25,7 @@ const OfficeInfo = () => {
             {
                 "title": "Bharat Properties - Mohali",
                 "address1": "Airport Road, Sector 82 Industrial Area",
-                "address2": "Mohali, Punjab",
+                "address2": "Mohali, Punjab 140306",
                 "coords": { "lat": 30.6661, "lng": 76.7414 }
             }
         ],

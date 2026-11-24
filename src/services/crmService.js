@@ -20,11 +20,27 @@ if (isServer && !API_KEY) {
 
 const crmApi = axios.create({
     baseURL: API_URL,
+    timeout: 8000,
     headers: {
         'Content-Type': 'application/json',
         ...(API_KEY ? { 'X-API-KEY': API_KEY } : {})
     }
 });
+
+// Helper for retry on transient network or 5xx errors with 1s backoff
+async function getWithRetry(url, config = {}) {
+    try {
+        return await crmApi.get(url, config);
+    } catch (err) {
+        const status = err?.response?.status;
+        const isRetryable = !status || status >= 500 || err.code === 'ECONNABORTED' || err.code === 'ECONNREFUSED';
+        if (isRetryable) {
+            await new Promise(r => setTimeout(r, 1000));
+            return await crmApi.get(url, config);
+        }
+        throw err;
+    }
+}
 
 // Cache-busting request interceptor for real-time live CRM synchronization
 crmApi.interceptors.request.use(config => {
@@ -88,7 +104,9 @@ const formatPrice = (amount) => {
 };
 
 // Mapper for CRM Deal to Website Property
-const mapDealToProperty = (deal) => {
+export const mapDealToProperty = (deal) => {
+    if (!deal || typeof deal !== 'object') return null;
+
     // Curate images and videos from all possible fields returned by public API
     let rawImagesList = [];
     
@@ -97,24 +115,38 @@ const mapDealToProperty = (deal) => {
         rawImagesList.push(deal.websiteMetadata.featuredImage);
     }
     
-    // 2. Add other deal/inventory images
+    // 2. Add other deal/inventory images defensively
     if (Array.isArray(deal.propertyImages) && deal.propertyImages.length > 0) {
-        deal.propertyImages.forEach(img => rawImagesList.push(typeof img === 'object' ? img.url : img));
+        deal.propertyImages.forEach(img => {
+            if (img) rawImagesList.push(typeof img === 'object' ? img?.url : img);
+        });
     } else if (Array.isArray(deal.imagesDetail) && deal.imagesDetail.length > 0) {
-        deal.imagesDetail.forEach(img => rawImagesList.push(typeof img === 'object' ? img.url : img));
+        deal.imagesDetail.forEach(img => {
+            if (img) rawImagesList.push(typeof img === 'object' ? img?.url : img);
+        });
     } else if (Array.isArray(deal.images) && deal.images.length > 0) {
-        deal.images.forEach(img => rawImagesList.push(typeof img === 'object' ? img.url : img));
+        deal.images.forEach(img => {
+            if (img) rawImagesList.push(typeof img === 'object' ? img?.url : img);
+        });
     } else if (Array.isArray(deal.inventoryImages) && deal.inventoryImages.length > 0) {
-        deal.inventoryImages.forEach(img => rawImagesList.push(typeof img === 'object' ? img.url : img));
-    } else if (deal.inventoryId?.inventoryImages && deal.inventoryId.inventoryImages.length > 0) {
-        deal.inventoryId.inventoryImages.forEach(img => rawImagesList.push(typeof img === 'object' ? img.url : img));
+        deal.inventoryImages.forEach(img => {
+            if (img) rawImagesList.push(typeof img === 'object' ? img?.url : img);
+        });
+    } else if (deal.inventoryId?.inventoryImages && Array.isArray(deal.inventoryId.inventoryImages) && deal.inventoryId.inventoryImages.length > 0) {
+        deal.inventoryId.inventoryImages.forEach(img => {
+            if (img) rawImagesList.push(typeof img === 'object' ? img?.url : img);
+        });
+    } else if (deal.inventoryInfo?.inventoryImages && Array.isArray(deal.inventoryInfo.inventoryImages) && deal.inventoryInfo.inventoryImages.length > 0) {
+        deal.inventoryInfo.inventoryImages.forEach(img => {
+            if (img) rawImagesList.push(typeof img === 'object' ? img?.url : img);
+        });
     }
     
     // 3. Add images from builtup details
-    const rawBuiltupDetails = deal.builtupDetails || deal.inventoryId?.builtupDetails || [];
+    const rawBuiltupDetails = deal.builtupDetails || deal.inventoryId?.builtupDetails || deal.inventoryInfo?.builtupDetails || [];
     if (Array.isArray(rawBuiltupDetails)) {
         rawBuiltupDetails.forEach(row => {
-            if (row.imageUrl) {
+            if (row && row.imageUrl) {
                 rawImagesList.push(row.imageUrl);
             }
         });
@@ -124,6 +156,7 @@ const mapDealToProperty = (deal) => {
     let resolvedImages = [];
     const seenImages = new Set();
     rawImagesList.forEach(img => {
+        if (!img) return;
         const fixed = fixDriveUrl(img);
         if (fixed && !seenImages.has(fixed)) {
             seenImages.add(fixed);
@@ -131,10 +164,11 @@ const mapDealToProperty = (deal) => {
         }
     });
 
-    // If still empty, check the documents
-    if (resolvedImages.length === 0) {
-        const docImages = (deal.documents || [])
-            .filter(doc => (doc.type === 'Image' || doc.url?.match(/\.(jpg|jpeg|png|webp|gif)$/i)))
+    // If still empty, check the documents safely
+    const safeDocuments = Array.isArray(deal.documents) ? deal.documents : [];
+    if (resolvedImages.length === 0 && safeDocuments.length > 0) {
+        const docImages = safeDocuments
+            .filter(doc => doc && (doc.type === 'Image' || (typeof doc.url === 'string' && doc.url.match(/\.(jpg|jpeg|png|webp|gif)$/i))))
             .map(doc => fixDriveUrl(doc.url))
             .filter(url => url) || [];
         docImages.forEach(img => {
@@ -148,20 +182,34 @@ const mapDealToProperty = (deal) => {
     // Now for videos
     let rawVideosList = [];
     if (Array.isArray(deal.propertyVideos) && deal.propertyVideos.length > 0) {
-        deal.propertyVideos.forEach(vid => rawVideosList.push(typeof vid === 'object' ? vid.url : vid));
+        deal.propertyVideos.forEach(vid => {
+            if (vid) rawVideosList.push(typeof vid === 'object' ? vid?.url : vid);
+        });
     } else if (Array.isArray(deal.videosDetail) && deal.videosDetail.length > 0) {
-        deal.videosDetail.forEach(vid => rawVideosList.push(typeof vid === 'object' ? vid.url : vid));
+        deal.videosDetail.forEach(vid => {
+            if (vid) rawVideosList.push(typeof vid === 'object' ? vid?.url : vid);
+        });
     } else if (Array.isArray(deal.videos) && deal.videos.length > 0) {
-        deal.videos.forEach(vid => rawVideosList.push(typeof vid === 'object' ? vid.url : vid));
+        deal.videos.forEach(vid => {
+            if (vid) rawVideosList.push(typeof vid === 'object' ? vid?.url : vid);
+        });
     } else if (Array.isArray(deal.inventoryVideos) && deal.inventoryVideos.length > 0) {
-        deal.inventoryVideos.forEach(vid => rawVideosList.push(typeof vid === 'object' ? vid.url : vid));
-    } else if (deal.inventoryId?.inventoryVideos && deal.inventoryId.inventoryVideos.length > 0) {
-        deal.inventoryId.inventoryVideos.forEach(vid => rawVideosList.push(typeof vid === 'object' ? vid.url : vid));
+        deal.inventoryVideos.forEach(vid => {
+            if (vid) rawVideosList.push(typeof vid === 'object' ? vid?.url : vid);
+        });
+    } else if (deal.inventoryId?.inventoryVideos && Array.isArray(deal.inventoryId.inventoryVideos) && deal.inventoryId.inventoryVideos.length > 0) {
+        deal.inventoryId.inventoryVideos.forEach(vid => {
+            if (vid) rawVideosList.push(typeof vid === 'object' ? vid?.url : vid);
+        });
+    } else if (deal.inventoryInfo?.inventoryVideos && Array.isArray(deal.inventoryInfo.inventoryVideos) && deal.inventoryInfo.inventoryVideos.length > 0) {
+        deal.inventoryInfo.inventoryVideos.forEach(vid => {
+            if (vid) rawVideosList.push(typeof vid === 'object' ? vid?.url : vid);
+        });
     }
 
     if (Array.isArray(rawBuiltupDetails)) {
         rawBuiltupDetails.forEach(row => {
-            if (row.videoUrl) {
+            if (row && row.videoUrl) {
                 rawVideosList.push(row.videoUrl);
             }
         });
@@ -170,6 +218,7 @@ const mapDealToProperty = (deal) => {
     let resolvedVideos = [];
     const seenVideos = new Set();
     rawVideosList.forEach(vid => {
+        if (!vid) return;
         const fixed = fixDriveUrl(vid);
         if (fixed && !seenVideos.has(fixed)) {
             seenVideos.add(fixed);
@@ -178,9 +227,9 @@ const mapDealToProperty = (deal) => {
     });
 
     // If still empty, check the documents for videos
-    if (resolvedVideos.length === 0) {
-        const docVideos = (deal.documents || [])
-            .filter(doc => (doc.type === 'Video' || doc.url?.match(/\.(mp4|webm|ogg|mov)$/i)))
+    if (resolvedVideos.length === 0 && safeDocuments.length > 0) {
+        const docVideos = safeDocuments
+            .filter(doc => doc && (doc.type === 'Video' || (typeof doc.url === 'string' && doc.url.match(/\.(mp4|webm|ogg|mov)$/i))))
             .map(doc => fixDriveUrl(doc.url))
             .filter(url => url) || [];
         docVideos.forEach(vid => {
@@ -222,9 +271,21 @@ const mapDealToProperty = (deal) => {
     ];
 
     const intent = deal.intent || 'Sell';
-    const rawCategory = deal.category || '';
+    const rawCategory = typeof deal.category === 'object' && deal.category !== null
+        ? (deal.category.lookup_value || deal.category.name || '')
+        : (deal.category || '');
     const category = /^[0-9a-fA-F]{24}$/.test(rawCategory) ? '' : rawCategory;
-    const subCat = /^[0-9a-fA-F]{24}$/.test(deal.subCategory) ? '' : (deal.subCategory || '');
+
+    const rawSubCat = typeof deal.subCategory === 'object' && deal.subCategory !== null
+        ? (deal.subCategory.lookup_value || deal.subCategory.name || '')
+        : (deal.subCategory || '');
+    const subCat = /^[0-9a-fA-F]{24}$/.test(rawSubCat) ? '' : rawSubCat;
+
+    const rawPropType = typeof deal.propertyType === 'object' && deal.propertyType !== null
+        ? (deal.propertyType.lookup_value || deal.propertyType.name || '')
+        : (deal.propertyType || '');
+    const propertyType = /^[0-9a-fA-F]{24}$/.test(rawPropType) ? '' : (rawPropType || 'Residential');
+
     const rawSizeLabel = deal.sizeLabel || deal.unitSpecification?.sizeLabel || '';
     const sizeLabel = /^[0-9a-fA-F]{24}$/.test(rawSizeLabel) ? '' : rawSizeLabel;
     
@@ -265,16 +326,41 @@ const mapDealToProperty = (deal) => {
     }
     const builtupType = builtupTypeVal;
 
+    const rawFurnishedItems = deal.furnishedItems || deal.inventoryId?.furnishedItems || deal.inventoryInfo?.furnishedItems;
     const furnishingObj = {
-        furnishing: deal.furnishType || deal.propertyDetails?.furnishing || deal.inventoryId?.furnishType || 'Unfurnished',
-        furnishingDetails: (deal.furnishedItems || (deal.inventoryId && deal.inventoryId.furnishedItems)) 
-            ? (deal.furnishedItems || deal.inventoryId.furnishedItems).split(',').map(s => s.trim()) 
-            : [],
-        occupationDate: (deal.occupationDate || (deal.inventoryId && deal.inventoryId.occupationDate)) 
-            ? new Date(deal.occupationDate || deal.inventoryId.occupationDate).toLocaleDateString('en-GB') 
+        furnishing: deal.furnishType || deal.propertyDetails?.furnishing || deal.inventoryId?.furnishType || deal.inventoryInfo?.furnishType || 'Unfurnished',
+        furnishingDetails: (typeof rawFurnishedItems === 'string' && rawFurnishedItems) 
+            ? rawFurnishedItems.split(',').map(s => s.trim()) 
+            : (Array.isArray(rawFurnishedItems) ? rawFurnishedItems : []),
+        occupationDate: (deal.occupationDate || deal.inventoryId?.occupationDate || deal.inventoryInfo?.occupationDate) 
+            ? new Date(deal.occupationDate || deal.inventoryId?.occupationDate || deal.inventoryInfo?.occupationDate).toLocaleDateString('en-GB') 
             : 'TBD',
-        age: deal.ageOfConstruction || deal.inventoryId?.ageOfConstruction || 'New'
+        age: deal.ageOfConstruction || deal.inventoryId?.ageOfConstruction || deal.inventoryInfo?.ageOfConstruction || 'New'
     };
+
+    const rawCollectorRate = Number(deal.collectorRate);
+    const collectorRate = (deal.collectorRate !== undefined && deal.collectorRate !== null && !isNaN(rawCollectorRate) && rawCollectorRate > 0)
+        ? rawCollectorRate
+        : null;
+
+    const rawCollectorValue = Number(deal.collectorValue);
+    const collectorValue = (deal.collectorValue !== undefined && deal.collectorValue !== null && !isNaN(rawCollectorValue) && rawCollectorValue > 0)
+        ? rawCollectorValue
+        : null;
+
+    const collectorRateUnit = (collectorRate || collectorValue) ? (deal.collectorRateUnit || 'Sq Yard') : null;
+
+    const rawFlexible = Number(deal.flexiblePercentage);
+    const flexiblePercentage = (deal.flexiblePercentage !== undefined && deal.flexiblePercentage !== null && !isNaN(rawFlexible) && rawFlexible > 0)
+        ? rawFlexible
+        : null;
+
+    const rawSiteVisit = Number(deal.siteVisitCount);
+    const siteVisitCount = (deal.siteVisitCount !== undefined && deal.siteVisitCount !== null && !isNaN(rawSiteVisit) && rawSiteVisit > 0)
+        ? rawSiteVisit
+        : null;
+
+    const safeRemarks = typeof deal.remarks === 'string' ? deal.remarks.trim() : '';
 
     return {
         id: deal._id,
@@ -303,21 +389,21 @@ const mapDealToProperty = (deal) => {
         images: resolvedImages,
         media: media,
         status: deal.status || 'Available',
-        type: deal.propertyType || 'Residential',
-        propertyType: deal.propertyType || 'Residential',
-        category: category || deal.category?.lookup_value || deal.category || 'Residential',
+        type: propertyType,
+        propertyType: propertyType,
+        category: category || 'Residential',
         subCategory: subCat,
         sizeLabel: sizeLabel || flattenMeasurement(deal.size, deal.sizeUnit || 'Sq.Ft') || 'Area on Request',
-        unitType: deal.unitType?.lookup_value || deal.unitType || deal.inventoryId?.unitType?.lookup_value || deal.inventoryId?.unitType || 'Ordinary',
-        width: deal.width || deal.inventoryId?.width || deal.inventoryId?.frontage || '',
-        length: deal.length || deal.inventoryId?.length || deal.inventoryId?.depth || '',
+        unitType: deal.unitType?.lookup_value || deal.unitType || deal.inventoryId?.unitType?.lookup_value || deal.inventoryId?.unitType || deal.inventoryInfo?.unitType?.lookup_value || deal.inventoryInfo?.unitType || 'Ordinary',
+        width: deal.width || deal.inventoryId?.width || deal.inventoryId?.frontage || deal.inventoryInfo?.width || deal.inventoryInfo?.frontage || '',
+        length: deal.length || deal.inventoryId?.length || deal.inventoryId?.depth || deal.inventoryInfo?.length || deal.inventoryInfo?.depth || '',
         intent: intent,
         availableString: availableString,
         description: (deal.websiteMetadata?.description && 
                        deal.websiteMetadata.description !== 'Check out this new property listing at Bharat Properties.' && 
                        deal.websiteMetadata.description !== 'Check out this updated property listing at Bharat Properties.')
                        ? deal.websiteMetadata.description 
-                       : (deal.description || deal.websiteMetadata?.description || deal.remarks || ''),
+                       : (deal.description || safeRemarks || deal.websiteMetadata?.description || ''),
         builtupDetails: {
             type: builtupType,
             area: String(deal.size || '0'),
@@ -337,23 +423,26 @@ const mapDealToProperty = (deal) => {
             maintenance: deal.priceDetails?.maintenanceCharges || 'N/A'
         },
         // Old field mappings for compatibility
-        unitNo: deal.unitNo || deal.inventoryId?.unitNo || 'N/A',
+        unitNo: deal.unitNo || deal.inventoryId?.unitNo || deal.inventoryInfo?.unitNo || 'N/A',
         
         ownership: deal.propertyDetails?.ownership || 'Freehold',
         stage: deal.status || 'Available',
         rawPrice: deal.price || deal.quotePrice || 0,
         transactionType: deal.transactionType || 'Full White',
-        flexiblePercentage: deal.flexiblePercentage !== undefined ? deal.flexiblePercentage : 100,
-        collectorRate: deal.collectorRate || 0,
-        collectorRateUnit: deal.collectorRateUnit || 'Sq Yard',
-        collectorValue: deal.collectorValue || 0,
+        flexiblePercentage: flexiblePercentage,
+        collectorRate: collectorRate,
+        collectorRateUnit: collectorRateUnit,
+        collectorValue: collectorValue,
         pricingNature: deal.pricingNature || { negotiable: false, fixed: false },
         seo: {
             title: deal.websiteMetadata?.metaTitle,
             description: deal.websiteMetadata?.metaDescription,
             tags: deal.websiteMetadata?.tags || []
         },
-        siteVisitCount: deal.siteVisitCount
+        siteVisitCount: siteVisitCount,
+        remarks: safeRemarks || null,
+        documents: safeDocuments,
+        updatedAt: deal.updatedAt || deal.createdAt || null
     };
 };
 
@@ -420,55 +509,63 @@ const mapProjectToWebProject = (project) => {
             title: project.websiteMetadata?.metaTitle,
             description: project.websiteMetadata?.metaDescription,
             tags: project.websiteMetadata?.tags || []
-        }
+        },
+        updatedAt: project.updatedAt || project.createdAt || null
     };
 };
 
 export const fetchListings = async () => {
     try {
-        const response = await crmApi.get('/listings');
-        const deals = response.data.data || [];
-        return deals.map(mapDealToProperty);
+        const endpoint = isServer ? '/listings?all=1' : '/listings?limit=200';
+        const response = await getWithRetry(endpoint);
+        const deals = response.data?.data || [];
+        return deals.map(mapDealToProperty).filter(Boolean);
     } catch (error) {
-        console.error('Error fetching listings from CRM:', error);
+        console.error('Error fetching listings from CRM:', error?.message || error);
+        if (isServer) {
+            throw new Error(`CRM outage: Failed to fetch listings - ${error?.message || 'service unreachable'}`);
+        }
         return [];
     }
 };
 
 export const fetchProjects = async () => {
     try {
-        const response = await crmApi.get('/projects');
-        const projects = response.data.data || [];
+        const response = await getWithRetry('/projects');
+        const projects = response.data?.data || [];
         return projects.map(mapProjectToWebProject);
     } catch (error) {
-        console.error('Error fetching projects from CRM:', error);
+        console.error('Error fetching projects from CRM:', error?.message || error);
+        if (isServer) {
+            throw new Error(`CRM outage: Failed to fetch projects - ${error?.message || 'service unreachable'}`);
+        }
         return [];
     }
 };
 
 export const fetchProjectBySlug = async (slug) => {
     try {
-        const response = await crmApi.get(`/projects/${encodeURIComponent(slug)}`);
-        return response.data.data ? mapProjectToWebProject(response.data.data) : null;
+        const response = await getWithRetry(`/projects/${encodeURIComponent(slug)}`);
+        return response.data?.data ? mapProjectToWebProject(response.data.data) : null;
     } catch (error) {
         const status = error?.response?.status;
         if (status && status >= 400 && status < 500) return null; // genuinely missing
         console.error(`Error fetching project with slug ${slug}:`, error?.message || error);
         // Network / 5xx: surface a clean error (never report an outage as "not found").
-        throw new Error(`CRM request failed for ${slug}: ${error?.message || 'unknown error'}`);
+        throw new Error(`CRM request failed for project ${slug}: ${error?.message || 'unknown error'}`);
     }
 };
 
 export const fetchListingBySlug = async (slug) => {
     try {
-        const response = await crmApi.get(`/listings/${encodeURIComponent(slug)}`);
-        return response.data.data ? mapDealToProperty(response.data.data) : null;
+        const response = await getWithRetry(`/listings/${encodeURIComponent(slug)}`);
+        return response.data?.data ? mapDealToProperty(response.data.data) : null;
     } catch (error) {
         const status = error?.response?.status;
         if (status && status >= 400 && status < 500) return null; // genuinely missing
         console.error(`Error fetching listing with slug ${slug}:`, error?.message || error);
         // Network / 5xx: surface a clean error (never report an outage as "not found").
-        throw new Error(`CRM request failed for ${slug}: ${error?.message || 'unknown error'}`);
+        throw new Error(`CRM request failed for listing ${slug}: ${error?.message || 'unknown error'}`);
     }
 };
 
@@ -497,13 +594,17 @@ export const fetchFeaturedDeals = async (type = 'latest', city = '') => {
         let url = `/listings?type=${type}&limit=8`;
         if (city) url += `&city=${encodeURIComponent(city)}`;
         
-        const response = await crmApi.get(url);
-        const deals = response.data.data || [];
+        const response = await getWithRetry(url);
+        const deals = response.data?.data || [];
         return deals.map(mapDealToProperty);
-    } catch {
+    } catch (error) {
+        console.error('Error fetching featured deals from CRM:', error?.message || error);
+        if (isServer) {
+            throw new Error(`CRM outage: Failed to fetch featured deals - ${error?.message || 'service unreachable'}`);
+        }
         return [];
     }
-}
+};
 
 export const fetchFeaturedProjects = async (status = '', city = '') => {
     // Cache check
@@ -515,8 +616,8 @@ export const fetchFeaturedProjects = async (status = '', city = '') => {
         let url = `/projects?limit=8`;
         if (status && status !== 'All') url += `&status=${encodeURIComponent(status)}`;
         if (city) url += `&city=${encodeURIComponent(city)}`;
-        const response = await crmApi.get(url);
-        const projects = response.data.data || [];
+        const response = await getWithRetry(url);
+        const projects = response.data?.data || [];
         const result = projects.map(p => ({
             id: p._id,
             slug: p.websiteMetadata?.slug || p._id,
@@ -530,10 +631,13 @@ export const fetchFeaturedProjects = async (status = '', city = '') => {
         cache.featuredProjects = { data: result, expiry: now + CACHE_TTL_MS };
         return result;
     } catch (error) {
-        console.error('Error fetching featured projects:', error);
+        console.error('Error fetching featured projects from CRM:', error?.message || error);
+        if (isServer) {
+            throw new Error(`CRM outage: Failed to fetch featured projects - ${error?.message || 'service unreachable'}`);
+        }
         return [];
     }
-};
+};;
 
 export const fetchPublicSettings = async () => {
     try {

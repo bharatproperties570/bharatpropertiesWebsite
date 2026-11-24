@@ -3,17 +3,23 @@ import dynamic from 'next/dynamic';
 import HeroSection from '../components/BP_Hero_Final_v4';
 import SearchBarOverlay from '../components/SearchBarOverlay';
 import CityGrid from '../components/CityGrid';
-import ReviewsSection from '../components/ReviewsSection';
-import NewsSection from '../components/NewsSection';
 import { AboutSection, ContactSection } from '../components/Sections';
 import FeaturedDeals from '../components/FeaturedDeals';
 import FeaturedProjects from '../components/FeaturedProjects';
 import { organizationGraph, faqPageSchema, jsonLd } from '../lib/seo';
-import FAQ from '../components/FAQ';
 import { FAQS } from '../content/faqs';
 import { fetchFeaturedDeals, fetchFeaturedProjects, fetchGoogleReviews } from '../services/crmService';
 import { fetchRealEstateNews } from '../services/NewsService';
 
+const ReviewsSection = dynamic(() => import('../components/ReviewsSection'), {
+    loading: () => <div style={{ minHeight: '350px' }} />,
+});
+const NewsSection = dynamic(() => import('../components/NewsSection'), {
+    loading: () => <div style={{ minHeight: '350px' }} />,
+});
+const FAQ = dynamic(() => import('../components/FAQ'), {
+    loading: () => <div style={{ minHeight: '300px' }} />,
+});
 const OfficeInfo = dynamic(() => import('../components/OfficeInfo'), {
     loading: () => <div style={{ minHeight: '400px' }} />,
 });
@@ -25,10 +31,10 @@ const MarketTrends = dynamic(() => import('../components/MarketTrends'), {
 export const revalidate = 300;
 
 export default async function HomePage() {
-    // Parallel fetching on server
+    // Parallel fetching on server: featured deals/projects throw on outage so ISR serves stale page
     const [hotDeals, allProjects, googleReviews, newsData] = await Promise.all([
-        fetchFeaturedDeals('hot').catch(() => []),
-        fetchFeaturedProjects('All').catch(() => []),
+        fetchFeaturedDeals('hot'),
+        fetchFeaturedProjects('All'),
         fetchGoogleReviews().catch(() => ({ reviews: [], rating: 5, totalReviews: 0 })),
         fetchRealEstateNews().catch(() => [])
     ]);

@@ -1,5 +1,6 @@
 'use client';
 import React from 'react';
+import Image from 'next/image';
 import { Shield, Star, Users, Phone, Mail, MapPin } from 'lucide-react';
 import { countryCodes } from '../data/countryCodes';
 
@@ -9,10 +10,13 @@ export const AboutSection = () => {
             <div className="container reveal">
                 <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(300px, 1fr))', gap: '4rem', alignItems: 'center' }}>
                     <div>
-                        <img
+                        <Image
                             src="https://images.unsplash.com/photo-1560518883-ce09059eeffa?ixlib=rb-4.0.3&auto=format&fit=crop&w=1073&q=80"
-                            alt="Luxury Interior"
-                            style={{ borderRadius: 'var(--radius-lg)', boxShadow: 'var(--shadow-xl)' }}
+                            alt="Luxury interior design and residential styling by Bharat Properties"
+                            width={800}
+                            height={533}
+                            style={{ width: '100%', height: 'auto', borderRadius: 'var(--radius-lg)', boxShadow: 'var(--shadow-xl)' }}
+                            loading="lazy"
                         />
                     </div>
                     <div>

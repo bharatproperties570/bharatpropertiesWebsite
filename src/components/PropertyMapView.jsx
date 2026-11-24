@@ -1,6 +1,7 @@
 'use client';
 
 import React, { useEffect, useRef, useState } from 'react';
+import Image from 'next/image';
 import { MapPin, Info, X, AlertTriangle } from 'lucide-react';
 
 /* global process */
@@ -264,11 +265,16 @@ const PropertyMapView = ({ properties = [], onPropertySelect, onClose, embedded 
                         animation: 'slideUp 0.3s ease'
                     }}>
                         <style>{`@keyframes slideUp { from { transform: translate(-50%, 100%); opacity: 0; } to { transform: translate(-50%, 0); opacity: 1; } }`}</style>
-                        <img
-                            src={selectedProperty.image}
-                            alt={selectedProperty.title}
-                            style={{ width: '120px', height: '120px', objectFit: 'cover' }}
-                        />
+                        <div style={{ position: 'relative', width: '120px', height: '120px', flexShrink: 0 }}>
+                            <Image
+                                src={selectedProperty.image}
+                                alt={selectedProperty.title || 'Selected property preview'}
+                                fill
+                                sizes="120px"
+                                style={{ objectFit: 'cover' }}
+                                loading="lazy"
+                            />
+                        </div>
                         <div style={{ padding: '0.75rem', flex: 1, display: 'flex', flexDirection: 'column' }}>
                             <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-start' }}>
                                 <h3 style={{ fontSize: '0.9rem', fontWeight: 700, marginBottom: '0.2rem', color: '#1e293b' }}>{selectedProperty.title}</h3>

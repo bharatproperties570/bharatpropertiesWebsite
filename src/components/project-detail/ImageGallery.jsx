@@ -1,6 +1,7 @@
 'use client';
 
 import React, { useState } from 'react';
+import Image from 'next/image';
 import { ChevronLeft, ChevronRight, X, Maximize2 } from 'lucide-react';
 
 const ImageGallery = ({ images, projectName }) => {
@@ -46,14 +47,15 @@ const ImageGallery = ({ images, projectName }) => {
                         backgroundColor: '#000',
                         overflow: 'hidden'
                     }}>
-                        <img
+                        <Image
                             src={images[currentIndex]}
                             alt={`${projectName} - Image ${currentIndex + 1}`}
+                            fill
+                            sizes="(max-width: 1200px) 100vw, 1200px"
                             style={{
-                                width: '100%',
-                                height: '100%',
                                 objectFit: 'contain'
                             }}
+                            priority={currentIndex === 0}
                         />
 
                         {/* Fullscreen Button */}
@@ -172,19 +174,21 @@ const ImageGallery = ({ images, projectName }) => {
                                             border: idx === currentIndex ? '3px solid var(--color-primary)' : '3px solid transparent',
                                             opacity: idx === currentIndex ? 1 : 0.6,
                                             transition: 'all 0.2s',
-                                            flexShrink: 0
+                                            flexShrink: 0,
+                                            position: 'relative'
                                         }}
                                         onMouseEnter={(e) => e.currentTarget.style.opacity = 1}
                                         onMouseLeave={(e) => e.currentTarget.style.opacity = idx === currentIndex ? 1 : 0.6}
                                     >
-                                        <img
+                                        <Image
                                             src={img}
-                                            alt={`Thumbnail ${idx + 1}`}
+                                            alt={`${projectName || 'Project'} thumbnail ${idx + 1}`}
+                                            fill
+                                            sizes="100px"
                                             style={{
-                                                width: '100%',
-                                                height: '100%',
                                                 objectFit: 'cover'
                                             }}
+                                            loading="lazy"
                                         />
                                     </div>
                                 ))}
@@ -234,15 +238,17 @@ const ImageGallery = ({ images, projectName }) => {
                     </button>
 
                     {/* Fullscreen Image */}
-                    <img
-                        src={images[currentIndex]}
-                        alt={`${projectName} - Fullscreen`}
-                        style={{
-                            maxWidth: '90%',
-                            maxHeight: '90%',
-                            objectFit: 'contain'
-                        }}
-                    />
+                    <div style={{ position: 'relative', width: '90%', height: '85%' }}>
+                        <Image
+                            src={images[currentIndex]}
+                            alt={`${projectName} - Fullscreen view`}
+                            fill
+                            sizes="100vw"
+                            style={{
+                                objectFit: 'contain'
+                            }}
+                        />
+                    </div>
 
                     {/* Fullscreen Navigation */}
                     {images.length > 1 && (

@@ -1,6 +1,7 @@
 'use client';
 import React from 'react';
 import Link from 'next/link';
+import Image from 'next/image';
 import { BLOG_DATA } from '../data/blogData';
 import { ArrowRight, Calendar, User } from 'lucide-react';
 
@@ -18,9 +19,9 @@ const BlogSection = () => {
                         marginBottom: '1rem',
                         display: 'block'
                     }}>Insights & Articles</span>
-                    <h2 style={{ fontSize: '3rem', fontWeight: 800, marginBottom: '1rem', color: '#0F172A', letterSpacing: '-0.02em' }}>
-                        Latest from Our <span style={{ color: 'var(--color-primary)' }}>Blog</span>
-                    </h2>
+                    <h1 style={{ fontSize: '3rem', fontWeight: 800, marginBottom: '1rem', color: '#0F172A', letterSpacing: '-0.02em' }}>
+                        Real Estate Insights for <span style={{ color: 'var(--color-primary)' }}>Kurukshetra, Mohali &amp; Chandigarh</span>
+                    </h1>
                     <p style={{ color: '#64748B', fontSize: '1.2rem', maxWidth: '600px', margin: '0 auto' }}>
                         Stay updated with the latest trends, investment guides, and lifestyle tips in the world of real estate.
                     </p>
@@ -54,15 +55,16 @@ const BlogSection = () => {
                             }}
                         >
                             <div style={{ position: 'relative', height: '240px', overflow: 'hidden' }}>
-                                <img
+                                <Image
                                     src={blog.image}
                                     alt={blog.title}
+                                    fill
+                                    sizes="(max-width: 768px) 100vw, 33vw"
                                     style={{
-                                        width: '100%',
-                                        height: '100%',
                                         objectFit: 'cover',
                                         transition: 'transform 0.5s ease'
                                     }}
+                                    loading="lazy"
                                 />
                                 <div style={{
                                     position: 'absolute',
@@ -99,7 +101,7 @@ const BlogSection = () => {
                                     color: '#1E293B',
                                     lineHeight: 1.4
                                 }}>
-                                    <Link href={`/blog/${blog.id}`} style={{ color: 'inherit', textDecoration: 'none' }}>
+                                    <Link href={`/blog/${blog.slug || blog.id}`} style={{ color: 'inherit', textDecoration: 'none' }}>
                                         {blog.title}
                                     </Link>
                                 </h3>
@@ -115,7 +117,7 @@ const BlogSection = () => {
                                     {blog.excerpt}
                                 </p>
                                 <Link
-                                    href={`/blog/${blog.id}`}
+                                    href={`/blog/${blog.slug || blog.id}`}
                                     style={{
                                         display: 'inline-flex',
                                         alignItems: 'center',

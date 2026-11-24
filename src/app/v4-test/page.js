@@ -1,7 +1,12 @@
+/* global process */
+import { notFound } from 'next/navigation';
 import React from 'react';
 import HeroSection from '../../components/BP_Hero_Final_v4';
 
 export default function V4TestPage() {
+    if (process.env.NODE_ENV === 'production') {
+        notFound();
+    }
     return (
         <div id="v4-sync-verification-success">
             <HeroSection />

@@ -1,5 +1,6 @@
 import { notFound } from 'next/navigation';
 import { getProject } from '../../../lib/data';
+import { fetchFeaturedProjects } from '../../../services/crmService';
 import {
     SITE_URL, cleanText, absoluteUrl, firstImage, projectSchema, breadcrumbSchema, jsonLd,
 } from '../../../lib/seo';
@@ -47,21 +48,36 @@ export default async function ProjectPage({ params }) {
 
     const path = `/project/${project.slug || id}`;
     const url = `${SITE_URL}${path}`;
-    const graph = [
-        projectSchema(project, url),
-        breadcrumbSchema([
-            { name: 'Home', path: '/' },
-            ...(cityOf(project) ? [{ name: cityOf(project), path: `/${cityOf(project).toLowerCase().replace(/\s+/g, '-')}` }] : []),
-            { name: project.name, path },
-        ]),
+    const city = cityOf(project);
+
+    const breadcrumbs = [
+        { name: 'Home', path: '/' },
+        ...(city ? [{ name: city, path: `/${city.toLowerCase().replace(/\s+/g, '-')}` }] : []),
+        { name: project.name, path },
     ];
+
+    const [graph, moreProjects] = await Promise.all([
+        Promise.resolve([
+            projectSchema(project, url),
+            breadcrumbSchema(breadcrumbs),
+        ]),
+        city
+            ? fetchFeaturedProjects('All', city)
+                .then((list) => list.filter((p) => p.slug !== project.slug && p.id !== project.id).slice(0, 4))
+            : Promise.resolve([])
+    ]);
 
     return (
         <>
             {graph.map((item, i) => (
                 <script key={i} type="application/ld+json" dangerouslySetInnerHTML={{ __html: jsonLd(item) }} />
             ))}
-            <ProjectPageClient initialProject={project} />
+            <ProjectPageClient
+                initialProject={project}
+                breadcrumbs={breadcrumbs}
+                moreProjects={moreProjects}
+                city={city}
+            />
         </>
     );
 }

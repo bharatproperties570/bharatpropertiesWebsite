@@ -20,10 +20,11 @@ const FeaturedDeals = ({ city = '', initialData = [], ownerInfo = {} }) => {
     ];
 
     const isFirstRender = useRef(true);
+    const unitNumber = ownerInfo?.unitNumber;
+    const mobile = ownerInfo?.mobile;
+    const name = ownerInfo?.name;
 
     useEffect(() => {
-        const { unitNumber, mobile, name } = ownerInfo || {};
-        
         if (isFirstRender.current && initialData && initialData.length > 0) {
             isFirstRender.current = false;
             return;
@@ -52,7 +53,7 @@ const FeaturedDeals = ({ city = '', initialData = [], ownerInfo = {} }) => {
             }
         };
         loadDeals();
-    }, [activeTab, city, ownerInfo?.unitNumber, ownerInfo?.mobile, ownerInfo?.name]);
+    }, [activeTab, city, initialData, unitNumber, mobile, name]);
 
     const scroll = (direction) => {
         if (scrollRef.current) {

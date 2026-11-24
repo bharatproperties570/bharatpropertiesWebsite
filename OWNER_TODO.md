@@ -45,6 +45,7 @@ The following variables must be configured in Vercel (**Project Settings** -> **
   - **Behavior:** The production build (`node scripts/build.mjs`) performs a 3-attempt authenticated check against `/projects?limit=1`. If missing or invalid (HTTP 401/403), the build **aborts immediately with exit code 1**. Mock data is strictly disabled on Vercel.
 - [ ] **`CRM_API_BASE_URL`:**
   - **Optional:** Defaults to `https://api.bharatproperties.co/api/public`.
+  - **API Capabilities Note:** The website server layer now calls `/listings?all=1` during build and sitemap generation to fetch the full catalog. Confirm the upstream CRM supports `all=1` (or returns the entire dataset). If unsupported, standard limit pagination is returned without breaking.
 - [ ] **`GEMINI_API_KEY`:**
   - **Required:** YES, for the website AI chatbot (`/api/webhooks/website-chat`).
 - [ ] **`NEXT_PUBLIC_SITE_URL`:**

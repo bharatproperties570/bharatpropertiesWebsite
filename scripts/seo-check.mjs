@@ -274,6 +274,44 @@ async function run() {
       '/sitemap.xml contains canonical domain URLs'
     );
 
+    // Verify sitemap lists all 25 mock listings via all=1 export
+    const sitemapListingMatches = sitemapText.match(/\/property\/mock-prop-[a-z0-9-]+/g) || [];
+    const uniqueSitemapListings = new Set(sitemapListingMatches);
+    assert(
+      uniqueSitemapListings.size >= 25,
+      `Sitemap lists all 25 listings (found ${uniqueSitemapListings.size}) via server all=1 export`,
+      `Found ${uniqueSitemapListings.size} listing URLs in sitemap`
+    );
+
+    // Test Mock CRM Pagination & Full Export Invariants
+    console.log('\n--- Testing CRM Pagination & Full Export Invariants ---');
+    const defaultListingsRes = await fetch(`http://127.0.0.1:${crmPort}/api/public/listings`);
+    const defaultListingsData = await defaultListingsRes.json();
+    assert(
+      defaultListingsData.success && defaultListingsData.data?.length === 10,
+      'Default CRM /listings call returns exactly 10 listings',
+      `Got ${defaultListingsData.data?.length} listings (total: ${defaultListingsData.total})`
+    );
+
+    const allListingsRes = await fetch(`http://127.0.0.1:${crmPort}/api/public/listings?all=1`);
+    const allListingsData = await allListingsRes.json();
+    assert(
+      allListingsData.success && allListingsData.data?.length === 25,
+      'CRM /listings?all=1 call returns all 25 listings',
+      `Got ${allListingsData.data?.length} listings (total: ${allListingsData.total})`
+    );
+
+    // Test Proxy Query Stripping: all=1 stripped, visitor receives default (10) not all (25)
+    console.log('\n--- Testing Proxy Parameter Stripping & Clamping ---');
+    const proxyAllRes = await fetch(`${baseUrl}/api/public/listings?all=1`);
+    assert(proxyAllRes.status === 200, '/api/public/listings?all=1 returns HTTP 200');
+    const proxyAllData = await proxyAllRes.json();
+    assert(
+      proxyAllData.data && proxyAllData.data.length === 10,
+      'Proxy stripped all=1, returning default 10 listings instead of full 25 export',
+      `Got ${proxyAllData.data?.length} listings`
+    );
+
     // Test /robots.txt
     console.log('\n--- Testing Robots [/robots.txt] ---');
     const robotsRes = await fetch(`${baseUrl}/robots.txt`);

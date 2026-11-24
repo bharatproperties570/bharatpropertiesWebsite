@@ -2,6 +2,7 @@
 import { getSiteUrl, IS_PRODUCTION } from '../../../lib/env';
 import { leadSubmissionLimiter, publicApiLimiter } from '../../../lib/rateLimit';
 import { getValidatedClientIp } from '../../../lib/ipUtils';
+import { sanitizeProxyQuery } from '../../../lib/proxyUtils';
 import {
   validateLeadPayload,
   validatePropertyPayload,
@@ -163,7 +164,7 @@ export default async function handler(req, res) {
 
   const apiBaseUrl = process.env.CRM_API_BASE_URL || 'https://api.bharatproperties.co/api/public';
   const apiKey = process.env.CRM_API_KEY || '';
-  const queryString = req.url.includes('?') ? req.url.substring(req.url.indexOf('?')) : '';
+  const queryString = sanitizeProxyQuery(req.url);
   const apiUrl = `${apiBaseUrl}${slugPath}${queryString}`;
 
   const clientIp = getValidatedClientIp(req);

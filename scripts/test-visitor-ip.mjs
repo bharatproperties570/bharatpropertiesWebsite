@@ -12,6 +12,7 @@
 import test from 'node:test';
 import assert from 'node:assert/strict';
 import { getValidatedClientIp } from '../src/lib/ipUtils.js';
+import { sanitizeProxyQuery } from '../src/lib/proxyUtils.js';
 
 test('Visitor IP: extracts valid single IPv4 from x-forwarded-for', () => {
   const req = {
@@ -150,4 +151,50 @@ test('Forwarded Headers Guard: only allowed headers sent upstream, no client hea
   for (const key of Object.keys(forwardHeaders)) {
     assert.ok(allowedKeys.has(key), `Unexpected header forwarded: ${key}`);
   }
+});
+
+test('Proxy Query Sanitizer: strips all=1 completely', () => {
+  const sanitized = sanitizeProxyQuery('/api/public/listings?all=1');
+  assert.equal(sanitized, '');
+});
+
+test('Proxy Query Sanitizer: strips all=true and any all parameter variant', () => {
+  const sanitized = sanitizeProxyQuery('/api/public/listings?all=true&foo=bar');
+  assert.equal(sanitized, '?foo=bar');
+});
+
+test('Proxy Query Sanitizer: clamps limit > 200 down to 200', () => {
+  const sanitized = sanitizeProxyQuery('/api/public/listings?limit=500');
+  assert.equal(sanitized, '?limit=200');
+});
+
+test('Proxy Query Sanitizer: clamps extreme limit down to 200 and strips all', () => {
+  const sanitized = sanitizeProxyQuery('/api/public/listings?all=1&limit=999999&city=Mohali');
+  const params = new URLSearchParams(sanitized.slice(1));
+  assert.equal(params.get('all'), null);
+  assert.equal(params.get('limit'), '200');
+  assert.equal(params.get('city'), 'Mohali');
+});
+
+test('Proxy Query Sanitizer: preserves valid limit <= 200', () => {
+  assert.equal(sanitizeProxyQuery('/api/public/listings?limit=50'), '?limit=50');
+  assert.equal(sanitizeProxyQuery('/api/public/listings?limit=200'), '?limit=200');
+  assert.equal(sanitizeProxyQuery('/api/public/listings?limit=1'), '?limit=1');
+});
+
+test('Proxy Query Sanitizer: clamps limit <= 0 to min 1', () => {
+  assert.equal(sanitizeProxyQuery('/api/public/listings?limit=0'), '?limit=1');
+  assert.equal(sanitizeProxyQuery('/api/public/listings?limit=-5'), '?limit=1');
+});
+
+test('Proxy Query Sanitizer: handles non-numeric limit by dropping it', () => {
+  assert.equal(sanitizeProxyQuery('/api/public/listings?limit=abc'), '');
+  assert.equal(sanitizeProxyQuery('/api/public/listings?limit=abc&city=Kharar'), '?city=Kharar');
+});
+
+test('Proxy Query Sanitizer: returns empty string on URLs without query string or empty inputs', () => {
+  assert.equal(sanitizeProxyQuery('/api/public/listings'), '');
+  assert.equal(sanitizeProxyQuery(''), '');
+  assert.equal(sanitizeProxyQuery(null), '');
+  assert.equal(sanitizeProxyQuery(undefined), '');
 });

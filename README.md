@@ -33,6 +33,9 @@ Enterprise-grade real estate web platform for Bharat Properties (`https://www.bh
 - **Framework:** Next.js 15 (App Router), React 19.
 - **Security:** CSP Report-Only with `/api/csp-report` telemetry collector, strict HSTS (`max-age=63072000; includeSubDomains`), Permissions-Policy, COOP, same-origin validation on POST proxy requests, body size enforcement (`<= 100KB`), and rate limiting.
 - **Data Resilience:** CRM layer with automatic retry, timeout limits, and failure boundaries that preserve cached ISR content during upstream outages rather than generating blank pages.
+- **Environment-Aware Listings Synchronization:** Server-side operations (SSR, SSG, sitemap generation) fetch complete catalog with `/listings?all=1`; browser clients query `/listings?limit=200` via the public proxy.
+- **Proxy Security & Query Sanitization:** `/api/public/[...slug]` strips `all=1` to block unauthorized full database exports from external browsers and clamps `limit` between 1 and 200. Client-supplied `X-Client-IP` is never trusted; real visitor IP is resolved strictly from trusted edge headers.
+- **Sitemap Protection:** Dedupes slugs, caps sitemaps at 50,000 URLs conforming to search protocols (with chunking support), and retains last-known good CRM items upon transient upstream CRM failures.
 - **SEO & A11y:** Canonical domain enforcement (`www.bharatproperties.co`), automated breadcrumbs, dynamic JSON-LD schemas (`RealEstateAgent`, `Place`, `Article`, `BreadcrumbList`, `FAQPage`), and accessible focus states.
 - **Drone Assets:** Verified local WebP assets in `public/images/` for Chandigarh, Kurukshetra, Mohali, Panchkula, Karnal, Sonepat, Delhi, Gurgaon, and Noida, with graceful local fallbacks for Kharar, Zirakpur, and New Chandigarh.
 
@@ -102,6 +105,15 @@ npm start
 - **City Pages (`/[cityName]`):** `revalidate = 3600` (1 hour) with `dynamicParams = false` restricted to approved core cities (`Kurukshetra`, `Mohali`, `Chandigarh`, `Panchkula`, `Zirakpur`, `Kharar`, `New Chandigarh`). All other slugs return 404.
 - **Projects & Properties (`/project/[id]`, `/property/[id]`):** `revalidate = 300` (5 minutes).
 - **Outage Protection:** When the CRM service returns 5xx or fails network connection, `crmService.js` throws a descriptive outage error on server components. Next.js catches this and serves the last successfully generated static version instead of overwriting cache with an empty page.
+
+### Listings Synchronization & Query Clamping Invariants
+- **Server Execution (`isServer === true`):** `fetchListings()` invokes `/listings?all=1` to pull the complete catalog during build, SSG generation, and periodic revalidation. The updated CRM API serves the full dataset when `all=1` is provided; legacy CRM deployments safely ignore unrecognized query arguments.
+- **Client Execution (`isServer === false`):** Browser-side calls query `/listings?limit=200` through the local `/api/public` proxy.
+- **Proxy Sanitization (`/api/public/[...slug]`):** External callers hitting the proxy cannot trigger full catalog exports. `sanitizeProxyQuery` strips any `all` parameter variant (`all=1`, `all=true`) and clamps requested `limit` values strictly between `1` and `200`.
+- **Sitemap Safeguards (`src/app/sitemap.js`):**
+  - **CRM Resilience:** If CRM calls fail during sitemap generation, a warning is logged and previous cached CRM items are retained rather than producing a depleted sitemap.
+  - **Slug Deduplication:** Slugs are deduplicated across projects, listings, and blog posts, with canonical URL deduplication across all routes.
+  - **Protocol Cap (50,000 URLs):** Output is capped at 50,000 URLs per file in adherence to search engine sitemap specifications, with index chunking support via `generateSitemaps()`.
 
 ---
 

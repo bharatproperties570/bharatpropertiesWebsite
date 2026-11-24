@@ -516,9 +516,10 @@ const mapProjectToWebProject = (project) => {
 
 export const fetchListings = async () => {
     try {
-        const response = await getWithRetry('/listings');
+        const endpoint = isServer ? '/listings?all=1' : '/listings?limit=200';
+        const response = await getWithRetry(endpoint);
         const deals = response.data?.data || [];
-        return deals.map(mapDealToProperty);
+        return deals.map(mapDealToProperty).filter(Boolean);
     } catch (error) {
         console.error('Error fetching listings from CRM:', error?.message || error);
         if (isServer) {

@@ -141,6 +141,59 @@ export const mockListings = [
     updatedAt: '2025-01-22T10:00:00.000Z',
     createdAt: '2025-01-10T10:00:00.000Z',
   },
+  // Generated mock listings to reach 25 items for sitemap & pagination assertions
+  ...Array.from({ length: 23 }, (_, i) => {
+    const index = i + 3; // 3 through 25
+    const cities = ['Mohali', 'Chandigarh', 'Panchkula', 'Zirakpur', 'Kharar', 'Kurukshetra', 'New Chandigarh'];
+    const city = cities[i % cities.length];
+    const bhk = (i % 4) + 1;
+    const isPlot = bhk === 1 && i % 2 === 0;
+    const title = isPlot
+      ? `Residential Plot in ${city} Sector ${index + 10}`
+      : `Modern ${bhk} BHK Apartment in ${city} Sector ${index + 10}`;
+
+    return {
+      _id: `6501b1b2c3d4e5f67890${String(index).padStart(4, '0')}`,
+      websiteMetadata: {
+        slug: `mock-prop-${index}`,
+        title,
+        metaTitle: `${title} | Bharat Properties`,
+        metaDescription: `Explore ${title} with verified title in ${city}.`,
+        description: `Premium real estate opportunity: ${title}.`,
+        featuredImage: 'https://images.bharatproperties.co/sample-listing.jpg',
+      },
+      propertyDetails: {
+        bhk: isPlot ? 0 : bhk,
+        bathrooms: isPlot ? 0 : bhk,
+        furnishing: isPlot ? 'Unfurnished' : 'Semi-Furnished',
+        ownership: 'Freehold',
+      },
+      propertyType: isPlot ? 'Residential Plot' : 'Residential',
+      category: { lookup_value: 'Residential' },
+      price: 3500000 + index * 200000,
+      quotePrice: 3500000 + index * 200000,
+      locationDetails: {
+        city: { lookup_value: city },
+        locality: { lookup_value: `Sector ${index + 10}` },
+        state: { lookup_value: city === 'Kurukshetra' || city === 'Panchkula' ? 'Haryana' : 'Punjab' },
+      },
+      address: {
+        address: `Sector ${index + 10}, ${city}`,
+        city,
+        locality: `Sector ${index + 10}`,
+        state: city === 'Kurukshetra' || city === 'Panchkula' ? 'Haryana' : 'Punjab',
+        country: 'India',
+        zip: '140306',
+      },
+      intent: 'Sell',
+      status: 'Available',
+      size: isPlot ? 150 + index * 5 : 900 + index * 50,
+      sizeUnit: isPlot ? 'Sq.Yd' : 'Sq.Ft',
+      propertyImages: ['https://images.bharatproperties.co/sample-listing.jpg'],
+      updatedAt: `2025-01-${String(Math.min(28, 10 + (index % 15))).padStart(2, '0')}T12:00:00.000Z`,
+      createdAt: '2025-01-02T10:00:00.000Z',
+    };
+  }),
 ];
 
 export function createMockCrmServer() {
@@ -183,7 +236,22 @@ export function createMockCrmServer() {
 
     // GET /listings
     if (req.method === 'GET' && pathname === '/listings') {
-      sendJson(200, { success: true, data: mockListings });
+      const isAll = parsedUrl.searchParams.get('all') === '1';
+      if (isAll) {
+        sendJson(200, { success: true, data: mockListings, total: mockListings.length });
+        return;
+      }
+
+      const limitParam = parsedUrl.searchParams.get('limit');
+      const defaultLimit = 10;
+      const limit = limitParam ? Math.max(1, parseInt(limitParam, 10) || defaultLimit) : defaultLimit;
+
+      sendJson(200, {
+        success: true,
+        data: mockListings.slice(0, limit),
+        total: mockListings.length,
+        limit,
+      });
       return;
     }
 

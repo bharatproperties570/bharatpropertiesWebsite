@@ -6,8 +6,13 @@ This document tracks every specific fact, credential, asset, and architectural s
 
 ## 1. Compliance & Business Identifiers
 
-- [x] **Official RERA Registration Number:**
-  - **Status:** Verified and updated to `PBRERA-HRY06-0050`. Configured as active default and rendered via `ReraBadge.jsx` (Footer & About Page) and Schema.org `RealEstateAgent` organization graph metadata.
+- [ ] **Official State RERA Registration Numbers (Haryana & Punjab):**
+  - **Context:** Hardcoded RERA numbers have been strictly purged from the codebase. Registration numbers and JSON-LD `license` fields render **ONLY** when supplied via environment variables.
+  - **Action Required for Owner:**
+    1. **Haryana Registration:** Copy the registration number exactly from your Haryana RERA certificate and set `NEXT_PUBLIC_RERA_NUMBER_HARYANA` (renders with label `HRERA Reg: <value>` and attaches to the Kurukshetra HQ branch schema).
+    2. **Punjab Registration:** Copy the registration number exactly from your Punjab RERA certificate and set `NEXT_PUBLIC_RERA_NUMBER_PUNJAB` (renders with label `Punjab RERA Reg: <value>` and attaches to the Mohali branch schema).
+    3. **Generic Fallback:** `NEXT_PUBLIC_RERA_NUMBER` is supported as a fallback when state-specific numbers are not set (renders with label `RERA Reg: <value>`).
+    4. **Confirmation:** Confirm which physical office each certificate covers. Do NOT invent numbers or copy unverified draft identifiers.
 - [x] **Mohali Office Postal Code:**
   - **Status:** Verified and updated to `140306` (PR 7, Airport Road, Sector 82 Industrial Area, Mohali, Punjab). Confirmed across JSON-LD schemas and UI pages.
 - [ ] **Official Mailbox Destinations:**
@@ -49,6 +54,12 @@ The following variables must be configured in Vercel (**Project Settings** -> **
   - **Required:** YES, for the website AI chatbot (`/api/webhooks/website-chat`).
 - [ ] **`NEXT_PUBLIC_SITE_URL`:**
   - **Required:** YES (`https://www.bharatproperties.co`).
+- [ ] **`NEXT_PUBLIC_RERA_NUMBER_HARYANA`:**
+  - **Optional:** Official Haryana RERA certificate number for Kurukshetra HQ. Copy exactly from certificate.
+- [ ] **`NEXT_PUBLIC_RERA_NUMBER_PUNJAB`:**
+  - **Optional:** Official Punjab RERA certificate number for Mohali branch. Copy exactly from certificate.
+- [ ] **`NEXT_PUBLIC_RERA_NUMBER`:**
+  - **Optional:** Generic RERA registration fallback (used if state-specific variables are omitted).
 - [ ] **`NEXT_PUBLIC_GOOGLE_MAPS_API_KEY`:**
   - **Required:** YES, for Google Maps Store Locator and office map embeds.
 - [ ] **`NEXT_PUBLIC_GA_ID`:**

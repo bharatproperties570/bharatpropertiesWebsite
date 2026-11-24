@@ -105,6 +105,9 @@ async function run() {
       CRM_API_KEY: 'mock-enterprise-test-key',
       NEXT_PUBLIC_SITE_URL: 'https://www.bharatproperties.co',
     };
+    delete env.NEXT_PUBLIC_RERA_NUMBER;
+    delete env.NEXT_PUBLIC_RERA_NUMBER_HARYANA;
+    delete env.NEXT_PUBLIC_RERA_NUMBER_PUNJAB;
 
     nextProc = spawn('npx', ['next', 'start', '-p', String(nextPort)], {
       env,
@@ -211,6 +214,13 @@ async function run() {
       // Entity name in raw HTML
       const hasEntity = html.includes('Bharat Properties');
       assert(hasEntity, `${pageType} includes entity name "Bharat Properties" in raw HTML`);
+
+      // RERA unset check: when env vars are unset, ensure no RERA registration text or license schema is rendered
+      const hasReraText = html.includes('RERA Reg:') || html.includes('HRERA Reg:') || html.includes('Punjab RERA Reg:');
+      assert(!hasReraText, `${pageType} renders no RERA registration badge/text when env vars are unset`);
+
+      const hasLicenseSchema = jsonLdBlocks.some(b => b.includes('"license"'));
+      assert(!hasLicenseSchema, `${pageType} renders no JSON-LD license schema when env vars are unset`);
     }
 
     // Test Home Page

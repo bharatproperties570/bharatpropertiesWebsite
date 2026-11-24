@@ -8,7 +8,7 @@ export const SAMPLE_PROJECTS = [
             secondaryDeveloper: null,
             isJointVenture: false
         },
-        reraNumber: 'RERA-HR-KKR-2024-001234',
+        reraNumber: null,
         description: 'Experience luxury living at Bharat Heights, a premium residential project in the heart of Kurukshetra. Featuring modern amenities, spacious apartments, and excellent connectivity to major landmarks.',
         category: 'Residential',
         subCategory: ['Apartment', 'Flat'],
@@ -27,7 +27,7 @@ export const SAMPLE_PROJECTS = [
         approvedBanks: ['HDFC Bank', 'ICICI Bank', 'SBI', 'Axis Bank'],
         approvals: {
             reraCertificate: true,
-            registrationNo: 'RERA-HR-KKR-2024-001234',
+            registrationNo: null,
             date: '2024-03-01',
             location: 'Kurukshetra, Haryana'
         },
@@ -53,7 +53,7 @@ export const SAMPLE_PROJECTS = [
                 expectedCompletion: '2026-12-31',
                 possession: '2027-03-31',
                 parkingType: 'Covered Parking',
-                reraNumber: 'RERA-HR-KKR-2024-001234-A'
+                reraNumber: null
             },
             {
                 name: 'Tower B',
@@ -68,7 +68,7 @@ export const SAMPLE_PROJECTS = [
                 expectedCompletion: '2026-12-31',
                 possession: '2027-03-31',
                 parkingType: 'Covered Parking',
-                reraNumber: 'RERA-HR-KKR-2024-001234-B'
+                reraNumber: null
             }
         ],
         unitSizes: [
@@ -177,7 +177,7 @@ export const SAMPLE_PROJECTS = [
             secondaryDeveloper: 'Urban Homes Pvt Ltd',
             isJointVenture: true
         },
-        reraNumber: 'RERA-HR-CHD-2023-005678',
+        reraNumber: null,
         description: 'Green Valley Residency offers eco-friendly living with sustainable design and modern amenities in Chandigarh. Perfect for families seeking a green lifestyle.',
         category: 'Residential',
         subCategory: ['Villa', 'Independent House'],
@@ -196,7 +196,7 @@ export const SAMPLE_PROJECTS = [
         approvedBanks: ['HDFC Bank', 'PNB', 'SBI'],
         approvals: {
             reraCertificate: true,
-            registrationNo: 'RERA-HR-CHD-2023-005678',
+            registrationNo: null,
             date: '2023-01-01',
             location: 'Chandigarh'
         },
@@ -222,7 +222,7 @@ export const SAMPLE_PROJECTS = [
                 expectedCompletion: '2025-06-30',
                 possession: '2025-07-15',
                 parkingType: 'Covered Parking',
-                reraNumber: 'RERA-HR-CHD-2023-005678-P1'
+                reraNumber: null
             }
         ],
         unitSizes: [
@@ -276,7 +276,7 @@ export const SAMPLE_PROJECTS = [
         id: 'mohali-hills',
         name: 'Mohali Hills',
         developer: { name: 'Emaar India', secondaryDeveloper: null, isJointVenture: false },
-        reraNumber: 'RERA-PB-SAS-2023-00789',
+        reraNumber: null,
         description: 'Mohali Hills is a hallmark of luxury and elegance, offering a range of residential plots, villas, and apartments in SAS Nagar. Spread over 3000 acres, it provides a serene environment with world-class infrastructure.',
         category: 'Residential',
         subCategory: ['Plots', 'Villas', 'Apartments'],
@@ -297,7 +297,7 @@ export const SAMPLE_PROJECTS = [
         },
         approvals: {
             reraCertificate: true,
-            registrationNo: 'RERA-PB-SAS-2023-00789',
+            registrationNo: null,
             date: '2023-01-01',
             location: 'Mohali'
         },

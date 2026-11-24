@@ -13,7 +13,9 @@ Please set the following environment variables in your Vercel / deployment envir
 | `CRM_API_KEY` | Server-side CRM API access key | Required for production CRM proxy. **Rotate old key in CRM!** |
 | `CRM_API_BASE_URL` | CRM upstream endpoint | e.g. `https://crm.bharatproperties.co/api` |
 | `NEXT_PUBLIC_SITE_URL` | Canonical domain | Configured default: `https://www.bharatproperties.co` |
-| `NEXT_PUBLIC_RERA_NUMBER` | Official Haryana/Punjab RERA registration number | **SET:** `PBRERA-HRY06-0050`. ReraBadge renders in footer & about page. |
+| `NEXT_PUBLIC_RERA_NUMBER_HARYANA` | Official Haryana RERA certificate number | Optional / Unset (copy from certificate for Kurukshetra HQ). |
+| `NEXT_PUBLIC_RERA_NUMBER_PUNJAB` | Official Punjab RERA certificate number | Optional / Unset (copy from certificate for Mohali branch). |
+| `NEXT_PUBLIC_RERA_NUMBER` | Generic RERA registration fallback | Optional / Unset. ReraBadge and JSON-LD license render ONLY when set. |
 | `NEXT_PUBLIC_FACEBOOK_URL` | Official Facebook business page URL | **VERIFIED:** `https://www.facebook.com/bharatproperties570` |
 | `NEXT_PUBLIC_INSTAGRAM_URL` | Official Instagram business profile URL | **VERIFIED:** `https://www.instagram.com/bhaaratproperties` |
 | `NEXT_PUBLIC_LINKEDIN_URL` | Official LinkedIn company page URL | **VERIFIED:** `https://www.linkedin.com/company/42752175/` |
@@ -44,9 +46,9 @@ The following physical office addresses and phones are configured in `src/lib/se
 
 ### Mohali (Regional Branch)
 - **Address:** PR 7, Airport Road, Sector 82 Industrial Area, Mohali, Punjab
-- **Postal Code (Pincode):** **ACTION NEEDED:** Please confirm the exact 6-digit postal code (e.g. `140306` or `160082`) so it can be added to the LocalBusiness schema in `src/lib/seo.js`.
+- **Postal Code (Pincode):** **VERIFIED:** `140306` (PR 7, Airport Road, Sector 82 Industrial Area, Mohali, Punjab).
 - **Branch Phones:** `+91-9991000570`, `+91-9996000570`
-- **Status:** Phones present in footer/office cards.
+- **Status:** Verified and active across JSON-LD schemas, footer, and locations page.
 
 ---
 

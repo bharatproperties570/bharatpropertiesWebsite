@@ -140,7 +140,7 @@ async function run() {
     }
 
     // 1. Core Page Assertions Helper
-    async function assertPage(pathname, expectedH1Count = 1, pageType = 'Page') {
+    async function assertPage(pathname, expectedH1Count = 1, pageType = 'Page', requireJsonLd = true) {
       console.log(`\n--- Testing ${pageType} [${pathname}] ---`);
       const url = `${baseUrl}${pathname}`;
       const res = await fetch(url, { redirect: 'manual' });
@@ -179,23 +179,33 @@ async function run() {
 
       // JSON-LD schema
       const jsonLdBlocks = extractJsonLdBlocks(html);
-      assert(
-        jsonLdBlocks.length >= 1,
-        `${pageType} has >= 1 application/ld+json block`,
-        `Found ${jsonLdBlocks.length} block(s)`
-      );
+      if (requireJsonLd) {
+        assert(
+          jsonLdBlocks.length >= 1,
+          `${pageType} has >= 1 application/ld+json block`,
+          `Found ${jsonLdBlocks.length} block(s)`
+        );
 
-      let allJsonValid = true;
-      for (const block of jsonLdBlocks) {
-        try {
-          JSON.parse(block);
-        } catch (e) {
-          allJsonValid = false;
-          assert(false, `${pageType} JSON-LD parses cleanly`, e.message);
+        let allJsonValid = true;
+        for (const block of jsonLdBlocks) {
+          try {
+            JSON.parse(block);
+          } catch (e) {
+            allJsonValid = false;
+            assert(false, `${pageType} JSON-LD parses cleanly`, e.message);
+          }
         }
-      }
-      if (jsonLdBlocks.length >= 1 && allJsonValid) {
-        assert(true, `${pageType} JSON-LD parses valid JSON`);
+        if (jsonLdBlocks.length >= 1 && allJsonValid) {
+          assert(true, `${pageType} JSON-LD parses valid JSON`);
+        }
+      } else if (jsonLdBlocks.length > 0) {
+        for (const block of jsonLdBlocks) {
+          try {
+            JSON.parse(block);
+          } catch (e) {
+            assert(false, `${pageType} optional JSON-LD parses cleanly`, e.message);
+          }
+        }
       }
 
       // Entity name in raw HTML
@@ -204,29 +214,43 @@ async function run() {
     }
 
     // Test Home Page
-    await assertPage('/', 1, 'Home Page');
+    await assertPage('/', 1, 'Home Page', true);
+
+    // Test About Page
+    await assertPage('/about', 1, 'About Page', true);
+
+    // Test Blog Index Page
+    await assertPage('/blog', 1, 'Blog Index Page', true);
+
+    // Test Locations Page
+    await assertPage('/locations', 1, 'Locations Page', false);
+
+    // Test Calculator Page
+    await assertPage('/calculator', 1, 'Calculator Page', false);
 
     // Test City Page
-    await assertPage('/mohali', 1, 'City Page (Mohali)');
+    await assertPage('/mohali', 1, 'City Page (Mohali)', true);
 
     // Test Project Page
-    await assertPage('/project/mock-project-1', 1, 'Project Detail Page');
+    await assertPage('/project/mock-project-1', 1, 'Project Detail Page', true);
 
     // Test Property Page (Standard)
-    await assertPage('/property/mock-prop-1', 1, 'Property Detail Page');
+    await assertPage('/property/mock-prop-1', 1, 'Property Detail Page', true);
 
     // Test Property Page (Sparse / Missing Optional Fields)
     await assertPage(
       '/property/mock-prop-sparse',
       1,
-      'Sparse Property Detail Page (Degraded Optional Fields)'
+      'Sparse Property Detail Page (Degraded Optional Fields)',
+      true
     );
 
-    // Test Blog Page
+    // Test Blog Post Page
     await assertPage(
       '/blog/top-5-investment-locations-in-north-india-for-2026',
       1,
-      'Blog Post Page'
+      'Blog Post Page',
+      true
     );
 
     // Test Unknown URL (404 Page)

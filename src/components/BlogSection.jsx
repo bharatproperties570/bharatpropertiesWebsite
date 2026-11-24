@@ -19,9 +19,9 @@ const BlogSection = () => {
                         marginBottom: '1rem',
                         display: 'block'
                     }}>Insights & Articles</span>
-                    <h2 style={{ fontSize: '3rem', fontWeight: 800, marginBottom: '1rem', color: '#0F172A', letterSpacing: '-0.02em' }}>
-                        Latest from Our <span style={{ color: 'var(--color-primary)' }}>Blog</span>
-                    </h2>
+                    <h1 style={{ fontSize: '3rem', fontWeight: 800, marginBottom: '1rem', color: '#0F172A', letterSpacing: '-0.02em' }}>
+                        Real Estate Insights for <span style={{ color: 'var(--color-primary)' }}>Kurukshetra, Mohali &amp; Chandigarh</span>
+                    </h1>
                     <p style={{ color: '#64748B', fontSize: '1.2rem', maxWidth: '600px', margin: '0 auto' }}>
                         Stay updated with the latest trends, investment guides, and lifestyle tips in the world of real estate.
                     </p>

@@ -151,6 +151,65 @@ async function run() {
     }
   }
 
+  // 2b. Utility pages check: /calculator, /locations, /privacy, /terms
+  console.log('\n--- 2b. Utility Pages Verification (H1, Title, Canonical Required; JSON-LD Optional) ---');
+  const utilityPages = ['/calculator', '/locations', '/privacy', '/terms'];
+
+  for (const pagePath of utilityPages) {
+    const pageUrl = `${TARGET_URL}${pagePath}`;
+    try {
+      const res = await fetch(pageUrl, {
+        headers: { Accept: 'text/html' },
+        signal: AbortSignal.timeout(10000),
+      });
+
+      if (res.status !== 200) {
+        fail(`${pagePath} returned unexpected status`, `HTTP ${res.status}`);
+        continue;
+      }
+
+      const html = await res.text();
+
+      // Check <h1> count
+      const h1Count = countH1(html);
+      if (h1Count === 1) {
+        pass(`${pagePath} has exactly one <h1>`);
+      } else {
+        fail(`${pagePath} has invalid <h1> count`, `Found ${h1Count}`);
+      }
+
+      // Check canonical
+      const canonical = extractCanonical(html);
+      if (canonical && (canonical === CANONICAL_DOMAIN || canonical.startsWith(`${CANONICAL_DOMAIN}/`))) {
+        pass(`${pagePath} canonical is on ${CANONICAL_DOMAIN}`, canonical);
+      } else {
+        fail(`${pagePath} canonical is missing or incorrect`, canonical || 'None');
+      }
+
+      // Check title
+      const title = extractTitle(html);
+      if (title && title.length > 0) {
+        pass(`${pagePath} has non-empty <title>`);
+      } else {
+        fail(`${pagePath} has empty or missing <title>`);
+      }
+
+      // JSON-LD is optional; if present, must parse cleanly
+      const jsonLdInfo = parseAllJsonLdBlocks(html);
+      if (jsonLdInfo.count > 0) {
+        if (jsonLdInfo.validCount === jsonLdInfo.count) {
+          pass(`${pagePath} optional JSON-LD parsed validly`, `Found ${jsonLdInfo.validCount} block(s)`);
+        } else {
+          fail(`${pagePath} contains malformed JSON-LD`, `${jsonLdInfo.validCount}/${jsonLdInfo.count} valid`);
+        }
+      } else {
+        pass(`${pagePath} JSON-LD check (optional, none present)`);
+      }
+    } catch (err) {
+      fail(`${pagePath} fetch error`, err.message);
+    }
+  }
+
   // 3. /delhi returns noindex
   console.log('\n--- 3. Non-Allowed City [/delhi] ---');
   try {

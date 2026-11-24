@@ -45,6 +45,19 @@ export default function LocationsPage() {
 
     return (
         <div style={{ height: 'calc(100vh - 80px)', width: '100%', position: 'relative', marginTop: '80px', backgroundColor: '#f8fafc' }}>
+            <h1 style={{
+                position: 'absolute',
+                width: '1px',
+                height: '1px',
+                padding: 0,
+                margin: '-1px',
+                overflow: 'hidden',
+                clip: 'rect(0, 0, 0, 0)',
+                whiteSpace: 'nowrap',
+                border: 0
+            }}>
+                Our Offices - Kurukshetra &amp; Mohali Locations
+            </h1>
             <Script
                 src="https://ajax.googleapis.com/ajax/libs/@googlemaps/extended-component-library/0.6.11/index.min.js"
                 type="module"

@@ -117,30 +117,74 @@ npm start
 
 ---
 
-## 5. Deployment & Rollback Runbook
+## 5. Release & Rollback Runbook
 
-### Deployment Checklist
-1. Verify branch CI passes (`npm run lint`, `npm audit --omit=dev --audit-level=high`, `npm run build`, `npm run seo:check`).
-2. Merge pull request into target deployment branch.
-3. Vercel automatically creates an immutable preview deployment.
-4. Verify smoke tests on the preview deployment:
-   - Check `/api/health` returns `{"status":"ok","crmReachable":true}`.
-   - Test form submissions on `/` and dynamic project/property pages.
-5. Promote preview to production.
+### Environment Variables (Names Only)
+Ensure the following environment variables are properly configured in Vercel (**Project Settings** -> **Environment Variables** -> **Production**):
 
-### Rollback Runbook
-If an issue occurs in production:
-1. **Instant Rollback via Vercel CLI:**
+- **Required Production Variables:**
+  - `CRM_API_KEY` (Server-only upstream CRM secret; build aborts if missing or invalid)
+  - `GEMINI_API_KEY` (Server-only AI chatbot assistant secret)
+  - `NEXT_PUBLIC_SITE_URL` (Canonical site URL: `https://www.bharatproperties.co`)
+  - `NEXT_PUBLIC_GOOGLE_MAPS_API_KEY` (Store Locator & Map embeds)
+- **Optional Production Variables:**
+  - `CRM_API_BASE_URL` (Defaults to `https://api.bharatproperties.co/api/public`)
+  - `NEXT_PUBLIC_GA_ID` (Google Analytics 4 Measurement ID)
+  - `NEXT_PUBLIC_GSC_VERIFICATION` (Google Search Console verification meta token)
+  - `NEXT_PUBLIC_RERA_NUMBER` (Official RERA registration identifier)
+  - `NEXT_PUBLIC_PHONE`, `NEXT_PUBLIC_WHATSAPP` (Contact numbers)
+  - `NEXT_PUBLIC_FACEBOOK_URL`, `NEXT_PUBLIC_INSTAGRAM_URL`, `NEXT_PUBLIC_LINKEDIN_URL`, `NEXT_PUBLIC_YOUTUBE_URL`
+- **Testing Only (Not for Production):**
+  - `USE_MOCK_CRM` (Explicit mock activation for CI/local testing; strictly ignored on Vercel)
+
+### Preview Checks (Pre-Cutover Verification)
+Before promoting a pull request or merging into production:
+1. Vercel automatically deploys an isolated preview build for the PR.
+2. Run the automated read-only verification suite directly against the preview URL:
+   ```bash
+   npm run verify:prod -- https://<preview-deployment-url>.vercel.app
+   ```
+3. Confirm that:
+   - `/api/health` returns HTTP 200 with `crmReachable: true`.
+   - Core pages (`/`, `/kurukshetra`, `/mohali`, `/about`, `/blog`) return 200 with exactly one `<h1>`, canonical on `https://www.bharatproperties.co`, non-empty `<title>`, and valid JSON-LD schemas.
+   - Non-allowed cities (e.g. `/delhi`) return `noindex`.
+   - Legacy blog redirect (`/blog/blog-1`) returns HTTP 308.
+   - Response headers enforce `Strict-Transport-Security`, `X-Content-Type-Options`, `Referrer-Policy`, `Permissions-Policy`, and CSP, without leaking `X-Powered-By`.
+
+### Running Post-Deploy Verification (`npm run verify:prod`)
+Execute read-only checks after production deployment cutover:
+```bash
+# Verify canonical production (default: https://www.bharatproperties.co)
+npm run verify:prod
+
+# Verify a specific custom domain or preview URL
+npm run verify:prod -- https://www.bharatproperties.co
+
+# Or run via GitHub Actions:
+# Go to Actions -> "Post-Deploy Verification" -> Click "Run workflow" -> Enter target base URL
+```
+
+### Vercel Instant Rollback Procedure
+If any regression, CRM outage, or verification failure is observed in production:
+1. **Instant Rollback via Vercel Dashboard:**
+   - Open **Vercel Dashboard** -> select `bharatpropertiesWebsite` project.
+   - Navigate to the **Deployments** tab.
+   - Locate the previous stable production deployment.
+   - Click the overflow menu (`...`) on that deployment and select **Instant Rollback**.
+   - Production traffic immediately switches to the previous deployment without rebuild delays.
+2. **Instant Rollback via Vercel CLI:**
    ```bash
    vercel rollback
    ```
-   Or select previous green deployment in the Vercel Dashboard -> **Deployments** -> **Instant Rollback**.
-2. **Git Rollback:**
+3. **Post-Rollback Sanity Verification:**
+   ```bash
+   npm run verify:prod
+   ```
+4. **Git Revert (for Git History Synchronization):**
    ```bash
    git revert HEAD -m 1
    git push origin main
    ```
-3. Re-verify `/api/health` immediately after rollback.
 
 ---
 

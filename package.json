@@ -8,8 +8,9 @@
     "build": "node scripts/build.mjs",
     "start": "NODE_NO_WARNINGS=1 next start",
     "lint": "eslint .",
-    "test": "node scripts/test-visitor-ip.mjs",
+    "test": "node --test scripts/test-*.mjs",
     "test:ip": "node scripts/test-visitor-ip.mjs",
+    "verify:prod": "node scripts/post-deploy-verify.mjs",
     "format:check": "prettier --check .",
     "seo:check": "node scripts/seo-check.mjs",
     "check:no-mock-leak": "node scripts/assert-no-mock-leak.mjs"

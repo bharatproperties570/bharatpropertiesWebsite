@@ -14,6 +14,7 @@
 import { spawn } from 'node:child_process';
 import net from 'node:net';
 import { startMockCrm } from './mock-crm.mjs';
+import { validateEnvironment, printValidationReport } from './env-check.mjs';
 
 const DEFAULT_CRM_BASE_URL = 'https://api.bharatproperties.co/api/public';
 
@@ -81,6 +82,17 @@ async function run() {
 
   const useMockCrm = !isVercel && requestedMock;
   let mockCrmHandle = null;
+
+  // On Vercel or when requested via CI/production env, validate configuration before CRM handshake
+  if (isVercel || process.env.ENABLE_PROD_ENV_CHECK === '1') {
+    console.log('[build] 🛡️ Running pre-build environment validation...');
+    const validation = validateEnvironment(process.env);
+    const passed = printValidationReport(validation);
+    if (!passed) {
+      console.error('\n[build] ❌ BLOCKER ERROR: Environment validation failed. Aborting build.\n');
+      process.exit(1);
+    }
+  }
 
   const buildEnv = {
     ...process.env,

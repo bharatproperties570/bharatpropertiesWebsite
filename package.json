@@ -14,6 +14,7 @@
     "format:check": "prettier --check .",
     "seo:check": "node scripts/seo-check.mjs",
     "ci:local": "bash scripts/local-ci.sh",
+    "env:check": "node scripts/env-check.mjs",
     "test:e2e": "node scripts/e2e-real-crm.mjs",
     "check:no-mock-leak": "node scripts/assert-no-mock-leak.mjs"
   },

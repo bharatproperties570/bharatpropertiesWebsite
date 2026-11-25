@@ -456,14 +456,18 @@ const ConsultationForm = ({ onClose }) => {
                                         </div>
                                     ) : (
                                         <>
-                                            <Image
-                                                src={`https://maps.googleapis.com/maps/api/staticmap?center=30.00,76.85&zoom=13&size=800x200&sensor=false&key=${process.env.NEXT_PUBLIC_GOOGLE_MAPS_API_KEY || 'AIzaSyBd2gdMJVt5C_tgYqWoRbBiatzmevYdB9U'}`}
-                                                alt="Bharat Properties office location map preview"
-                                                fill
-                                                sizes="(max-width: 768px) 100vw, 800px"
-                                                style={{ objectFit: 'cover', opacity: 0.6 }}
-                                                loading="lazy"
-                                            />
+                                            {process.env.NEXT_PUBLIC_GOOGLE_MAPS_API_KEY ? (
+                                                <Image
+                                                    src={`https://maps.googleapis.com/maps/api/staticmap?center=30.00,76.85&zoom=13&size=800x200&sensor=false&key=${process.env.NEXT_PUBLIC_GOOGLE_MAPS_API_KEY}`}
+                                                    alt="Bharat Properties office location map preview"
+                                                    fill
+                                                    sizes="(max-width: 768px) 100vw, 800px"
+                                                    style={{ objectFit: 'cover', opacity: 0.6 }}
+                                                    loading="lazy"
+                                                />
+                                            ) : (
+                                                <div style={{ position: 'absolute', inset: 0, backgroundColor: '#f1f5f9', opacity: 0.8 }} />
+                                            )}
                                             <div style={{
                                                 position: 'absolute',
                                                 textAlign: 'center',

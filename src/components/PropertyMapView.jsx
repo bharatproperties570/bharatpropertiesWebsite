@@ -5,7 +5,7 @@ import Image from 'next/image';
 import { MapPin, Info, X, AlertTriangle } from 'lucide-react';
 
 /* global process */
-const MAPS_API_KEY = process.env.NEXT_PUBLIC_GOOGLE_MAPS_API_KEY || 'AIzaSyBd2gdMJVt5C_tgYqWoRbBiatzmevYdB9U';
+const MAPS_API_KEY = (process.env.NEXT_PUBLIC_GOOGLE_MAPS_API_KEY || '').trim();
 
 const PropertyMapView = ({ properties = [], onPropertySelect, onClose, embedded = false }) => {
     const mapRef = useRef(null);
@@ -20,6 +20,11 @@ const PropertyMapView = ({ properties = [], onPropertySelect, onClose, embedded 
         let isMounted = true;
 
         const loadGoogleMaps = () => {
+            if (!MAPS_API_KEY) {
+                if (isMounted) setError('Google Maps API key is not configured.');
+                return;
+            }
+
             if (window.google?.maps?.Map) {
                 if (isMounted) setLibLoaded(true);
                 return;

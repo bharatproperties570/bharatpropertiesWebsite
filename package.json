@@ -13,6 +13,7 @@
     "verify:prod": "node scripts/post-deploy-verify.mjs",
     "format:check": "prettier --check .",
     "seo:check": "node scripts/seo-check.mjs",
+    "ci:local": "bash scripts/local-ci.sh",
     "check:no-mock-leak": "node scripts/assert-no-mock-leak.mjs"
   },
   "engines": {

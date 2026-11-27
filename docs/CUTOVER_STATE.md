@@ -24,7 +24,7 @@
 | Gate | Title | Description | Executor | Status | Notes / Output Ref |
 |---|---|---|---|---|---|
 | **G1** | MongoDB Atlas Backup | Take on-demand snapshot via Atlas Console (30-day retention) | Owner | **IN PROGRESS** | Awaiting owner "done" |
-| **G2** | CRM Env & Dependency Preflight | Run `npm run preflight:env` on CRM server | Owner | PENDING | Validates keys, proxy hops, Redis |
+| **G2** | DB User Rotation & Preflight | Rotate DB user (new user -> verify health -> restrict IP -> delete old user) & preflight | Owner | PENDING | Dual-user fallback safe |
 | **G3** | CRM Dual-Key Env Config | Configure `PUBLIC_API_KEY` alongside `WEBSITE_INTEGRATION_KEY` | Owner | PENDING | Zero-downtime key rotation |
 | **G4** | CRM Schema & Index Backfill | Execute backfill over SSH on CRM host (or laptop with Atlas IP allowlist) | Owner | PENDING | Dry-run first, then apply with `--confirm-backup` |
 | **G5** | CRM Process Reload | Graceful reload via PM2 (`pm2 reload crm`) over SSH | Owner | PENDING | Zero dropped connections |

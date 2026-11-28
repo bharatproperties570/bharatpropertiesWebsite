@@ -70,7 +70,7 @@ This release consolidates comprehensive architectural hardening, SEO governance,
 3. **Post-Deployment Verification:**
    - Run verification suite against live domain:
      ```bash
-     npm run verify:prod -- --base https://www.bharatproperties.co
+     npm run verify:prod -- https://www.bharatproperties.co
      ```
    - Confirm `/api/health` returns `200` with `crmReachable: true`.
    - Confirm sitemap, canonicals, single H1s, and JSON-LD structured data pass all checks.

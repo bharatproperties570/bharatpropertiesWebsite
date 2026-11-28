@@ -11,7 +11,7 @@ Please set the following environment variables in your Vercel / deployment envir
 | Variable Name | Description | Current State / Action Needed |
 | :--- | :--- | :--- |
 | `CRM_API_KEY` | Server-side CRM API access key | Required for production CRM proxy. **Rotate old key in CRM!** |
-| `CRM_API_BASE_URL` | CRM upstream endpoint | e.g. `https://crm.bharatproperties.co/api` |
+| `CRM_API_BASE_URL` | CRM upstream endpoint | e.g. `https://api.bharatproperties.co/api/public` |
 | `NEXT_PUBLIC_SITE_URL` | Canonical domain | Configured default: `https://www.bharatproperties.co` |
 | `NEXT_PUBLIC_RERA_NUMBER_HARYANA` | Official Haryana RERA certificate number | Optional / Unset (copy from certificate for Kurukshetra HQ). |
 | `NEXT_PUBLIC_RERA_NUMBER_PUNJAB` | Official Punjab RERA certificate number | Optional / Unset (copy from certificate for Mohali branch). |

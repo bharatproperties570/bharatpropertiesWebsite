@@ -48,7 +48,7 @@ This release consolidates comprehensive architectural hardening, SEO governance,
 | `GEMINI_API_KEY` | **Required** | Gemini API key for AI assistant features. |
 | `NEXT_PUBLIC_SITE_URL` | **Required** | Canonical base URL. Must equal `https://www.bharatproperties.co` exactly. |
 | `NEXT_PUBLIC_GOOGLE_MAPS_API_KEY` | **Required** | Google Maps JavaScript API key for location widgets. |
-| `CRM_API_BASE_URL` | Optional | CRM API upstream base URL (defaults to production URL: `https://crm.bharatproperties.co/api/public`). Must be HTTPS and never localhost in production. |
+| `CRM_API_BASE_URL` | Optional | CRM API upstream base URL (defaults to production URL: `https://api.bharatproperties.co/api/public`). Must be HTTPS and never localhost in production. |
 | `NEXT_PUBLIC_RERA_NUMBER_HARYANA` | Optional | Haryana RERA registration number (rendered on badge and structured data when present). |
 | `NEXT_PUBLIC_RERA_NUMBER_PUNJAB` | Optional | Punjab RERA registration number (rendered on badge and structured data when present). |
 | `NEXT_PUBLIC_GA_ID` | Optional | Google Analytics 4 Measurement ID (`G-XXXXXXXXXX`). |
